@@ -63,23 +63,22 @@ namespace rfiStrategy {
 					8.0/*bp complex*/ * 4.0 /*polarizations*/ *
 					double(timeStepCount) * double(channelCount) *
 					3.0 /* approx copies of the data that will be made in memory*/;
-				AOLogger::Debug << "Estimate of memory each thread will use: " << round(estMemorySizePerThread/(1024.0*1024.0*10.0))/10.0 << " MB.\n";
+				AOLogger::Debug << "Estimate of memory each thread will use: " << memToStr(estMemorySizePerThread) << ".\n";
 				size_t compThreadCount = _threadCount;
 				if(compThreadCount > 0) --compThreadCount;
 				
 				long int pageCount = sysconf(_SC_PHYS_PAGES), pageSize = sysconf(_SC_PAGE_SIZE);
 				int64_t memSize = int64_t(pageCount) * int64_t(pageSize);
-				double memSizeInGB = (double) memSize / (1024.0*1024.0*1024.0);
-				AOLogger::Debug << "Detected " << round(memSizeInGB*10.0)/10.0 << " GB of system memory.\n";
+				AOLogger::Debug << "Detected " << memToStr(memSize) << " of system memory.\n";
 				
 				if(estMemorySizePerThread * double(compThreadCount) > memSize)
 				{
-					size_t maxThreads = memSize / estMemorySizePerThread;
+					size_t maxThreads = size_t(memSize / estMemorySizePerThread);
 					if(maxThreads < 1) maxThreads = 1;
 					AOLogger::Warn <<
 						"WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING!\n"
 						"This measurement set is TOO LARGE to be processed with " << _threadCount << " threads!\n" <<
-						_threadCount << " threads would require " << ((estMemorySizePerThread*compThreadCount)/(1024*1024)) << " MB of memory approximately.\n"
+						_threadCount << " threads would require " << memToStr(estMemorySizePerThread*compThreadCount) << " of memory approximately.\n"
 						"Number of threads that will actually be used: " << maxThreads << "\n"
 						"This might hurt performance a lot!\n\n";
 					_threadCount = maxThreads;
@@ -393,6 +392,22 @@ namespace rfiStrategy {
 		std::stringstream str;
 		str << "T" << threadId << ": " << taskName;
 		progress.OnStartTask(*this, totalNo, totalCount, str.str());
+	}
+	
+	std::string ForEachBaselineAction::memToStr(double memSize)
+	{
+		std::ostringstream str;
+		if(memSize > 1024.0*1024.0*1024.0*1024.0)
+			str << round(memSize*10.0 / (1024.0*1024.0*1024.0*1024.0))/10.0 << " TB";
+		else if(memSize > 1024.0*1024.0*1024.0)
+			str << round(memSize*10.0 / (1024.0*1024.0*1024.0))/10.0 << " GB";
+		else if(memSize > 1024.0*1024.0)
+			str << round(memSize*10.0 / (1024.0*1024.0))/10.0 << " MB";
+		else if(memSize > 1024.0)
+			str << round(memSize*10.0 / (1024.0))/10.0 << " KB";
+		else
+			str << memSize << " B";
+		return str.str();
 	}
 }
 

@@ -71,6 +71,7 @@ namespace rfiStrategy {
 		private:
 			bool IsBaselineSelected(ImageSetIndex &index);
 			class ImageSetIndex *GetNextIndex();
+			static std::string memToStr(double memSize);
 			
 			void SetExceptionOccured();
 			void SetFinishedBaselines();
