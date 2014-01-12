@@ -59,13 +59,22 @@ namespace rfiStrategy {
 				size_t timeStepCount = msImageSet->ObservationTimesVector(*tempIndex).size();
 				delete tempIndex;
 				size_t channelCount = msImageSet->GetBandInfo(0).channels.size();
-				size_t estMemorySizePerThread = 8/*bp complex*/ * 4 /*polarizations*/ * timeStepCount * channelCount * 3 /* approx copies of the data that will be made in memory*/;
-				AOLogger::Debug << "Estimate of memory each thread will use: " << estMemorySizePerThread/(1024*1024) << " MB.\n";
+				double estMemorySizePerThread =
+					8.0/*bp complex*/ * 4.0 /*polarizations*/ *
+					double(timeStepCount) * double(channelCount) *
+					3.0 /* approx copies of the data that will be made in memory*/;
+				AOLogger::Debug << "Estimate of memory each thread will use: " << round(estMemorySizePerThread/(1024.0*1024.0*10.0))/10.0 << " MB.\n";
 				size_t compThreadCount = _threadCount;
 				if(compThreadCount > 0) --compThreadCount;
-				if(estMemorySizePerThread * compThreadCount > 12ul*1024ul*1024ul*1024ul)
+				
+				long int pageCount = sysconf(_SC_PHYS_PAGES), pageSize = sysconf(_SC_PAGE_SIZE);
+				int64_t memSize = int64_t(pageCount) * int64_t(pageSize);
+				double memSizeInGB = (double) memSize / (1024.0*1024.0*1024.0);
+				AOLogger::Debug << "Detected " << round(memSizeInGB*10.0)/10.0 << " GB of system memory.\n";
+				
+				if(estMemorySizePerThread * double(compThreadCount) > memSize)
 				{
-					size_t maxThreads = (12ul * 1024ul * 1024ul * 1024ul) / estMemorySizePerThread;
+					size_t maxThreads = memSize / estMemorySizePerThread;
 					if(maxThreads < 1) maxThreads = 1;
 					AOLogger::Warn <<
 						"WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING!\n"
