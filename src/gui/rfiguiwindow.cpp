@@ -1414,10 +1414,15 @@ void RFIGuiWindow::onLoadLongestBaselinePressed()
 			for(size_t a=0; a!=antCount; a++)
 				antennas[a] = msSet->GetAntennaInfo(a);
 			
-			for(size_t a1=0; a1!=antCount; a1++)
+			rfiStrategy::ImageSetIndex *index = msSet->StartIndex();
+			size_t band = msSet->GetBand(*_imageSetIndex);
+			size_t sequenceId = msSet->GetSequenceId(*_imageSetIndex);
+			while(index->IsValid())
 			{
-				for(size_t a2=a1+1; a2!=antCount; ++a2)
+				if(sequenceId == msSet->GetSequenceId(*index) && band == msSet->GetBand(*index))
 				{
+					size_t a1 = msSet->GetAntenna1(*index);
+					size_t a2 = msSet->GetAntenna2(*index);
 					const AntennaInfo &ant1 = antennas[a1], &ant2 = antennas[a2];
 					double distSq = ant1.position.DistanceSquared(ant2.position);
 					if(distSq > longestSq)
@@ -1427,9 +1432,11 @@ void RFIGuiWindow::onLoadLongestBaselinePressed()
 						longestA2 = a2;
 					}
 				}
+				index->Next();
 			}
-			rfiStrategy::MSImageSetIndex *index = msSet->Index(longestA1, longestA2, msSet->GetBand(*_imageSetIndex), msSet->GetSequenceId(*_imageSetIndex));
-			SetImageSetIndex(index);
+			delete index;
+			rfiStrategy::MSImageSetIndex *newIndex = msSet->Index(longestA1, longestA2, band, sequenceId);
+			SetImageSetIndex(newIndex);
 		}
 	}
 }
@@ -1441,29 +1448,36 @@ void RFIGuiWindow::onLoadShortestBaselinePressed()
 		rfiStrategy::MSImageSet *msSet = dynamic_cast<rfiStrategy::MSImageSet*>(_imageSet);
 		if(msSet != 0)
 		{
-			double shortestSq = 1e20;
-			size_t shortestA1=0, shortestA2=0;
+			double smallestSq = 1e26;
+			size_t smallestA1=0, smallestA2=0;
 			size_t antCount = msSet->AntennaCount();
 			std::vector<AntennaInfo> antennas(antCount);
 			for(size_t a=0; a!=antCount; a++)
 				antennas[a] = msSet->GetAntennaInfo(a);
 			
-			for(size_t a1=0; a1!=antCount; a1++)
+			rfiStrategy::ImageSetIndex *index = msSet->StartIndex();
+			size_t band = msSet->GetBand(*_imageSetIndex);
+			size_t sequenceId = msSet->GetSequenceId(*_imageSetIndex);
+			while(index->IsValid())
 			{
-				for(size_t a2=a1+1; a2!=antCount; ++a2)
+				if(sequenceId == msSet->GetSequenceId(*index) && band == msSet->GetBand(*index))
 				{
+					size_t a1 = msSet->GetAntenna1(*index);
+					size_t a2 = msSet->GetAntenna2(*index);
 					const AntennaInfo &ant1 = antennas[a1], &ant2 = antennas[a2];
 					double distSq = ant1.position.DistanceSquared(ant2.position);
-					if(distSq < shortestSq)
+					if(distSq < smallestSq)
 					{
-						shortestSq = distSq;
-						shortestA1 = a1;
-						shortestA2 = a2;
+						smallestSq = distSq;
+						smallestA1 = a1;
+						smallestA2 = a2;
 					}
 				}
+				index->Next();
 			}
-			rfiStrategy::MSImageSetIndex *index = msSet->Index(shortestA1, shortestA2, msSet->GetBand(*_imageSetIndex), msSet->GetSequenceId(*_imageSetIndex));
-			SetImageSetIndex(index);
+			delete index;
+			rfiStrategy::MSImageSetIndex *newIndex = msSet->Index(smallestA1, smallestA2, band, sequenceId);
+			SetImageSetIndex(newIndex);
 		}
 	}
 }
