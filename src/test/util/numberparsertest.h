@@ -47,10 +47,10 @@ inline void NumberParserTest::TestToDouble::operator()()
 	AssertEquals<double>(NumberParser::ToDouble("-1"), -1.0);
 	AssertEquals<double>(NumberParser::ToDouble("-1.00000"), -1.0);
 	
-	AssertEquals<double>(NumberParser::ToDouble("3.14159265"), 3.14159265);
-	AssertEquals<double>(NumberParser::ToDouble("0.00002"), 0.00002);
+	AssertAlmostEqual(NumberParser::ToDouble("3.14159265"), 3.14159265);
+	AssertAlmostEqual(NumberParser::ToDouble("0.00002"), 0.00002);
 	AssertEquals<double>(NumberParser::ToDouble("234567"), 234567.0);
-	AssertEquals<double>(NumberParser::ToDouble("234.567"), 234.567);
+	AssertAlmostEqual(NumberParser::ToDouble("234.567"), 234.567);
 	
 	AssertEquals<double>(NumberParser::ToDouble("0"), 0.0);
 	AssertEquals<double>(NumberParser::ToDouble("0.0"), 0.0);

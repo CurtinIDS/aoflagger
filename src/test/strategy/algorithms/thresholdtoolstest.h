@@ -95,7 +95,7 @@ void ThresholdToolsTest::WinsorizedMaskedMeanVar::operator()()
 	for(unsigned x=0;x<100;++x)
 		image1->SetValue(x, 0, x+1.0);
 	ThresholdTools::WinsorizedMeanAndStdDev(image1, mask1, mean, variance);
-	Asserter::AssertAlmostEqual(mean, 25.5, "Mean of 50% flagged sequencial image");
+	Asserter::AssertLessThan(fabs(mean - 25.5), 0.2, "Error in mean of 50% flagged sequential image < 0.2");
 	// Since the distribution is not Gaussian, the variance does not correspond with
 	// the Winsorized variance. Therefore, don't test it here. TODO
 }
