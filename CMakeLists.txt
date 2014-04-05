@@ -17,6 +17,7 @@ find_path(FFTW3_INCLUDE_DIR NAMES fftw3.h)
 
 #find_package(GSL)
 
+find_package(Threads REQUIRED)
 find_package(LibXml2 REQUIRED)
 find_package(PNG REQUIRED)
 find_package(Boost REQUIRED COMPONENTS date_time thread filesystem signals system)

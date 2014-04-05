@@ -277,7 +277,7 @@ if(BOOST_ASIO_H_FOUND AND SIGCXX_FOUND AND GTKMM_FOUND)
   target_link_libraries(aoquality aoflaggerremote ${SIGCXX_LIBRARIES})
 
 	add_executable(aoremoteclient aoremoteclient.cpp)
-  target_link_libraries(aoremoteclient aoflaggerremote ${SIGCXX_LIBRARIES})
+  target_link_libraries(aoremoteclient aoflaggerremote ${SIGCXX_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
 endif(BOOST_ASIO_H_FOUND AND SIGCXX_FOUND AND GTKMM_FOUND)
 
 add_executable(aotest EXCLUDE_FROM_ALL aotest.cpp)
