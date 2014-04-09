@@ -61,7 +61,7 @@ int main(int argc, char *argv[])
 {
 	int pindex = 1;
 	// parameters
-	bool useSpectrum = true;
+	bool useSpectrum = true, blackWhite = false;
 	bool colormap = false;
 	int removeNoiseImages = 0;
 	bool fft = false;
@@ -77,6 +77,7 @@ int main(int argc, char *argv[])
 	while(pindex < argc && argv[pindex][0] == '-') {
 		string parameter = argv[pindex]+1;
 		if(parameter == "s") { useSpectrum = true; }
+		else if(parameter == "bw") { blackWhite = true; }
 		else if(parameter == "c") { useSpectrum = false; }
 		else if(parameter == "d") { ++pindex; subtractFile = argv[pindex]; subtract=true; }
 		else if(parameter == "fft") { fft = true; }
@@ -280,7 +281,10 @@ int main(int argc, char *argv[])
 				if(rms)
 					ReportRMS(image);
 				long double r=0.0,g=0.0,b=0.0;
-				if(redblue) {
+				if(blackWhite) {
+					r = 1.0; b = 1.0; g = 1.0;
+				}
+				else if(redblue) {
 					r = 1.0;
 					b = 1.0;
 				} else if(useSpectrum)
@@ -291,10 +295,10 @@ int main(int argc, char *argv[])
 				totalGreen += g;
 				totalBlue += b;
 				if(red == 0) {
-					red = Image2D::CreateUnsetImage(image->Width(), image->Height());
-					green = Image2D::CreateUnsetImage(image->Width(), image->Height());
-					blue = Image2D::CreateUnsetImage(image->Width(), image->Height());
-					mono = Image2D::CreateUnsetImage(image->Width(), image->Height());
+					red = Image2D::CreateZeroImage(image->Width(), image->Height());
+					green = Image2D::CreateZeroImage(image->Width(), image->Height());
+					blue = Image2D::CreateZeroImage(image->Width(), image->Height());
+					mono = Image2D::CreateZeroImage(image->Width(), image->Height());
 				}
 				size_t minY = image->Height(), minX = image->Width();
 				if(red->Height() < minY) minY = red->Height();
@@ -305,7 +309,12 @@ int main(int argc, char *argv[])
 					{
 						long double value = image->Value(x, y);
 						mono->AddValue(x, y, value);
-						if(redblue) {
+						if(blackWhite) {
+							red->AddValue(x, y, value/max);
+							blue->AddValue(x, y, value/max); 
+							green->AddValue(x, y, value/max); 
+						}
+						else if(redblue) {
 							if(value > 0)
 								red->AddValue(x, y, value/max);
 							else
@@ -396,6 +405,9 @@ int main(int argc, char *argv[])
 				if(r > 255) r = 255;
 				if(g > 255) g = 255;
 				if(b > 255) b = 255;
+				if(red->Value(x, y) < 0) r = 0;
+				if(green->Value(x, y) < 0) g = 0;
+				if(blue->Value(x, y) < 0) b = 0;
 				file.PlotDatapoint(x, red->Height() - 1 - y, r, g, b, 255);
 			}
 		}
