@@ -1,6 +1,7 @@
 #include "rayleighfitter.h"
 
 #include <iostream>
+#include <limits>
 
 #ifdef HAVE_GSL
 
@@ -108,6 +109,8 @@ void RayleighFitter::Fit(double minVal, double maxVal, const LogHistogram &hist,
 	else
 		_minVal = hist.MinPositiveAmplitude();
 	_maxVal = maxVal;
+	
+	if(sigma < minVal) sigma = minVal;
 
 	size_t nData = 0;
 	for (LogHistogram::iterator i=hist.begin(); i!=hist.end(); ++i)
@@ -171,6 +174,26 @@ void RayleighFitter::Fit(double minVal, double maxVal, const LogHistogram &hist,
 double RayleighFitter::SigmaEstimate(const LogHistogram &hist)
 {
 	return hist.AmplitudeWithMaxNormalizedCount();
+}
+
+double RayleighFitter::SigmaEstimate(const LogHistogram &hist, double rangeStart, double rangeEnd)
+{
+	double maxAmplitude = 0.0, maxNormalizedCount = std::numeric_limits<double>::min();
+	for (LogHistogram::const_iterator i=hist.begin(); i!=hist.end(); ++i)
+	{
+		if(i.value() > rangeStart && i.value() < rangeEnd && std::isfinite(i.value()))
+		{
+			if(std::isfinite(i.normalizedCount()))
+			{
+				if(i.normalizedCount() > maxNormalizedCount)
+				{
+					maxAmplitude = i.value();
+					maxNormalizedCount = i.normalizedCount();
+				}
+			}
+		}
+	}
+	return maxAmplitude;
 }
 
 void RayleighFitter::FindFitRangeUnderRFIContamination(double minPositiveAmplitude, double sigmaEstimate, double &minValue, double &maxValue)

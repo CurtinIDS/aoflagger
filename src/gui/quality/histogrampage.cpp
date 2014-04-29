@@ -322,7 +322,7 @@ void HistogramPage::plotFit(const LogHistogram &histogram, const std::string &ti
 		minRange = atof(_fitStartEntry.get_text().c_str());
 		maxRange = atof(_fitEndEntry.get_text().c_str());
 	}
-	double sigma = sigmaEstimate, n = RayleighFitter::NEstimate(histogram, minRange, maxRange);
+	double sigma = RayleighFitter::SigmaEstimate(histogram, minRange, maxRange), n = RayleighFitter::NEstimate(histogram, minRange, maxRange);
 	RayleighFitter fitter;
 	fitter.SetFitLogarithmic(_fitLogarithmicButton.get_active());
 	fitter.Fit(minRange, maxRange, histogram, sigma, n);

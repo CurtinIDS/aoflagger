@@ -61,7 +61,7 @@ void HistogramCollection::Load(HistogramTablesFormatter &histogramTables)
 	}
 }
 
-void HistogramCollection::Add(const unsigned antenna1, const unsigned antenna2, const unsigned polarization, Image2DCPtr image, Mask2DCPtr mask)
+void HistogramCollection::Add(const unsigned antenna1, const unsigned antenna2, const unsigned polarization, Image2DCPtr image, Mask2DCPtr flagMask)
 {
 	LogHistogram &totalHistogram = GetTotalHistogram(antenna1, antenna2, polarization);
 	LogHistogram &rfiHistogram = GetRFIHistogram(antenna1, antenna2, polarization);
@@ -72,13 +72,33 @@ void HistogramCollection::Add(const unsigned antenna1, const unsigned antenna2, 
 		{
 			const double amplitude = image->Value(x, y);
 			totalHistogram.Add(amplitude);
-			if(mask->Value(x, y))
+			if(flagMask->Value(x, y))
 				rfiHistogram.Add(amplitude);
 		}
 	}
 }
 
-void HistogramCollection::Add(const unsigned antenna1, const unsigned antenna2, const unsigned polarization, Image2DCPtr real, Image2DCPtr imaginary, Mask2DCPtr mask)
+void HistogramCollection::Add(const unsigned antenna1, const unsigned antenna2, const unsigned polarization, Image2DCPtr image, Mask2DCPtr flagMask, Mask2DCPtr correlatorMask)
+{
+	LogHistogram &totalHistogram = GetTotalHistogram(antenna1, antenna2, polarization);
+	LogHistogram &rfiHistogram = GetRFIHistogram(antenna1, antenna2, polarization);
+	
+	for(size_t y=0;y<image->Height();++y)
+	{
+		for(size_t x=0;x<image->Width();++x)
+		{
+			if(!correlatorMask->Value(x, y))
+			{
+				const double amplitude = image->Value(x, y);
+				totalHistogram.Add(amplitude);
+				if(flagMask->Value(x, y))
+					rfiHistogram.Add(amplitude);
+			}
+		}
+	}
+}
+
+void HistogramCollection::Add(const unsigned antenna1, const unsigned antenna2, const unsigned polarization, Image2DCPtr real, Image2DCPtr imaginary, Mask2DCPtr flagMask, Mask2DCPtr correlatorMask)
 {
 	LogHistogram &totalHistogram = GetTotalHistogram(antenna1, antenna2, polarization);
 	LogHistogram &rfiHistogram = GetRFIHistogram(antenna1, antenna2, polarization);
@@ -87,11 +107,14 @@ void HistogramCollection::Add(const unsigned antenna1, const unsigned antenna2, 
 	{
 		for(size_t x=0;x<real->Width();++x)
 		{
-			const double r = real->Value(x, y), i = imaginary->Value(x, y);
-			const double amplitude = sqrt(r*r + i*i);
-			totalHistogram.Add(amplitude);
-			if(mask->Value(x, y))
-				rfiHistogram.Add(amplitude);
+			if(!correlatorMask->Value(x, y))
+			{
+				const double r = real->Value(x, y), i = imaginary->Value(x, y);
+				const double amplitude = sqrt(r*r + i*i);
+				totalHistogram.Add(amplitude);
+				if(flagMask->Value(x, y))
+					rfiHistogram.Add(amplitude);
+			}
 		}
 	}
 }

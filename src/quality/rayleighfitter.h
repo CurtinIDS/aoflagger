@@ -10,6 +10,7 @@ class RayleighFitter
 	 
 	void Fit(double minVal, double maxVal, const LogHistogram &hist, double &sigma, double &n);
 	static double SigmaEstimate(const LogHistogram &hist);
+	static double SigmaEstimate(const LogHistogram &hist, double rangeStart, double rangeEnd);
 	static double NEstimate(const LogHistogram &hist, double rangeStart, double rangeEnd);
 	static void FindFitRangeUnderRFIContamination(double minPositiveAmplitude, double sigmaEstimate, double &minValue, double &maxValue);
 	static double RayleighValue(double sigma, double n, double x)

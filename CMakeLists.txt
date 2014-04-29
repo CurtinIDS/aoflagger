@@ -15,7 +15,8 @@ find_path(CASA_INCLUDE_DIR NAMES ms/MeasurementSets/MeasurementSet.h PATHS /usr/
 find_path(FITSIO_INCLUDE_DIR NAMES fitsio.h)
 find_path(FFTW3_INCLUDE_DIR NAMES fftw3.h)
 
-#find_package(GSL)
+find_library(GSL_LIB NAMES gsl)
+find_path(GSL_INCLUDE_DIR NAMES gsl/gsl_version.h)
 
 find_package(Threads REQUIRED)
 find_package(LibXml2 REQUIRED)

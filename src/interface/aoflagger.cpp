@@ -290,10 +290,11 @@ namespace aoflagger {
 	class QualityStatisticsDataImp
 	{
 		public:
-			QualityStatisticsDataImp(const double* _scanTimes, size_t nScans, size_t nPolarizations, bool computeHistograms) :
+			QualityStatisticsDataImp(const double* _scanTimes, size_t nScans, size_t nPolarizations, bool _computeHistograms) :
 				scanTimes(_scanTimes, _scanTimes+nScans),
 				statistics(nPolarizations),
-				histograms(nPolarizations)
+				histograms(nPolarizations),
+				computeHistograms(_computeHistograms)
 			{
 			}
 			std::vector<double> scanTimes;
@@ -438,7 +439,8 @@ namespace aoflagger {
 										 rfiFlags._data->mask, correlatorFlags._data->mask);
 			if(destination._data->_implementation->computeHistograms)
 			{
-				histograms.Add(antenna1, antenna2, 0, imageSet._data->images[0], correlatorFlags._data->mask);
+				histograms.Add(antenna1, antenna2, 0, imageSet._data->images[0],
+											 rfiFlags._data->mask, correlatorFlags._data->mask);
 			}
 		}
 		else {
@@ -451,7 +453,8 @@ namespace aoflagger {
 				if(destination._data->_implementation->computeHistograms)
 				{
 					histograms.Add(antenna1, antenna2, polarization,
-												 imageSet._data->images[polarization*2], imageSet._data->images[polarization*2+1], correlatorFlags._data->mask);
+												 imageSet._data->images[polarization*2], imageSet._data->images[polarization*2+1],
+										rfiFlags._data->mask, correlatorFlags._data->mask);
 				}
 			}
 		}
