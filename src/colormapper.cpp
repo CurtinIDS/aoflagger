@@ -61,7 +61,9 @@ int main(int argc, char *argv[])
 {
 	int pindex = 1;
 	// parameters
-	bool useSpectrum = true, blackWhite = false;
+	bool useSpectrum = true, blackWhite = false, mapColours = false;
+	std::string colourMapName = "";
+	ColorMap *map = 0;
 	bool colormap = false;
 	int removeNoiseImages = 0;
 	bool fft = false;
@@ -90,6 +92,7 @@ int main(int argc, char *argv[])
 		else if(parameter == "fv") { scaleMethod = Constant; ++pindex; scaleValue = atof(argv[pindex]); }
 		else if(parameter == "m") { colormap = true; }
 		else if(parameter == "max") { displayMax=true; }
+		else if(parameter == "mc") { mapColours = true; ++pindex; colourMapName = argv[pindex]; }
 		else if(parameter == "png")
 		{
 			savePng = true;
@@ -153,6 +156,11 @@ int main(int argc, char *argv[])
 
 	long double totalRed = 0.0, totalGreen = 0.0, totalBlue = 0.0;
 	unsigned addedCount = 0;
+	
+	if(mapColours)
+	{
+		map = ColorMap::CreateColorMap(colourMapName);
+	}
 	
 	size_t inputCount = argc-pindex;
 	for(unsigned inputIndex=pindex;inputIndex<(unsigned) argc;++inputIndex)
@@ -281,7 +289,7 @@ int main(int argc, char *argv[])
 				if(rms)
 					ReportRMS(image);
 				long double r=0.0,g=0.0,b=0.0;
-				if(blackWhite) {
+				if(blackWhite || mapColours) {
 					r = 1.0; b = 1.0; g = 1.0;
 				}
 				else if(redblue) {
@@ -309,7 +317,15 @@ int main(int argc, char *argv[])
 					{
 						long double value = image->Value(x, y);
 						mono->AddValue(x, y, value);
-						if(blackWhite) {
+						if(mapColours) {
+							double mapVal = 2.0*value/max/scaleValue-1.0;
+							if(mapVal < -1.0) mapVal = -1.0;
+							if(mapVal > 1.0) mapVal = 1.0;
+							red->AddValue(x, y, map->ValueToColorR(mapVal)/255.0);
+							blue->AddValue(x, y, map->ValueToColorB(mapVal)/255.0); 
+							green->AddValue(x, y, map->ValueToColorG(mapVal)/255.0); 
+						}
+						else if(blackWhite) {
 							red->AddValue(x, y, value/max);
 							blue->AddValue(x, y, value/max); 
 							green->AddValue(x, y, value/max); 
@@ -380,9 +396,15 @@ int main(int argc, char *argv[])
 				maxBlue = blue->GetTresholdForCountAbove(blue->Width() * blue->Height() / 5000);
 			break;
 			case Constant:
-				maxRed = scaleValue;
-				maxGreen = scaleValue * totalGreen / totalRed;
-				maxBlue = scaleValue * totalBlue / totalRed;
+				if(!mapColours)
+				{
+					maxRed = scaleValue;
+					maxGreen = scaleValue * totalGreen / totalRed;
+					maxBlue = scaleValue * totalBlue / totalRed;
+				}
+				else {
+					maxRed = 1.0; maxGreen = 1.0; maxBlue = 1.0;
+				}
 			break; 
 		}
 		if(maxRed <= 0.0) maxRed = 1.0;
