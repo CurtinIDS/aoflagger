@@ -131,11 +131,15 @@ void actionCollect(const std::string &filename, enum CollectingMode mode, Statis
 			std::cout << "MWA channels requested, but nr of channels not a multiply of 24. Ignoring.\n";
 		else {
 			size_t chanPerSb = channelCount/24;
+			size_t sideCh = chanPerSb / 16;
 			for(size_t x=0;x!=24;++x)
 			{
-				correlatorFlags[x*chanPerSb] = true;
 				correlatorFlags[x*chanPerSb + chanPerSb/2] = true;
-				correlatorFlags[x*chanPerSb + chanPerSb-1] = true;
+				for(size_t side=0; side!=sideCh; ++side)
+				{
+					correlatorFlags[x*chanPerSb + side] = true;
+					correlatorFlags[x*chanPerSb + chanPerSb-1 - side] = true;
+				}
 			}
 		}
 	}
