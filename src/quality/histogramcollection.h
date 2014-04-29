@@ -105,6 +105,8 @@ class HistogramCollection : public Serializable
 		
 		void Add(const unsigned antenna1, const unsigned antenna2, const unsigned polarization, Image2DCPtr image, Mask2DCPtr mask);
 		
+		void Add(const unsigned antenna1, const unsigned antenna2, const unsigned polarization, Image2DCPtr real, Image2DCPtr imaginary, Mask2DCPtr mask);
+		
 		LogHistogram &GetTotalHistogram(const unsigned a1, const unsigned a2, const unsigned polarization)
 		{
 			return getHistogram(_totalHistograms, a1, a2, polarization);

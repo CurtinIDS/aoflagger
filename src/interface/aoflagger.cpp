@@ -1,5 +1,7 @@
 #include "aoflagger.h"
 
+#include "../version.h"
+
 #include "../msio/image2d.h"
 #include "../msio/mask2d.h"
 
@@ -11,6 +13,7 @@
 
 #include "../util/progresslistener.h"
 
+#include "../quality/histogramcollection.h"
 #include "../quality/statisticscollection.h"
 
 #include <vector>
@@ -287,20 +290,23 @@ namespace aoflagger {
 	class QualityStatisticsDataImp
 	{
 		public:
-			QualityStatisticsDataImp(const double* _scanTimes, size_t nScans, size_t nPolarizations) :
+			QualityStatisticsDataImp(const double* _scanTimes, size_t nScans, size_t nPolarizations, bool computeHistograms) :
 				scanTimes(_scanTimes, _scanTimes+nScans),
-				statistics(nPolarizations)
+				statistics(nPolarizations),
+				histograms(nPolarizations)
 			{
 			}
 			std::vector<double> scanTimes;
 			StatisticsCollection statistics;
+			HistogramCollection histograms;
+			bool computeHistograms;
 	};
 	
 	class QualityStatisticsData
 	{
 		public:
-			QualityStatisticsData(const double* _scanTimes, size_t nScans, size_t nPolarizations) :
-				_implementation(new QualityStatisticsDataImp(_scanTimes, nScans, nPolarizations))
+			QualityStatisticsData(const double* _scanTimes, size_t nScans, size_t nPolarizations, bool computeHistograms) :
+				_implementation(new QualityStatisticsDataImp(_scanTimes, nScans, nPolarizations, computeHistograms))
 			{
 			}
 			QualityStatisticsData(boost::shared_ptr<QualityStatisticsDataImp> implementation) :
@@ -310,8 +316,8 @@ namespace aoflagger {
 			boost::shared_ptr<QualityStatisticsDataImp> _implementation;
 	};
 
-	QualityStatistics::QualityStatistics(const double* scanTimes, size_t nScans, const double* channelFrequencies, size_t nChannels, size_t nPolarizations) :
-		_data(new QualityStatisticsData(scanTimes, nScans, nPolarizations))
+	QualityStatistics::QualityStatistics(const double* scanTimes, size_t nScans, const double* channelFrequencies, size_t nChannels, size_t nPolarizations, bool computeHistograms) :
+		_data(new QualityStatisticsData(scanTimes, nScans, nPolarizations, computeHistograms))
 	{
 		_data->_implementation->statistics.InitializeBand(0, channelFrequencies, nChannels);
 	}
@@ -335,6 +341,7 @@ namespace aoflagger {
 	QualityStatistics& QualityStatistics::operator+=(const QualityStatistics& rhs)
 	{
 		_data->_implementation->statistics.Add(rhs._data->_implementation->statistics);
+		_data->_implementation->histograms.Add(rhs._data->_implementation->histograms);
 		return *this;
 	}
 	
@@ -346,7 +353,7 @@ namespace aoflagger {
 		{
 			std::cerr <<
 				"*** EXCEPTION OCCURED IN THE AOFLAGGER ***\n"
-				"The AOFlagger hit a bug or the given strategy was invalid!\n"
+				"The AOFlagger encountered a bug or the given strategy was invalid!\n"
 				"The reported exception " << typeid(e).name() << " is:\n" << e.what();
 		}
 	};
@@ -410,12 +417,18 @@ namespace aoflagger {
 	
 	QualityStatistics AOFlagger::MakeQualityStatistics(const double *scanTimes, size_t nScans, const double *channelFrequencies, size_t nChannels, size_t nPolarizations)
 	{
-		return QualityStatistics(scanTimes, nScans, channelFrequencies, nChannels, nPolarizations);
+		return QualityStatistics(scanTimes, nScans, channelFrequencies, nChannels, nPolarizations, false);
+	}
+	
+	QualityStatistics AOFlagger::MakeQualityStatistics(const double *scanTimes, size_t nScans, const double *channelFrequencies, size_t nChannels, size_t nPolarizations, bool computeHistograms)
+	{
+		return QualityStatistics(scanTimes, nScans, channelFrequencies, nChannels, nPolarizations, computeHistograms);
 	}
 	
 	void AOFlagger::CollectStatistics(QualityStatistics& destination, const ImageSet& imageSet, const FlagMask& rfiFlags, const FlagMask& correlatorFlags, size_t antenna1, size_t antenna2)
 	{
-		StatisticsCollection &stats(destination._data->_implementation->statistics);
+		StatisticsCollection& stats(destination._data->_implementation->statistics);
+		HistogramCollection& histograms(destination._data->_implementation->histograms);
 		const std::vector<double> &times(destination._data->_implementation->scanTimes);
 		
 		if(imageSet.ImageCount() == 1)
@@ -423,6 +436,10 @@ namespace aoflagger {
 			stats.AddImage(antenna1, antenna2, &times[0], 0, 0,
 										 imageSet._data->images[0], imageSet._data->images[0],
 										 rfiFlags._data->mask, correlatorFlags._data->mask);
+			if(destination._data->_implementation->computeHistograms)
+			{
+				histograms.Add(antenna1, antenna2, 0, imageSet._data->images[0], correlatorFlags._data->mask);
+			}
 		}
 		else {
 			const size_t polarizationCount = imageSet.ImageCount()/2;
@@ -431,14 +448,43 @@ namespace aoflagger {
 				stats.AddImage(antenna1, antenna2, &times[0], 0, polarization,
 											imageSet._data->images[polarization*2], imageSet._data->images[polarization*2+1],
 											rfiFlags._data->mask, correlatorFlags._data->mask);
+				if(destination._data->_implementation->computeHistograms)
+				{
+					histograms.Add(antenna1, antenna2, polarization,
+												 imageSet._data->images[polarization*2], imageSet._data->images[polarization*2+1], correlatorFlags._data->mask);
+				}
 			}
 		}
 	}
 	
 	void AOFlagger::WriteStatistics(const QualityStatistics& statistics, const std::string& measurementSetPath)
 	{
-		QualityTablesFormatter formatter(measurementSetPath);
-		statistics._data->_implementation->statistics.Save(formatter);
+		QualityTablesFormatter qFormatter(measurementSetPath);
+		statistics._data->_implementation->statistics.Save(qFormatter);
+		
+		HistogramCollection& histograms(statistics._data->_implementation->histograms);
+		if(!histograms.Empty())
+		{
+			HistogramTablesFormatter hFormatter(measurementSetPath);
+			histograms.Save(hFormatter);
+		}
+	}
+	
+	std::string AOFlagger::GetVersionString()
+	{
+		return AOFLAGGER_VERSION_STR;
+	}
+	
+	void AOFlagger::GetVersion(short& major, short& minor, short& subMinor)
+	{
+		major = AOFLAGGER_VERSION_MAJOR;
+		minor = AOFLAGGER_VERSION_MINOR;
+		subMinor = AOFLAGGER_VERSION_SUBMINOR;
+	}
+	
+	std::string AOFlagger::GetVersionDate()
+	{
+		return AOFLAGGER_VERSION_DATE_STR;
 	}
 	
 } // end of namespace aoflagger

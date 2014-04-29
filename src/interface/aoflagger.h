@@ -18,7 +18,7 @@ namespace aoflagger {
 	/** @brief Strategy identifier for the supported telescopes.
 	 * 
 	 * If you have an optimized strategy for an unlisted telescope, please
-	 * send me an e-mail or give me a call!
+	 * contact me.
 	 * @sa AOFlagger::MakeStrategy().
 	 */
 	enum TelescopeId {
@@ -34,7 +34,7 @@ namespace aoflagger {
 		LOFAR_TELESCOPE,
 		/** @brief MWA, the Murchison Widefield Array in Western Australia. */
 		MWA_TELESCOPE,
-		/** @brief Parkes, single Dish, NSW. */
+		/** @brief Parkes, the single dish telescope in New South Wales. */
 		PARKES_TELESCOPE,
 		/** @brief WSRT, the Westerbork Synthesis Radio Telescope in the Netherlands. */
 		WSRT_TELESCOPE
@@ -379,7 +379,7 @@ namespace aoflagger {
 			QualityStatistics &operator+=(const QualityStatistics &rhs);
 			
 		private:
-			QualityStatistics(const double *scanTimes, size_t nScans, const double *channelFrequencies, size_t nChannels, size_t nPolarizations);
+			QualityStatistics(const double *scanTimes, size_t nScans, const double *channelFrequencies, size_t nChannels, size_t nPolarizations, bool computeHistograms);
 			
 			class QualityStatisticsData *_data;
 	};
@@ -588,9 +588,18 @@ namespace aoflagger {
 			 * 
 			 * See the QualityStatistics class description for info on multithreading and/or combining statistics
 			 * with different meta data. The meta data that is passed to this method will be used for all
-			 * calls to CollectStatistics() if this class is specified.
+			 * calls to CollectStatistics() if this class is specified. No histograms will be computed.
 			 */
 			QualityStatistics MakeQualityStatistics(const double *scanTimes, size_t nScans, const double *channelFrequencies, size_t nChannels, size_t nPolarizations);
+			
+			/** @brief Create a new object for collecting statistics, possibly with histograms.
+			 * 
+			 * See the QualityStatistics class description for info on multithreading and/or combining statistics
+			 * with different meta data. The meta data that is passed to this method will be used for all
+			 * calls to CollectStatistics() if this class is specified.
+			 * @since Version 2.6
+			 */
+			QualityStatistics MakeQualityStatistics(const double *scanTimes, size_t nScans, const double *channelFrequencies, size_t nChannels, size_t nPolarizations, bool computeHistograms);
 			
 			/** @brief Collect statistics from time-frequency images and masks.
 			 * 
@@ -617,6 +626,30 @@ namespace aoflagger {
 			 * be written.
 			 */
 			void WriteStatistics(const QualityStatistics& statistics, const std::string& measurementSetPath);
+			
+			/** @brief Get the AOFlagger version number as a string.
+			 * @returns The version number, formatted like '1.2.3'.
+			 * @since Version 2.6
+			 */
+			static std::string GetVersionString();
+			
+			/** @brief Get the AOFlagger version number separated in major, minor and subminor fields.
+			 * @param major Most significant number of the version, e.g. '1' for version '1.2.3'. This
+			 * number is only incremented in major changes of the flagger.
+			 * @param minor Minor number of the version, e.g. '2' for version '1.2.3'. This number 
+			 * is incremented for every public release.
+			 * @param subMinor Subminor number of the version, e.g. '3' for version '1.2.3', or zero if
+			 * the current version has no subminor number. This number is incremented for internal releases
+			 * or small bug fixes.
+			 * @since Version 2.6
+			 */
+			static void GetVersion(short& major, short& minor, short& subMinor);
+			
+			/** @brief Get the date this version was released as a string.
+			 * @returns The version date formatted like "1982-05-08".
+			 * @since Version 2.6
+			 */
+			static std::string GetVersionDate();
 			
 		private:
 			/** @brief It is not allowed to copy this class

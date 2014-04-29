@@ -42,8 +42,12 @@
 * - @c aoqplot: for fast visualization of statistics, to assert the generic
 * data quality.
 * 
-* See also the <a href="http://www.astron.nl/radio-observatory/lofar/lofar-imaging-cookbook">LOFAR cookbook</a>
-* for general info about running the flagger.
-* 
+* See also the <a href="https://sourceforge.net/p/aoflagger/wiki/">AOFlagger
+* Wiki</a> on Sourceforge for information, which includes a section with
+* <a href="https://sourceforge.net/p/aoflagger/wiki/faq/">Frequency Asked
+* Questions</a>. Additionally, the 
+* <a href="http://www.astron.nl/radio-observatory/lofar/lofar-imaging-cookbook">
+* LOFAR imaging cookbook</a> contains a lot of general info about running the
+* flagger.
 */
 

@@ -77,3 +77,22 @@ void HistogramCollection::Add(const unsigned antenna1, const unsigned antenna2, 
 		}
 	}
 }
+
+void HistogramCollection::Add(const unsigned antenna1, const unsigned antenna2, const unsigned polarization, Image2DCPtr real, Image2DCPtr imaginary, Mask2DCPtr mask)
+{
+	LogHistogram &totalHistogram = GetTotalHistogram(antenna1, antenna2, polarization);
+	LogHistogram &rfiHistogram = GetRFIHistogram(antenna1, antenna2, polarization);
+	
+	for(size_t y=0;y<real->Height();++y)
+	{
+		for(size_t x=0;x<real->Width();++x)
+		{
+			const double r = real->Value(x, y), i = imaginary->Value(x, y);
+			const double amplitude = sqrt(r*r + i*i);
+			totalHistogram.Add(amplitude);
+			if(mask->Value(x, y))
+				rfiHistogram.Add(amplitude);
+		}
+	}
+}
+
