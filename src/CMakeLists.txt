@@ -45,11 +45,11 @@ if(GTKMM_FOUND)
   add_definitions(-DHAVE_GTKMM)
 endif(GTKMM_FOUND)
 
-if(GSL_LIB AND GSL_INCLUDE_DIR)
+if(GSL_LIB AND GSL_CBLAS_LIB AND GSL_INCLUDE_DIR)
   add_definitions(-DHAVE_GSL)
-  link_libraries(${GSL_LIB})
+  link_libraries(${GSL_LIB} ${GSL_CBLAS_LIB})
   message(STATUS "GSL found.")
-endif(GSL_LIB AND GSL_INCLUDE_DIR)
+endif(GSL_LIB AND GSL_CBLAS_LIB AND GSL_INCLUDE_DIR)
 
 add_executable(rficonsole rficonsole.cpp)
 

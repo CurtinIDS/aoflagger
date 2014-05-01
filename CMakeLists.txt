@@ -16,6 +16,7 @@ find_path(FITSIO_INCLUDE_DIR NAMES fitsio.h)
 find_path(FFTW3_INCLUDE_DIR NAMES fftw3.h)
 
 find_library(GSL_LIB NAMES gsl)
+find_library(GSL_CBLAS_LIB NAMES gslcblas)
 find_path(GSL_INCLUDE_DIR NAMES gsl/gsl_version.h)
 
 find_package(Threads REQUIRED)
