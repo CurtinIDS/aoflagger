@@ -462,11 +462,15 @@ void actionSummarizeRFI(const std::string &filename)
 	DefaultStatistics statistics(statisticsCollection.PolarizationCount());
 	statisticsCollection.GetGlobalCrossBaselineStatistics(statistics);
 	DefaultStatistics singlePolStat = statistics.ToSinglePolarization();
-	
-	double start = band.channels.begin()->frequencyHz;
-	double end = band.channels.rbegin()->frequencyHz;
-	std::cout << "Start:\t" << round(start/10000.0)/100.0 << "\tEnd:\t" << round(end/10000.0)/100.0
-		<<  "\tRFIPercentange:\t"
+
+	double
+		startTime = statisticsCollection.TimeStatistics().begin()->first,
+		endTime = statisticsCollection.TimeStatistics().rbegin()->first,
+		startFreq = band.channels.begin()->frequencyHz,
+		endFreq = band.channels.rbegin()->frequencyHz;
+	std::cout.precision(16);
+	std::cout << startTime << '\t' << endTime <<  '\t'
+		<< round(startFreq/10000.0)/100.0 << '\t' << round(endFreq/10000.0)/100.0 <<  '\t'
 		<< StatisticsDerivator::GetStatisticAmplitude(QualityTablesFormatter::RFIPercentageStatistic, singlePolStat, 0) << '\n';
 }
 
