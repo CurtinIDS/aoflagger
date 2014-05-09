@@ -198,6 +198,7 @@ class RFIGuiWindow : public Gtk::Window, private StrategyController {
 		void onPlotSingularValuesPressed();
 		void onEditStrategyPressed();
 		void onExecuteStrategyPressed();
+		void onReloadPressed();
 		void onGoToPressed();
 		void onLoadLongestBaselinePressed();
 		void onLoadShortestBaselinePressed();

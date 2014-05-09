@@ -732,15 +732,18 @@ void RFIGuiWindow::createToolbar()
 		Gtk::AccelKey("F2"),
 		sigc::mem_fun(*this, &RFIGuiWindow::onShowStats) );
 	_actionGroup->add( Gtk::Action::create("Previous", Gtk::Stock::GO_BACK),
-		Gtk::AccelKey("F5"),
+		Gtk::AccelKey("F6"),
 		sigc::mem_fun(*this, &RFIGuiWindow::onLoadPrevious) );
 	_actionGroup->add( Gtk::Action::create("Next", Gtk::Stock::GO_FORWARD),
-		Gtk::AccelKey("F6"),
+		Gtk::AccelKey("F7"),
 		sigc::mem_fun(*this, &RFIGuiWindow::onLoadNext) );
-	_actionGroup->add( Gtk::Action::create("LargeStepPrevious", Gtk::Stock::GOTO_FIRST),
+	_actionGroup->add( Gtk::Action::create("LargeStepPrevious", Gtk::Stock::GOTO_FIRST, "Previous band/field"),
   sigc::mem_fun(*this, &RFIGuiWindow::onLoadLargeStepPrevious) );
-	_actionGroup->add( Gtk::Action::create("LargeStepNext", Gtk::Stock::GOTO_LAST),
-  sigc::mem_fun(*this, &RFIGuiWindow::onLoadLargeStepNext) );
+	_actionGroup->add( Gtk::Action::create("LargeStepNext", Gtk::Stock::GOTO_LAST, "Next band/field"),
+   sigc::mem_fun(*this, &RFIGuiWindow::onLoadLargeStepNext) );
+	_actionGroup->add( Gtk::Action::create("Reload", Gtk::Stock::REFRESH, "_Reload"),
+		Gtk::AccelKey("F5"),
+  sigc::mem_fun(*this, &RFIGuiWindow::onReloadPressed) );
 	_actionGroup->add( Gtk::Action::create("GoTo", "_Go to..."),
 		Gtk::AccelKey("<control>G"),
   sigc::mem_fun(*this, &RFIGuiWindow::onGoToPressed) );
@@ -945,9 +948,11 @@ void RFIGuiWindow::createToolbar()
     "      <menuitem action='PlotSingularValues'/>"
 	  "    </menu>"
     "    <menu action='MenuBrowse'>"
-    "      <menuitem action='LargeStepPrevious'/>"
     "      <menuitem action='Previous'/>"
+    "      <menuitem action='Reload'/>"
     "      <menuitem action='Next'/>"
+    "      <separator/>"
+    "      <menuitem action='LargeStepPrevious'/>"
     "      <menuitem action='LargeStepNext'/>"
     "      <separator/>"
     "      <menuitem action='GoTo'/>"
@@ -1025,6 +1030,7 @@ void RFIGuiWindow::createToolbar()
     "    <toolitem action='OpenDirectory'/>"
     "    <separator/>"
     "    <toolitem action='Previous'/>"
+    "    <toolitem action='Reload'/>"
     "    <toolitem action='Next'/>"
     "    <separator/>"
     "    <toolitem action='ExecuteStrategy'/>"
@@ -1397,6 +1403,14 @@ void RFIGuiWindow::onGoToPressed()
 		} else {
 			showError("Can not goto in this image set; format does not support goto");
 		}
+	}
+}
+
+void RFIGuiWindow::onReloadPressed()
+{
+	if(HasImageSet())
+	{
+		loadCurrentTFData();
 	}
 }
 
