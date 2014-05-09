@@ -1480,7 +1480,7 @@ void RFIGuiWindow::onLoadShortestBaselinePressed()
 					size_t a2 = msSet->GetAntenna2(*index);
 					const AntennaInfo &ant1 = antennas[a1], &ant2 = antennas[a2];
 					double distSq = ant1.position.DistanceSquared(ant2.position);
-					if(distSq < smallestSq)
+					if(distSq < smallestSq && a1 != a2)
 					{
 						smallestSq = distSq;
 						smallestA1 = a1;
