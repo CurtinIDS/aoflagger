@@ -55,13 +55,13 @@ class RawDescFile
 		
 		unsigned SelectedBeam() const { return _selectedBeam; }
 		
-		const double TimeResolution() const { return _timeRes; }
+		double TimeResolution() const { return _timeRes; }
 
 		double DisplayedTimeDuration() const { return _displayedTimeDuration; }
 		
-		const double FrequencyResolution() const { return _freqRes; }
+		double FrequencyResolution() const { return _freqRes; }
 
-		const double FrequencyStart() const { return _freqStart; }
+		double FrequencyStart() const { return _freqStart; }
 	private:
 		const std::string _filename;
 		std::vector<std::string> _sets;

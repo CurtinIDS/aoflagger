@@ -1483,7 +1483,6 @@ num_t RFIStatistics::FrequencySNR(Image2DCPtr image, Image2DCPtr model, Mask2DCP
 			num_t signal = fabsn(model->Value(x, channel));
 			if(std::isfinite(signal) && std::isfinite(noise))
 			{
-				if(noise <= 1e-50) noise = 1e-50;
 				num_t snr = logn(signal / noise);
 				sum += snr;
 	

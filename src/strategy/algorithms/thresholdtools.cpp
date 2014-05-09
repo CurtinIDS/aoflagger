@@ -18,6 +18,7 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 #include <deque>
+#include <limits>
 
 #include "../../util/rng.h"
 
@@ -274,7 +275,7 @@ void ThresholdTools::WinsorizedMeanAndStdDev(const Image2DCPtr &image, const Mas
 
 num_t ThresholdTools::MinValue(const Image2DCPtr &image, const Mask2DCPtr &mask)
 {
-	num_t minValue = 1e100;
+	num_t minValue = std::numeric_limits<num_t>::max();
 	for(size_t y=0;y<image->Height();++y) {
 		for(size_t x=0;x<image->Width();++x) {
 			if(!mask->Value(x, y) && std::isfinite(image->Value(x, y)) && image->Value(x, y) < minValue)
@@ -286,7 +287,7 @@ num_t ThresholdTools::MinValue(const Image2DCPtr &image, const Mask2DCPtr &mask)
 
 num_t ThresholdTools::MaxValue(const Image2DCPtr &image, const Mask2DCPtr &mask)
 {
-	num_t maxValue = -1e100;
+	num_t maxValue = std::numeric_limits<num_t>::min();
 	for(size_t y=0;y<image->Height();++y) {
 		for(size_t x=0;x<image->Width();++x) {
 			if(!mask->Value(x, y) && std::isfinite(image->Value(x, y)) && image->Value(x, y) > maxValue)

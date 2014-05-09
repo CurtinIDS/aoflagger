@@ -49,7 +49,7 @@ class IntegerDomain {
 			for(unsigned i=0;	i!=_values.size();++i) {
 				if(_values[i] == number) return i;
 			}
-			return -1;
+			return unsigned(-1);
 		}
 	private:
 		std::vector<int> _values;

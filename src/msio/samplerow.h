@@ -333,7 +333,7 @@ class SampleRow {
 		}
 		SampleRow &operator=(const SampleRow &)
 		{
-			return *static_cast<SampleRow*>(0);
+			return *this;
 		}
 		size_t _size;
 		num_t *_values;
