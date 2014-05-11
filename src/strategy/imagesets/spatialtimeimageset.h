@@ -23,8 +23,6 @@ namespace rfiStrategy {
 			}
 			inline virtual void Previous();
 			inline virtual void Next();
-			inline virtual void LargeStepPrevious();
-			inline virtual void LargeStepNext();
 			virtual std::string Description() const
 			{
 				std::stringstream s;
@@ -147,16 +145,6 @@ namespace rfiStrategy {
 			std::stack<BaselineData> _baseline;
 			size_t _cachedTimeIndex;
 	};
-
-	void SpatialTimeImageSetIndex::LargeStepPrevious()
-	{
-		_isValid = false;
-	}
-
-	void SpatialTimeImageSetIndex::LargeStepNext()
-	{
-		_isValid = false;
-	}
 
 	void SpatialTimeImageSetIndex::Previous()
 	{

@@ -87,14 +87,11 @@ set(GUI_FILES
   gui/imagepropertieswindow.cpp
   gui/imagewidget.cpp
   gui/msoptionwindow.cpp
-  gui/noisestatoptionwindow.cpp
   gui/plotframe.cpp
   gui/plotwindow.cpp
   gui/progresswindow.cpp
-  gui/rawoptionwindow.cpp
   gui/rfiguiwindow.cpp
   gui/strategywizardwindow.cpp
-  gui/tfstatoptionwindow.cpp
   ${GUI_PLOT_FILES} ${GUI_QUALITY_FILES})
 
 set(IMAGING_FILES

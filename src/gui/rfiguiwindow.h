@@ -117,8 +117,6 @@ class RFIGuiWindow : public Gtk::Window, private StrategyController {
 
 		void onLoadPrevious();
 		void onLoadNext();
-		void onLoadLargeStepPrevious();
-		void onLoadLargeStepNext();
 		void onToggleFlags();
 		void onToggleImage();
 		void onQuit() { hide(); }
@@ -224,7 +222,6 @@ class RFIGuiWindow : public Gtk::Window, private StrategyController {
 		void onStoreData();
 		void onRecallData();
 		void onSubtractDataFromMem();
-		void onTimeMergeUnsetValues();
 		
 		void showError(const std::string &description);
 		void setSetNameInStatusBar();
@@ -255,6 +252,8 @@ class RFIGuiWindow : public Gtk::Window, private StrategyController {
 		PlotFrame _plotFrame;
 		std::string _imageSetName, _imageSetIndexDescription;
 
+		Glib::RefPtr<Gtk::Action>
+			_previousButton, _nextButton;
 		Glib::RefPtr<Gtk::ToggleAction>
 			_originalFlagsButton, _altFlagsButton,
 			_originalImageButton, _backgroundImageButton, _diffImageButton,

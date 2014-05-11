@@ -69,16 +69,6 @@ namespace rfiStrategy {
 		}
 	}
 	
-	void MSImageSetIndex::LargeStepPrevious()
-	{
-		_isValid = false;
-	}
-	
-	void MSImageSetIndex::LargeStepNext()
-	{
-		_isValid = false;
-	}
-
 	void MSImageSet::initReader()
 	{
 		if(_reader == 0 )

@@ -24,8 +24,6 @@ namespace rfiStrategy {
 			}
 			inline virtual void Previous();
 			inline virtual void Next();
-			inline virtual void LargeStepPrevious();
-			inline virtual void LargeStepNext();
 			virtual std::string Description() const
 			{
 				std::stringstream s;
@@ -165,27 +163,6 @@ namespace rfiStrategy {
 			size_t _cachedTimeIndex;
 	};
 
-	void SpatialMSImageSetIndex::LargeStepPrevious()
-	{
-		if(_timeIndex > 0)
-			--_timeIndex;
-		else
-		{
-			_timeIndex = SMSSet().GetTimeIndexCount()-1;
-			_isValid = false;
-		}
-	}
-
-	void SpatialMSImageSetIndex::LargeStepNext()
-	{
-		++_timeIndex;
-		if(_timeIndex == SMSSet().GetTimeIndexCount())
-		{
-			_timeIndex = 0;
-			_isValid = false;
-		}
-	}
-
 	void SpatialMSImageSetIndex::Previous()
 	{
 		if(_channelIndex > 0)
@@ -193,7 +170,13 @@ namespace rfiStrategy {
 		else
 		{
 			_channelIndex = SMSSet().GetFrequencyCount()-1;
-			LargeStepPrevious();
+			if(_timeIndex > 0)
+				--_timeIndex;
+			else
+			{
+				_timeIndex = SMSSet().GetTimeIndexCount()-1;
+				_isValid = false;
+			}
 		}
 	}
 
@@ -203,7 +186,12 @@ namespace rfiStrategy {
 		if(_channelIndex == SMSSet().GetFrequencyCount())
 		{
 			_channelIndex = 0;
-			LargeStepNext();
+			++_timeIndex;
+			if(_timeIndex == SMSSet().GetTimeIndexCount())
+			{
+				_timeIndex = 0;
+				_isValid = false;
+			}
 		}
 	}
 

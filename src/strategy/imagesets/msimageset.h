@@ -48,8 +48,6 @@ namespace rfiStrategy {
 			
 			virtual void Previous();
 			virtual void Next();
-			virtual void LargeStepPrevious();
-			virtual void LargeStepNext();
 			virtual std::string Description() const;
 			virtual bool IsValid() const { return _isValid; }
 			virtual MSImageSetIndex *Copy() const

@@ -25,7 +25,6 @@
 #include "../actions/baselineselectionaction.h"
 #include "../actions/calibratepassbandaction.h"
 #include "../actions/changeresolutionaction.h"
-#include "../actions/collectnoisestatisticsaction.h"
 #include "../actions/combineflagresultsaction.h"
 #include "../actions/cutareaaction.h"
 #include "../actions/directionalcleanaction.h"
@@ -45,7 +44,6 @@
 #include "../actions/normalizevarianceaction.h"
 #include "../actions/plotaction.h"
 #include "../actions/quickcalibrateaction.h"
-#include "../actions/rawappenderaction.h"
 #include "../actions/setflaggingaction.h"
 #include "../actions/setimageaction.h"
 #include "../actions/slidingwindowfitaction.h"
@@ -119,9 +117,6 @@ namespace rfiStrategy {
 			case ChangeResolutionActionType:
 				writeChangeResolutionAction(static_cast<const ChangeResolutionAction&>(action));
 				break;
-			case CollectNoiseStatisticsActionType:
-				writeCollectNoiseStatisticsAction(static_cast<const CollectNoiseStatisticsAction&>(action));
-				break;
 			case CombineFlagResultsType:
 				writeCombineFlagResults(static_cast<const CombineFlagResults&>(action));
 				break;
@@ -178,9 +173,6 @@ namespace rfiStrategy {
 				break;
 			case QuickCalibrateActionType:
 				writeQuickCalibrateAction(static_cast<const QuickCalibrateAction&>(action));
-				break;
-			case RawAppenderActionType:
-				writeRawAppenderAction(static_cast<const RawAppenderAction&>(action));
 				break;
 			case SetFlaggingActionType:
 				writeSetFlaggingAction(static_cast<const SetFlaggingAction&>(action));
@@ -285,15 +277,6 @@ namespace rfiStrategy {
 		Write<bool>("restore-revised", action.RestoreRevised());
 		Write<bool>("restore-masks", action.RestoreMasks());
 		writeContainerItems(action);
-	}
-
-	void StrategyWriter::writeCollectNoiseStatisticsAction(const CollectNoiseStatisticsAction &action)
-	{
-		Attribute("type", "CollectNoiseStatisticsAction");
-		Write("filename", action.Filename().c_str());
-		Write<int>("channel-distance", action.ChannelDistance());
-		Write<int>("tile-timestep-size", action.TileWidth());
-		Write<int>("tile-channels-size", action.TileHeight());
 	}
 
 	void StrategyWriter::writeCombineFlagResults(const CombineFlagResults &action)

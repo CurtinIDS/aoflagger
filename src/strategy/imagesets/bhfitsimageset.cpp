@@ -273,7 +273,7 @@ namespace rfiStrategy {
 			--_imageIndex;
 		else {
 			_imageIndex = static_cast<class BHFitsImageSet&>(imageSet()).ImageCount() - 1;
-			LargeStepPrevious();
+			_isValid = false;
 		}
 	}
 	
@@ -283,18 +283,8 @@ namespace rfiStrategy {
 		if( _imageIndex >= static_cast<class BHFitsImageSet&>(imageSet()).ImageCount() )
 		{
 		  _imageIndex = 0;
-		  LargeStepNext();
+			_isValid = false;
 		}
-	}
-
-	void BHFitsImageSetIndex::LargeStepPrevious()
-	{
-	  _isValid = false;
-	}
-	
-	void BHFitsImageSetIndex::LargeStepNext()
-	{
-	  _isValid = false;
 	}
 
 	std::string BHFitsImageSetIndex::Description() const {

@@ -48,12 +48,6 @@ namespace rfiStrategy {
 			
 			inline virtual void Next();
 			
-			virtual void LargeStepPrevious()
-			{
-			}
-			virtual void LargeStepNext()
-			{
-			}
 			inline virtual std::string Description() const;
 			
 			virtual bool IsValid() const { return _valid; }

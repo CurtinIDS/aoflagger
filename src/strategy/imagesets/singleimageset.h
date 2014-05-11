@@ -36,8 +36,6 @@ namespace rfiStrategy {
 			virtual ~SingleImageSetIndex() { }
 			virtual void Previous() { _valid = false; }
 			virtual void Next() { _valid = false; }
-			virtual void LargeStepPrevious() { _valid = false; }
-			virtual void LargeStepNext() { _valid = false; }
 			virtual std::string Description() const { return _description; }
 			virtual bool IsValid() const { return _valid; }
 			virtual ImageSetIndex *Copy() const

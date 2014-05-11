@@ -26,7 +26,6 @@
 #include "../actions/baselineselectionaction.h"
 #include "../actions/calibratepassbandaction.h"
 #include "../actions/changeresolutionaction.h"
-#include "../actions/collectnoisestatisticsaction.h"
 #include "../actions/combineflagresultsaction.h"
 #include "../actions/cutareaaction.h"
 #include "../actions/directionalcleanaction.h"
@@ -47,7 +46,6 @@
 #include "../actions/normalizevarianceaction.h"
 #include "../actions/plotaction.h"
 #include "../actions/quickcalibrateaction.h"
-#include "../actions/rawappenderaction.h"
 #include "../actions/resamplingaction.h"
 #include "../actions/setflaggingaction.h"
 #include "../actions/setimageaction.h"
@@ -72,7 +70,6 @@ const std::vector<std::string> ActionFactory::GetActionList()
 	list.push_back("Baseline selection");
 	list.push_back("Calibrate passband");
 	list.push_back("Change resolution");
-	list.push_back("Collect noise statistics");
 	list.push_back("Combine flag results");
 	list.push_back("Cut area");
 	list.push_back("Directional CLEAN");
@@ -94,7 +91,6 @@ const std::vector<std::string> ActionFactory::GetActionList()
 	list.push_back("Phase adapter");
 	list.push_back("Plot");
 	list.push_back("Quickly calibrate");
-	list.push_back("Raw appender");
 	list.push_back("Resample");
 	list.push_back("Set flagging");
 	list.push_back("Set image");
@@ -123,8 +119,6 @@ Action *ActionFactory::CreateAction(const std::string &action)
 		return new CalibratePassbandAction();
 	else if(action == "Change resolution")
 		return new ChangeResolutionAction();
-	else if(action == "Collect noise statistics")
-		return new CollectNoiseStatisticsAction();
 	else if(action == "Combine flag results")
 		return new CombineFlagResults();
 	else if(action == "Cut area")
@@ -167,8 +161,6 @@ Action *ActionFactory::CreateAction(const std::string &action)
 		return new PlotAction();
 	else if(action == "Quickly calibrate")
 		return new QuickCalibrateAction();
-	else if(action == "Raw appender")
-		return new RawAppenderAction();
 	else if(action == "Resample")
 		return new ResamplingAction();
 	else if(action == "Set flagging")

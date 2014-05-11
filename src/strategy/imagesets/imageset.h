@@ -39,8 +39,6 @@ namespace rfiStrategy {
 			virtual ~ImageSetIndex() { }
 			virtual void Previous() = 0;
 			virtual void Next() = 0;
-			virtual void LargeStepPrevious() = 0;
-			virtual void LargeStepNext() = 0;
 			virtual std::string Description() const = 0;
 			virtual bool IsValid() const = 0;
 			virtual ImageSetIndex *Copy() const = 0;

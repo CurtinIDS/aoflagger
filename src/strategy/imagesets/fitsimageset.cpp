@@ -585,7 +585,12 @@ namespace rfiStrategy {
 			--_baselineIndex;
 		else {
 			_baselineIndex = static_cast<class FitsImageSet&>(imageSet()).Baselines().size() - 1;
-			LargeStepPrevious();
+			if(_band > 0)
+				--_band;
+			else {
+				_band = static_cast<class FitsImageSet&>(imageSet()).BandCount() - 1;
+				_isValid = false;
+			}
 		}
 	}
 	
@@ -595,27 +600,12 @@ namespace rfiStrategy {
 		if( _baselineIndex >= static_cast<class FitsImageSet&>(imageSet()).Baselines().size() )
 		{
 			_baselineIndex = 0;
-			LargeStepNext();
-		}
-	}
-
-	void FitsImageSetIndex::LargeStepPrevious()
-	{
-		if(_band > 0)
-			--_band;
-		else {
-			_band = static_cast<class FitsImageSet&>(imageSet()).BandCount() - 1;
-			_isValid = false;
-		}
-	}
-	
-	void FitsImageSetIndex::LargeStepNext()
-	{
-		++_band;
-		if(_band >= static_cast<class FitsImageSet&>(imageSet()).BandCount())
-		{
-			_band = 0;
-			_isValid = false;
+			++_band;
+			if(_band >= static_cast<class FitsImageSet&>(imageSet()).BandCount())
+			{
+				_band = 0;
+				_isValid = false;
+			}
 		}
 	}
 

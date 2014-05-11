@@ -62,7 +62,6 @@ class StrategyReader {
 		class Action *parseBaselineSelectionAction(xmlNode *node);
 		class Action *parseCalibratePassbandAction(xmlNode *node);
 		class Action *parseChangeResolutionAction(xmlNode *node);
-		class Action *parseCollectNoiseStatisticsAction(xmlNode *node);
 		class Action *parseCombineFlagResults(xmlNode *node);
 		class Action *parseCutAreaAction(xmlNode *node);
 		class Action *parseDirectionalCleanAction(xmlNode *node);
@@ -82,7 +81,6 @@ class StrategyReader {
 		class Action *parseNormalizeVarianceAction(xmlNode *node);
 		class Action *parsePlotAction(xmlNode *node);
 		class Action *parseQuickCalibrateAction(xmlNode *node);
-		class Action *parseRawAppenderAction(xmlNode *node);
 		class Action *parseSetFlaggingAction(xmlNode *node);
 		class Action *parseSetImageAction(xmlNode *node);
 		class Action *parseSlidingWindowFitAction(xmlNode *node);

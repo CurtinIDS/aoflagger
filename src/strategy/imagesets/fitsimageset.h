@@ -41,8 +41,6 @@ namespace rfiStrategy {
 		
 		virtual void Previous();
 		virtual void Next();
-		virtual void LargeStepPrevious();
-		virtual void LargeStepNext();
 		virtual std::string Description() const;
 		virtual bool IsValid() const throw() { return _isValid; }
 		virtual FitsImageSetIndex *Copy() const

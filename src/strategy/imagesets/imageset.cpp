@@ -22,15 +22,9 @@
 
 #include "bhfitsimageset.h"
 #include "fitsimageset.h"
-#include "harishreader.h"
 #include "msimageset.h"
-#include "noisestatimageset.h"
 #include "parmimageset.h"
 #include "pngreader.h"
-#include "rawimageset.h"
-#include "rawdescimageset.h"
-#include "rspimageset.h"
-#include "timefrequencystatimageset.h"
 
 #include <boost/algorithm/string.hpp>
 
@@ -42,19 +36,13 @@ namespace rfiStrategy {
 		else if(IsBHFitsFile(file))
 			return new BHFitsImageSet(file);
 		else if(IsRCPRawFile(file))
-			return new RSPImageSet(file);
+			throw std::runtime_error("Don't know how to open RCP raw files");
 		else if(IsTKPRawFile(file))
-			return new RawImageSet(file);
+			throw std::runtime_error("Don't know how to open TKP raw files");
 		else if(IsRawDescFile(file))
-			return new RawDescImageSet(file);
+			throw std::runtime_error("Don't know how to open RCP desc files");
 		else if(IsParmFile(file))
 			return new ParmImageSet(file);
-		else if(IsTimeFrequencyStatFile(file))
-			return new TimeFrequencyStatImageSet(file);
-		else if(IsNoiseStatFile(file))
-			return new NoiseStatImageSet(file);
-		else if(IsHarishFile(file))
-			return new HarishReader(file);
 		else if(IsPngFile(file))
 			return new PngReader(file);
 		else {

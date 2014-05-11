@@ -27,8 +27,7 @@
 
 #include "../msio/antennainfo.h"
 #include "../msio/timefrequencydata.h"
-
-#include "../strategy/imagesets/noisestatimageset.h"
+#include "../msio/timefrequencymetadata.h"
 
 struct stat;
 class StatisticsDerivator

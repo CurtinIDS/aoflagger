@@ -39,7 +39,6 @@
 #include "../strategy/control/defaultstrategy.h"
 
 #include "../strategy/imagesets/msimageset.h"
-#include "../strategy/imagesets/noisestatimageset.h"
 #include "../strategy/imagesets/spatialmsimageset.h"
 #include "../strategy/imagesets/spatialtimeimageset.h"
 
@@ -67,12 +66,9 @@
 #include "imageplanewindow.h"
 #include "imagepropertieswindow.h"
 #include "msoptionwindow.h"
-#include "noisestatoptionwindow.h"
 #include "numinputdialog.h"
 #include "plotwindow.h"
 #include "progresswindow.h"
-#include "rawoptionwindow.h"
-#include "tfstatoptionwindow.h"
 
 #include "../imaging/model.h"
 #include "../imaging/observatorium.h"
@@ -245,24 +241,9 @@ void RFIGuiWindow::OpenPath(const std::string &path)
 {
 	if(_optionWindow != 0)
 		delete _optionWindow;
-	if(rfiStrategy::ImageSet::IsRCPRawFile(path))
-	{
-		_optionWindow = new RawOptionWindow(*this, path);
-		_optionWindow->present();
-	}
-	else if(rfiStrategy::ImageSet::IsMSFile(path))
+	if(rfiStrategy::ImageSet::IsMSFile(path))
 	{
 		_optionWindow = new MSOptionWindow(*this, *this, path);
-		_optionWindow->present();
-	}
-	else if(rfiStrategy::ImageSet::IsTimeFrequencyStatFile(path))
-	{
-		_optionWindow = new TFStatOptionWindow(*this, path);
-		_optionWindow->present();
-	}
-	else if(rfiStrategy::ImageSet::IsNoiseStatFile(path))
-	{
-		_optionWindow = new NoiseStatOptionWindow(*this, path);
 		_optionWindow->present();
 	}
 	else
@@ -318,12 +299,22 @@ void RFIGuiWindow::loadCurrentTFData()
 			{
 				_spatialMetaData = new SpatialMatrixMetaData(static_cast<rfiStrategy::SpatialMSImageSet*>(_imageSet)->SpatialMetaData(*_imageSetIndex));
 			}
+			// Disable forward/back buttons when only one baseline is available
+			rfiStrategy::ImageSetIndex* firstIndex = _imageSet->StartIndex();
+			firstIndex->Next();
+			bool multipleBaselines = firstIndex->IsValid();
+			delete firstIndex;
+			_previousButton->set_sensitive(multipleBaselines);
+			_nextButton->set_sensitive(multipleBaselines);
+			
 			// We store these seperate, as they might access the measurement set. This is
 			// not only faster (the names are used in the onMouse.. events) but also less dangerous,
 			// since the set can be simultaneously accessed by another thread. (thus the io mutex should
 			// be locked before calling below statements).
+			lock.lock();
 			_imageSetName = _imageSet->Name();
 			_imageSetIndexDescription = _imageSetIndex->Description();
+			lock.unlock();
 			
 			_timeFrequencyWidget.SetTitleText(_imageSetIndexDescription);
 			_timeFrequencyWidget.Update();
@@ -360,26 +351,6 @@ void RFIGuiWindow::onLoadNext()
 	if(_imageSet != 0) {
 		boost::mutex::scoped_lock lock(_ioMutex);
 		_imageSetIndex->Next();
-		lock.unlock();
-		loadCurrentTFData();
-	}
-}
-
-void RFIGuiWindow::onLoadLargeStepPrevious()
-{
-	if(_imageSet != 0) {
-		boost::mutex::scoped_lock lock(_ioMutex);
-		_imageSetIndex->LargeStepPrevious();
-		lock.unlock();
-		loadCurrentTFData();
-	}
-}
-
-void RFIGuiWindow::onLoadLargeStepNext()
-{
-	if(_imageSet != 0) {
-		boost::mutex::scoped_lock lock(_ioMutex);
-		_imageSetIndex->LargeStepNext();
 		lock.unlock();
 		loadCurrentTFData();
 	}
@@ -731,16 +702,14 @@ void RFIGuiWindow::createToolbar()
 	_actionGroup->add( Gtk::Action::create("ShowStats", "Show _stats"),
 		Gtk::AccelKey("F2"),
 		sigc::mem_fun(*this, &RFIGuiWindow::onShowStats) );
-	_actionGroup->add( Gtk::Action::create("Previous", Gtk::Stock::GO_BACK),
+	_previousButton = Gtk::Action::create("Previous", Gtk::Stock::GO_BACK, "Previous");
+	_actionGroup->add(_previousButton,
 		Gtk::AccelKey("F6"),
 		sigc::mem_fun(*this, &RFIGuiWindow::onLoadPrevious) );
-	_actionGroup->add( Gtk::Action::create("Next", Gtk::Stock::GO_FORWARD),
+	_nextButton = Gtk::Action::create("Next", Gtk::Stock::GO_FORWARD, "Next");
+	_actionGroup->add(_nextButton,
 		Gtk::AccelKey("F7"),
 		sigc::mem_fun(*this, &RFIGuiWindow::onLoadNext) );
-	_actionGroup->add( Gtk::Action::create("LargeStepPrevious", Gtk::Stock::GOTO_FIRST, "Previous band/field"),
-  sigc::mem_fun(*this, &RFIGuiWindow::onLoadLargeStepPrevious) );
-	_actionGroup->add( Gtk::Action::create("LargeStepNext", Gtk::Stock::GOTO_LAST, "Next band/field"),
-   sigc::mem_fun(*this, &RFIGuiWindow::onLoadLargeStepNext) );
 	_actionGroup->add( Gtk::Action::create("Reload", Gtk::Stock::REFRESH, "_Reload"),
 		Gtk::AccelKey("F5"),
   sigc::mem_fun(*this, &RFIGuiWindow::onReloadPressed) );
@@ -842,8 +811,6 @@ void RFIGuiWindow::createToolbar()
 
 	_actionGroup->add( Gtk::Action::create("Highlight", "Highlight"),
   sigc::mem_fun(*this, &RFIGuiWindow::onHightlightPressed) );
-	_actionGroup->add( Gtk::Action::create("TimeMergeUnsetValues", "Merge unset values in time"),
-  sigc::mem_fun(*this, &RFIGuiWindow::onTimeMergeUnsetValues) );
 	_actionGroup->add( Gtk::Action::create("VertEVD", "Vert EVD"),
   sigc::mem_fun(*this, &RFIGuiWindow::onVertEVD) );
 	_actionGroup->add( Gtk::Action::create("ApplyTimeProfile", "Apply time profile"),
@@ -952,9 +919,6 @@ void RFIGuiWindow::createToolbar()
     "      <menuitem action='Reload'/>"
     "      <menuitem action='Next'/>"
     "      <separator/>"
-    "      <menuitem action='LargeStepPrevious'/>"
-    "      <menuitem action='LargeStepNext'/>"
-    "      <separator/>"
     "      <menuitem action='GoTo'/>"
     "      <separator/>"
     "      <menuitem action='LoadLongestBaseline'/>"
@@ -1013,7 +977,6 @@ void RFIGuiWindow::createToolbar()
     "      <menuitem action='Classify'/>"
     "      <menuitem action='RemoveSmallSegments'/>"
     "      <separator/>"
-    "      <menuitem action='TimeMergeUnsetValues'/>"
     "      <menuitem action='VertEVD'/>"
     "      <menuitem action='ApplyTimeProfile'/>"
     "      <menuitem action='ApplyVertProfile'/>"
@@ -1894,18 +1857,6 @@ void RFIGuiWindow::onSubtractDataFromMem()
 		TimeFrequencyData *diffData = TimeFrequencyData::CreateTFDataFromDiff(_storedData, activeData);
 		_timeFrequencyWidget.SetNewData(*diffData, _timeFrequencyWidget.GetMetaData());
 		delete diffData;
-		_timeFrequencyWidget.Update();
-	}
-}
-
-void RFIGuiWindow::onTimeMergeUnsetValues()
-{
-	if(HasImage())
-	{
-		TimeFrequencyData activeData = _timeFrequencyWidget.GetActiveData();
-		TimeFrequencyMetaDataPtr metaData(new class TimeFrequencyMetaData(*_timeFrequencyWidget.GetMetaData()));
-		rfiStrategy::NoiseStatImageSet::MergeInTime(activeData, metaData);
-		_timeFrequencyWidget.SetNewData(activeData, metaData);
 		_timeFrequencyWidget.Update();
 	}
 }

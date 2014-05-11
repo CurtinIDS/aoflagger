@@ -28,7 +28,6 @@
 #include "../actions/baselineselectionaction.h"
 #include "../actions/calibratepassbandaction.h"
 #include "../actions/changeresolutionaction.h"
-#include "../actions/collectnoisestatisticsaction.h"
 #include "../actions/combineflagresultsaction.h"
 #include "../actions/cutareaaction.h"
 #include "../actions/directionalcleanaction.h"
@@ -48,7 +47,6 @@
 #include "../actions/normalizevarianceaction.h"
 #include "../actions/plotaction.h"
 #include "../actions/quickcalibrateaction.h"
-#include "../actions/rawappenderaction.h"
 #include "../actions/setflaggingaction.h"
 #include "../actions/setimageaction.h"
 #include "../actions/slidingwindowfitaction.h"
@@ -253,8 +251,6 @@ Action *StrategyReader::parseAction(xmlNode *node)
 		newAction = parseCalibratePassbandAction(node);
 	else if(typeStr == "ChangeResolutionAction")
 		newAction = parseChangeResolutionAction(node);
-	else if(typeStr == "CollectNoiseStatisticsAction")
-		newAction = parseCollectNoiseStatisticsAction(node);
 	else if(typeStr == "CombineFlagResults")
 		newAction = parseCombineFlagResults(node);
 	else if(typeStr == "CutAreaAction")
@@ -293,8 +289,6 @@ Action *StrategyReader::parseAction(xmlNode *node)
 		newAction = parsePlotAction(node);
 	else if(typeStr == "QuickCalibrateAction")
 		newAction = parseQuickCalibrateAction(node);
-	else if(typeStr == "RawAppenderAction")
-		newAction = parseRawAppenderAction(node);
 	else if(typeStr == "SetFlaggingAction")
 		newAction = parseSetFlaggingAction(node);
 	else if(typeStr == "SetImageAction")
@@ -382,16 +376,6 @@ Action *StrategyReader::parseChangeResolutionAction(xmlNode *node)
 	newAction->SetRestoreRevised(getBool(node, "restore-revised"));
 	newAction->SetRestoreMasks(getBool(node, "restore-masks"));
 	parseChildren(node, newAction);
-	return newAction;
-}
-
-Action *StrategyReader::parseCollectNoiseStatisticsAction(xmlNode *node)
-{
-	CollectNoiseStatisticsAction *newAction = new CollectNoiseStatisticsAction();
-	newAction->SetFilename(getString(node, "filename"));
-	newAction->SetChannelDistance(getInt(node, "channel-distance"));
-	newAction->SetTileWidth(getInt(node, "tile-timestep-size"));
-	newAction->SetTileHeight(getInt(node, "tile-channels-size"));
 	return newAction;
 }
 
@@ -626,12 +610,6 @@ Action *StrategyReader::parsePlotAction(xmlNode *node)
 Action *StrategyReader::parseQuickCalibrateAction(xmlNode *)
 {
 	QuickCalibrateAction *newAction = new QuickCalibrateAction();
-	return newAction;
-}
-
-Action *StrategyReader::parseRawAppenderAction(xmlNode *)
-{
-	RawAppenderAction *newAction = new RawAppenderAction();
 	return newAction;
 }
 

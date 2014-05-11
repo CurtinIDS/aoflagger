@@ -27,7 +27,6 @@
 #include "eigenvaluetest.h"
 #include "highpassfiltertest.h"
 #include "noisestatisticstest.h"
-#include "noisestatisticscollectortest.h"
 #include "siroperatortest.h"
 #include "statisticalflaggertest.h"
 #include "sumthresholdtest.h"
@@ -44,7 +43,6 @@ class AlgorithmsTestGroup : public TestGroup {
 			Add(new EigenvalueTest());
 			Add(new HighPassFilterTest());
 			Add(new NoiseStatisticsTest());
-			Add(new NoiseStatisticsCollectorTest());
 			Add(new SIROperatorTest());
 			Add(new StatisticalFlaggerTest());
 			Add(new SumThresholdTest());
