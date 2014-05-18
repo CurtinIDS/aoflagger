@@ -545,7 +545,7 @@ namespace aoflagger {
 			 * as flag and giving a high @a frequency value. In these cases it is not defined which
 			 * parameter takes precedence, thus it should obviously be avoided.
 			 * 
-			 * If frequency, time resolution or frequency resolution or not known, they can be left at
+			 * If frequency value, time resolution or frequency resolution or not known, they can be left at
 			 * their default values. Currently, they have no effect, but might have effect in later
 			 * versions. Therefore, if they are known, it is recommended to specify them. They could
 			 * even identify problematic cases and report this.
@@ -553,7 +553,7 @@ namespace aoflagger {
 			 * @param telescopeId Identifies the telescope to optimize the strategy for.
 			 * @param strategyFlags Flags to optimize the strategy further.
 			 * @param frequency The observation frequency in Hz, or zero if unknown.
-			 * @param timeRes The time resolution (distance between to consecutive time steps) in s, or zero if unknown.
+			 * @param timeRes The time resolution (distance between two consecutive time steps) in s, or zero if unknown.
 			 * @param frequencyRes The frequency resolution (distance between to channels) in Hz, or zero if unknown.
 			 */
 			Strategy MakeStrategy(enum TelescopeId telescopeId=GENERIC_TELESCOPE, unsigned strategyFlags=StrategyFlags::NONE, double frequency=0.0, double timeRes=0.0, double frequencyRes=0.0)
