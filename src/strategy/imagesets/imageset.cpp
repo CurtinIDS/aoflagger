@@ -21,6 +21,7 @@
 #include "imageset.h"
 
 #include "bhfitsimageset.h"
+#include "filterbankset.h"
 #include "fitsimageset.h"
 #include "msimageset.h"
 #include "parmimageset.h"
@@ -45,6 +46,8 @@ namespace rfiStrategy {
 			return new ParmImageSet(file);
 		else if(IsPngFile(file))
 			return new PngReader(file);
+		else if(IsFilterBankFile(file))
+			return new FilterBankSet(file);
 		else {
 			MSImageSet *set = new MSImageSet(file, ioMode);
 			set->SetReadUVW(readUVW);
@@ -117,8 +120,13 @@ namespace rfiStrategy {
 		return file.size()>=4 && file.substr(file.size()-4) == ".png";
 	}
 	
+	bool ImageSet::IsFilterBankFile(const std::string& file)
+	{
+		return file.size()>=4 && file.substr(file.size()-4) == ".fil";
+	}
+	
 	bool ImageSet::IsMSFile(const std::string &file)
 	{
-	  return (!IsBHFitsFile(file)) && (!IsFitsFile(file)) && (!IsRCPRawFile(file)) && (!IsTKPRawFile(file)) && (!IsRawDescFile(file)) && (!IsParmFile(file)) && (!IsTimeFrequencyStatFile(file)) && (!IsNoiseStatFile(file)) && (!IsPngFile(file));
+	  return (!IsBHFitsFile(file)) && (!IsFitsFile(file)) && (!IsRCPRawFile(file)) && (!IsTKPRawFile(file)) && (!IsRawDescFile(file)) && (!IsParmFile(file)) && (!IsTimeFrequencyStatFile(file)) && (!IsNoiseStatFile(file)) && (!IsPngFile(file)) && (!IsFilterBankFile(file));
 	}
 }

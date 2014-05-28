@@ -197,6 +197,7 @@ set(STRATEGY_CONTROL_FILES
 
 set(STRATEGY_IMAGESETS_FILES
   strategy/imagesets/bhfitsimageset.cpp
+  strategy/imagesets/filterbankset.cpp
   strategy/imagesets/fitsimageset.cpp
   strategy/imagesets/imageset.cpp
   strategy/imagesets/msimageset.cpp
