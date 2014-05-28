@@ -96,7 +96,7 @@ namespace rfiStrategy {
 			static std::string readString(std::istream& str)
 			{
 				int32_t length = readInt(str);
-				if(length <= 1 || length >= 80)
+				if(length <= 0 || length >= 80)
 					return std::string();
 				std::string data(length, 0);
 				str.read(&data[0], length);

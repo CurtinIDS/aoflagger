@@ -18,6 +18,7 @@ FilterBankSet::FilterBankSet(const std::string &location) :
 	while(file.good() && keyword!="HEADER_END")
 	{
 		keyword = readString(file);
+		std::cout << keyword << '\n';
 		
 		if(keyword == "tsamp")
 			_timeOfSample = readDouble(file);
@@ -37,6 +38,22 @@ FilterBankSet::FilterBankSet(const std::string &location) :
 			_sampleCount = readInt(file);
 		else if(keyword == "machine_id")
 			_machineId = readInt(file);
+		else if(keyword == "telescope_id")
+			readInt(file);
+		else if(keyword == "src_raj")
+			readDouble(file);
+		else if(keyword == "src_dej")
+			readDouble(file);
+		else if(keyword == "az_start")
+			readDouble(file);
+		else if(keyword == "za_start")
+			readDouble(file);
+		else if(keyword == "data_type")
+			readInt(file);
+		else if(keyword == "nbeams")
+			readInt(file);
+		else if(keyword == "ibeam")
+			readInt(file);
 	}
 	std::cout <<
 		"tsamp=" << _timeOfSample << ", tstart=" << _timeStart << ", fch1=" << _fch1 << ", foff=" << _foff << '\n' <<
