@@ -79,7 +79,7 @@ namespace rfiStrategy {
 			double _timeOfSample, _timeStart, _fch1, _foff;
 			size_t _channelCount, _ifCount, _bitCount, _sampleCount;
 			size_t _nBeams, _iBeam;
-			int _machineId;
+			int _machineId, _telescopeId;
 			size_t _intervalCount;
 			std::streampos _headerEnd;
 			

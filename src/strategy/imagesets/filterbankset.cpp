@@ -71,7 +71,7 @@ FilterBankSet::FilterBankSet(const std::string &location) :
 	std::cout <<
 		"tsamp=" << _timeOfSample << ", tstart=" << _timeStart << ", fch1=" << _fch1 << ", foff=" << _foff << '\n' <<
 		"nChans=" << _channelCount << ", nIFs=" << _ifCount << ", nBits=" << _bitCount << ", nSamples=" << _sampleCount
-		<< "\nmachine_ID=" << _machineId << '\n';
+		<< "\nmachine_ID=" << _machineId << ", telescope_ID=" << _telescopeId << '\n';
 		
 	double sizeOfImage = double(_channelCount) * _sampleCount * _bitCount / 8.0;
 	long int pageCount = sysconf(_SC_PHYS_PAGES), pageSize = sysconf(_SC_PAGE_SIZE);

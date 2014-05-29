@@ -47,13 +47,9 @@ namespace rfiStrategy {
 
 			if(_restoreRevised && !_restoreContaminated)
 			{
-				//TimeFrequencyData *contaminatedData =
-				//	TimeFrequencyData::CreateTFDataFromDiff(oldContaminated, artifacts.RevisedData());
-				//contaminatedData->SetMask(oldContaminated);
-				//artifacts.SetContaminatedData(*contaminatedData);
-				//delete contaminatedData;
-				
 				oldContaminated.Subtract(artifacts.RevisedData());
+				if(_restoreMasks)
+					oldContaminated.SetMask(artifacts.ContaminatedData());
 				artifacts.SetContaminatedData(oldContaminated);
 			}
 		} else {
@@ -80,13 +76,12 @@ namespace rfiStrategy {
 			IncreaseFrequency(artifacts.ContaminatedData(), artifactsCopy.ContaminatedData(), _restoreContaminated, _restoreMasks);
 			IncreaseFrequency(artifacts.RevisedData(), artifactsCopy.RevisedData(), _restoreRevised, _restoreMasks);
 
-			if(_restoreRevised)
+			if(_restoreRevised && !_restoreContaminated)
 			{
-				TimeFrequencyData *contaminatedData =
-					TimeFrequencyData::CreateTFDataFromDiff(oldContaminated, artifacts.RevisedData());
-				contaminatedData->SetMask(oldContaminated);
-				artifacts.SetContaminatedData(*contaminatedData);
-				delete contaminatedData;
+				oldContaminated.Subtract(artifacts.RevisedData());
+				if(_restoreMasks)
+					oldContaminated.SetMask(artifacts.ContaminatedData());
+				artifacts.SetContaminatedData(oldContaminated);
 			}
 		} else {
 			ActionBlock::Perform(artifacts, listener);
