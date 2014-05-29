@@ -355,6 +355,12 @@ void EditStrategyWindow::onSelectionChanged()
 			_moveUpButton.set_sensitive(false);
 			_removeActionButton.set_sensitive(false);
 		}
+		//resize window
+		int prefWidth, natWidth;
+		_paned.get_preferred_width(prefWidth, natWidth);
+		prefWidth = std::max(prefWidth, natWidth);
+		if(get_width() < prefWidth)
+			resize(prefWidth, get_height());
 	}
 }
 
