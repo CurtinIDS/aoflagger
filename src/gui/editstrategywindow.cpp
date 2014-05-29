@@ -162,12 +162,12 @@ void EditStrategyWindow::initLoadDefaultsButtons()
 
 void EditStrategyWindow::onStrategyChanged()
 {
-	_strategy = &_strategyController.Strategy();
-	clearRightFrame();
 	_disableUpdates = true;
 	_store->clear();
-	fillStore();
 	_disableUpdates = false;
+	_strategy = &_strategyController.Strategy();
+	clearRightFrame();
+	fillStore();
 	onSelectionChanged();
 }
 
@@ -449,24 +449,24 @@ Gtk::TreeModel::Row EditStrategyWindow::findActionRow(rfiStrategy::Action *actio
 
 void EditStrategyWindow::onLoadEmptyClicked()
 {
-	_strategy->RemoveAll();
 	_store->clear();
+	_strategy->RemoveAll();
 	fillStore();
 }
 
 void EditStrategyWindow::onLoadDefaultClicked()
 {
+	_store->clear();
 	_strategy->RemoveAll();
 	DefaultStrategy::LoadStrategy(*_strategy, rfiStrategy::DefaultStrategy::GENERIC_TELESCOPE, rfiStrategy::DefaultStrategy::FLAG_GUI_FRIENDLY);
-	_store->clear();
 	fillStore();
 }
 
 void EditStrategyWindow::onLoadFullButtonClicked()
 {
+	_store->clear();
 	_strategy->RemoveAll();
 	DefaultStrategy::LoadFullStrategy(*_strategy, rfiStrategy::DefaultStrategy::GENERIC_TELESCOPE, rfiStrategy::DefaultStrategy::FLAG_GUI_FRIENDLY);
-	_store->clear();
 	fillStore();
 }
 
@@ -514,9 +514,9 @@ void EditStrategyWindow::onOpenClicked()
 		StrategyReader reader;
 		std::string filename(dialog.get_filename());
 		try {
+			_store->clear();
 			_strategy = reader.CreateStrategyFromFile(filename);
 			_strategyController.SetStrategy(_strategy);
-			_store->clear();
 			fillStore();
 		} catch(std::exception &e)
 		{
