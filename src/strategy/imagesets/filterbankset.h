@@ -2,6 +2,7 @@
 #define FILTERBANKSET_H
 
 #include <string>
+#include <deque>
 
 #include "imageset.h"
 
@@ -77,7 +78,12 @@ namespace rfiStrategy {
 			
 			double _timeOfSample, _timeStart, _fch1, _foff;
 			size_t _channelCount, _ifCount, _bitCount, _sampleCount;
-			size_t _machineId;
+			size_t _nBeams, _iBeam;
+			int _machineId;
+			size_t _intervalCount;
+			std::streampos _headerEnd;
+			
+			std::deque<BaselineData*> _requests;
 			
 			static int32_t readInt(std::istream& str)
 			{
