@@ -190,7 +190,9 @@ void ImageWidget::update(Cairo::RefPtr<Cairo::Context> cairo, unsigned width, un
 		startX = (unsigned int) round(_startHorizontal * image->Width()),
 		startY = (unsigned int) round(_startVertical * image->Height()),
 		endX = (unsigned int) round(_endHorizontal * image->Width()),
-		endY = (unsigned int) round(_endVertical * image->Height());
+		endY = (unsigned int) round(_endVertical * image->Height()),
+		startTimestep = startX,
+		endTimestep = endX;
 	size_t
 		imageWidth = endX - startX,
 		imageHeight = endY - startY;
@@ -245,10 +247,10 @@ void ImageWidget::update(Cairo::RefPtr<Cairo::Context> cairo, unsigned width, un
 		}
 		if(_metaData != 0 && _metaData->HasObservationTimes())
 		{
-			_horiScale->InitializeTimeTicks(_metaData->ObservationTimes()[startX], _metaData->ObservationTimes()[endX-1]);
+			_horiScale->InitializeTimeTicks(_metaData->ObservationTimes()[startTimestep], _metaData->ObservationTimes()[endTimestep-1]);
 			_horiScale->SetUnitsCaption("Time");
 		} else {
-			_horiScale->InitializeNumericTicks(-0.5 + startX, 0.5 + endX - 1.0);
+			_horiScale->InitializeNumericTicks(-0.5 + startTimestep, 0.5 + endTimestep - 1.0);
 		}
 		if(_manualXAxisDescription)
 			_horiScale->SetUnitsCaption(_xAxisDescription);

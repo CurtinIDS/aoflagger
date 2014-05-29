@@ -44,21 +44,16 @@ FilterBankSet::FilterBankSet(const std::string &location) :
 		else if(keyword == "machine_id")
 			_machineId = readInt(file);
 		else if(keyword == "telescope_id")
-			readInt(file);
-		else if(keyword == "src_raj")
-			readDouble(file);
-		else if(keyword == "src_dej")
-			readDouble(file);
-		else if(keyword == "az_start")
-			readDouble(file);
-		else if(keyword == "za_start")
-			readDouble(file);
-		else if(keyword == "data_type")
-			readInt(file);
+			_telescopeId = readInt(file);
 		else if(keyword == "nbeams")
 			_nBeams = readInt(file);
 		else if(keyword == "ibeam")
 			_iBeam = readInt(file);
+		else if(keyword == "src_raj" || keyword == "src_dej" || keyword == "az_start" || keyword == "za_start" ||
+			keyword == "refdm" || keyword == "period")
+			readDouble(file);
+		else if(keyword == "data_type" || keyword == "barycentric" || keyword == "pulsarcentric")
+			readInt(file);
 	}
 	_headerEnd = file.tellg();
 	if(_sampleCount == 0)
@@ -142,6 +137,7 @@ BaselineData* FilterBankSet::GetNextRequested()
 	for(size_t t=startIndex; t!=endIndex; ++t)
 		observationTimes[t-startIndex] = (_timeStart + _timeOfSample*t);
 	metaData->SetObservationTimes(observationTimes);
+	metaData->SetValueDescription("Power");
 	
 	baseline->SetData(tfData);
 	baseline->SetMetaData(metaData);
@@ -174,7 +170,9 @@ void FilterBankSet::WriteFlags(const ImageSetIndex& index, TimeFrequencyData& da
 
 std::string FilterBankSetIndex::Description() const
 {
-	return "Filter bank set";
+	std::ostringstream str;
+	str << "Filterbank set -- interval " << (_intervalIndex+1) << '/' << static_cast<FilterBankSet&>(imageSet())._intervalCount;
+	return str.str();
 }
 
 void FilterBankSetIndex::Next()
