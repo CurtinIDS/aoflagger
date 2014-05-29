@@ -140,7 +140,7 @@ BaselineData* FilterBankSet::GetNextRequested()
 	metaData->SetBand(band);
 	std::vector<double> observationTimes(endIndex - startIndex);
 	for(size_t t=startIndex; t!=endIndex; ++t)
-		observationTimes[t-startIndex] = _timeStart + _timeOfSample*t;
+		observationTimes[t-startIndex] = (_timeStart + _timeOfSample*t);
 	metaData->SetObservationTimes(observationTimes);
 	
 	baseline->SetData(tfData);
