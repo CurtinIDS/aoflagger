@@ -112,7 +112,15 @@ class Date {
 			{
 				s << ":" << (secs/10) << (secs%10);
 				if(msec != 0)
-					s << "." << msec/100 << (msec/10)%10 << (msec)%10;
+				{
+					s << "." << msec/100;
+					if(msec%100!=0)
+					{
+						s << (msec/10)%10;
+						if(msec%10!=0)
+							s << (msec)%10;
+					}
+				}
 			}
 			return s.str();
 		}

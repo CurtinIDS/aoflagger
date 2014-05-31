@@ -210,7 +210,7 @@ bool HorizontalPlotScale::ticksFit(Cairo::RefPtr<Cairo::Context> cairo)
 			startX = midX - extents.width/2,
 			endX = startX + extents.width;
 		}
-		if(startX < prevEndX)
+		if(startX < prevEndX && i!=0)
 			return false;
 		prevEndX = endX;
 	}
