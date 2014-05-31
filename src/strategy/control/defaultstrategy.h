@@ -3,6 +3,8 @@
 
 #include <string>
 
+#include "../actions/action.h"
+
 #include "../../interface/aoflagger.h"
 
 class MeasurementSet;
@@ -70,6 +72,8 @@ namespace rfiStrategy {
 		static void DetermineSettings(ImageSet &measurementSet, enum TelescopeId &telescopeId, unsigned &flags, double &frequency, double &timeRes, double &frequencyRes);
 		
 		static void DetermineSettings(MeasurementSet &measurementSet, enum TelescopeId &telescopeId, unsigned &flags, double &frequency, double &timeRes, double &frequencyRes);
+		
+		static bool StrategyContainsAction(Strategy& strategy, ActionType actionType);
 		
 	private:
 		static void warnIfUnknownTelescope(enum TelescopeId &telescopeId, const std::string &telescopeName);

@@ -1,4 +1,5 @@
 #include "defaultstrategy.h"
+#include "strategyiterator.h"
 
 #include "../actions/adapter.h"
 #include "../actions/baselineselectionaction.h"
@@ -478,4 +479,18 @@ namespace rfiStrategy {
 		    "** been implemented for this file format. A generic strategy will be used!\n";
 		}
 	}
+
+	bool DefaultStrategy::StrategyContainsAction(Strategy& strategy, ActionType actionType)
+	{
+		StrategyIterator iterator = StrategyIterator::NewStartIterator(strategy);
+		while(!iterator.PastEnd())
+		{
+			const Action& action = *iterator;
+			if(action.Type() == actionType)
+				return true;
+			++iterator;
+		}
+		return false;
+	}
 }
+
