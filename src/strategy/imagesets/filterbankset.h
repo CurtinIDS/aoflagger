@@ -47,7 +47,9 @@ namespace rfiStrategy {
 
 			virtual FilterBankSet* Copy()
 			{
-				return new FilterBankSet(_location);
+				FilterBankSet* set = new FilterBankSet(*this);
+				set->_requests.clear();
+				return set;
 			}
 	
 			virtual std::string Name() { return _location; }

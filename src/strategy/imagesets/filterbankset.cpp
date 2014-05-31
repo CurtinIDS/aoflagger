@@ -1,5 +1,7 @@
 #include "filterbankset.h"
 
+#include "../../msio/date.h"
+
 #include <fstream>
 
 namespace rfiStrategy {
@@ -67,7 +69,9 @@ FilterBankSet::FilterBankSet(const std::string &location) :
 		"tsamp=" << _timeOfSample << ", tstart=" << _timeStart << ", fch1=" << _fch1 << ", foff=" << _foff << '\n' <<
 		"nChans=" << _channelCount << ", nIFs=" << _ifCount << ", nBits=" << _bitCount << ", nSamples=" << _sampleCount
 		<< "\nmachine_ID=" << _machineId << ", telescope_ID=" << _telescopeId << '\n';
-		
+	
+	_timeStart = Date::MJDToAipsMJD(_timeStart);
+	
 	double sizeOfImage = double(_channelCount) * _sampleCount * _bitCount / 8.0;
 	long int pageCount = sysconf(_SC_PHYS_PAGES), pageSize = sysconf(_SC_PAGE_SIZE);
 	double memSize = double(pageCount) * double(pageSize);
