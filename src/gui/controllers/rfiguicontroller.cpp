@@ -50,9 +50,9 @@ TimeFrequencyData RFIGuiController::ContaminatedData() const
 	return _rfiGuiWindow.GetTimeFrequencyWidget().ContaminatedData();
 }
 
-TimeFrequencyMetaDataCPtr RFIGuiController::MetaData() const
+TimeFrequencyMetaDataCPtr RFIGuiController::SelectedMetaData() const
 {
-	return _rfiGuiWindow.GetTimeFrequencyWidget().GetMetaData();
+	return _rfiGuiWindow.GetTimeFrequencyWidget().GetSelectedMetaData();
 }
 
 void RFIGuiController::plotMeanSpectrum(bool weight)
@@ -67,18 +67,18 @@ void RFIGuiController::plotMeanSpectrum(bool weight)
 			Mask2D::CreateSetMaskPtr<false>(data.ImageWidth(), data.ImageHeight());
 		Plot2DPointSet &beforeSet = plot.StartLine("Without flagging");
 		if(weight)
-			RFIPlots::MakeMeanSpectrumPlot<true>(beforeSet, data, mask, MetaData());
+			RFIPlots::MakeMeanSpectrumPlot<true>(beforeSet, data, mask, SelectedMetaData());
 		else
-			RFIPlots::MakeMeanSpectrumPlot<false>(beforeSet, data, mask, MetaData());
+			RFIPlots::MakeMeanSpectrumPlot<false>(beforeSet, data, mask, SelectedMetaData());
 
 		mask = Mask2D::CreateCopy(data.GetSingleMask());
 		if(!mask->AllFalse())
 		{
 			Plot2DPointSet &afterSet = plot.StartLine("Flagged");
 			if(weight)
-				RFIPlots::MakeMeanSpectrumPlot<true>(afterSet, data, mask, MetaData());
+				RFIPlots::MakeMeanSpectrumPlot<true>(afterSet, data, mask, SelectedMetaData());
 			else
-				RFIPlots::MakeMeanSpectrumPlot<false>(afterSet, data, mask, MetaData());
+				RFIPlots::MakeMeanSpectrumPlot<false>(afterSet, data, mask, SelectedMetaData());
 		}
 		
 		_plotManager->Update();
@@ -139,13 +139,13 @@ void RFIGuiController::PlotPowerSpectrum()
 		Mask2DPtr mask =
 			Mask2D::CreateSetMaskPtr<false>(image->Width(), image->Height());
 		Plot2DPointSet &beforeSet = plot.StartLine("Before");
-		RFIPlots::MakePowerSpectrumPlot(beforeSet, image, mask, MetaData());
+		RFIPlots::MakePowerSpectrumPlot(beforeSet, image, mask, SelectedMetaData());
 
 		mask = Mask2D::CreateCopy(data.GetSingleMask());
 		if(!mask->AllFalse())
 		{
 			Plot2DPointSet &afterSet = plot.StartLine("After");
-			RFIPlots::MakePowerSpectrumPlot(afterSet, image, mask, MetaData());
+			RFIPlots::MakePowerSpectrumPlot(afterSet, image, mask, SelectedMetaData());
 		}
 		
 		_plotManager->Update();
@@ -162,13 +162,13 @@ void RFIGuiController::PlotPowerSpectrumComparison()
 		Image2DCPtr image = data.GetSingleImage();
 		Mask2DCPtr mask = data.GetSingleMask();
 		Plot2DPointSet &originalSet = plot.StartLine("Original");
-		RFIPlots::MakePowerSpectrumPlot(originalSet, image, mask, MetaData());
+		RFIPlots::MakePowerSpectrumPlot(originalSet, image, mask, SelectedMetaData());
 
 		data = ContaminatedData();
 		image = data.GetSingleImage();
 		mask = data.GetSingleMask();
 		Plot2DPointSet &alternativeSet = plot.StartLine("Alternative");
-		RFIPlots::MakePowerSpectrumPlot(alternativeSet, image, mask, MetaData());
+		RFIPlots::MakePowerSpectrumPlot(alternativeSet, image, mask, SelectedMetaData());
 	
 		_plotManager->Update();
 	}
@@ -245,17 +245,17 @@ void RFIGuiController::PlotPowerTime()
 		Mask2DPtr mask =
 			Mask2D::CreateSetMaskPtr<false>(image->Width(), image->Height());
 		Plot2DPointSet &totalPlot = plot.StartLine("Total");
-		RFIPlots::MakePowerTimePlot(totalPlot, image, mask, MetaData());
+		RFIPlots::MakePowerTimePlot(totalPlot, image, mask, SelectedMetaData());
 
 		mask = Mask2D::CreateCopy(activeData.GetSingleMask());
 		if(!mask->AllFalse())
 		{
 			Plot2DPointSet &uncontaminatedPlot = plot.StartLine("Uncontaminated");
-			RFIPlots::MakePowerTimePlot(uncontaminatedPlot, image, mask, MetaData());
+			RFIPlots::MakePowerTimePlot(uncontaminatedPlot, image, mask, SelectedMetaData());
 	
 			mask->Invert();
 			Plot2DPointSet &rfiPlot = plot.StartLine("RFI");
-			RFIPlots::MakePowerTimePlot(rfiPlot, image, mask, MetaData());
+			RFIPlots::MakePowerTimePlot(rfiPlot, image, mask, SelectedMetaData());
 		}
 
 		_plotManager->Update();
@@ -272,14 +272,14 @@ void RFIGuiController::PlotPowerTimeComparison()
 		Mask2DCPtr mask = data.GetSingleMask();
 		Image2DCPtr image = data.GetSingleImage();
 		Plot2DPointSet &originalPlot = plot.StartLine("Original");
-		RFIPlots::MakePowerTimePlot(originalPlot, image, mask, MetaData());
+		RFIPlots::MakePowerTimePlot(originalPlot, image, mask, SelectedMetaData());
 
 		data = ContaminatedData();
 		mask = data.GetSingleMask();
 		image = data.GetSingleImage();
 		Plot2DPointSet &alternativePlot = plot.StartLine("Original");
 		plot.StartLine("Alternative");
-		RFIPlots::MakePowerTimePlot(alternativePlot, image, mask, MetaData());
+		RFIPlots::MakePowerTimePlot(alternativePlot, image, mask, SelectedMetaData());
 
 		_plotManager->Update();
 	}
@@ -290,7 +290,7 @@ void RFIGuiController::PlotTimeScatter()
 	if(IsImageLoaded())
 	{
 		MultiPlot plot(_plotManager->NewPlot2D("Time scatter"), 4);
-		RFIPlots::MakeScatterPlot(plot, ActiveData(), MetaData());
+		RFIPlots::MakeScatterPlot(plot, ActiveData(), SelectedMetaData());
 		plot.Finish();
 		_plotManager->Update();
 	}
@@ -301,8 +301,8 @@ void RFIGuiController::PlotTimeScatterComparison()
 	if(IsImageLoaded())
 	{
 		MultiPlot plot(_plotManager->NewPlot2D("Time scatter comparison"), 8);
-		RFIPlots::MakeScatterPlot(plot, OriginalData(), MetaData(), 0);
-		RFIPlots::MakeScatterPlot(plot, ContaminatedData(), MetaData(), 4);
+		RFIPlots::MakeScatterPlot(plot, OriginalData(), SelectedMetaData(), 0);
+		RFIPlots::MakeScatterPlot(plot, ContaminatedData(), SelectedMetaData(), 4);
 		plot.Finish();
 		_plotManager->Update();
 	}
@@ -334,6 +334,6 @@ void RFIGuiController::OpenTestSet(unsigned index, bool gaussianTestSets)
 	TimeFrequencyData data(SinglePolarisation, testSetReal, testSetImaginary);
 	data.SetGlobalMask(rfi);
 	
-	_rfiGuiWindow.GetTimeFrequencyWidget().SetNewData(data, MetaData());
+	_rfiGuiWindow.GetTimeFrequencyWidget().SetNewData(data, SelectedMetaData());
 	_rfiGuiWindow.GetTimeFrequencyWidget().Update();
 }

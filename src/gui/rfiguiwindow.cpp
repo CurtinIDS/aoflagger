@@ -394,8 +394,8 @@ void RFIGuiWindow::onExecuteStrategyPressed()
 		artifacts.SetRevisedData(*zero);
 		delete zero;
 	}
-	if(_timeFrequencyWidget.GetMetaData() != 0)
-			artifacts.SetMetaData(_timeFrequencyWidget.GetMetaData());
+	if(_timeFrequencyWidget.GetFullMetaData() != 0)
+			artifacts.SetMetaData(_timeFrequencyWidget.GetFullMetaData());
 	if(HasImageSet())
 	{
 		artifacts.SetImageSet(_imageSet);
@@ -1029,7 +1029,7 @@ void RFIGuiWindow::onDifferenceToOriginalPressed()
 	if(HasImage())
 	{
 		TimeFrequencyData data(_timeFrequencyWidget.ContaminatedData());
-		_timeFrequencyWidget.SetNewData(data, _timeFrequencyWidget.GetMetaData());
+		_timeFrequencyWidget.SetNewData(data, _timeFrequencyWidget.GetFullMetaData());
 	}
 	if(_originalImageButton->get_active())
 		_timeFrequencyWidget.Update();
@@ -1043,7 +1043,7 @@ void RFIGuiWindow::onBackgroundToOriginalPressed()
 	{
 		TimeFrequencyData data(_timeFrequencyWidget.RevisedData());
 		_timeFrequencyWidget.ClearBackground();
-		_timeFrequencyWidget.SetNewData(data, _timeFrequencyWidget.GetMetaData());
+		_timeFrequencyWidget.SetNewData(data, _timeFrequencyWidget.GetFullMetaData());
 	}
 	if(_originalImageButton->get_active())
 		_timeFrequencyWidget.Update();
@@ -1064,7 +1064,7 @@ void RFIGuiWindow::onAddStaticFringe()
 	try {
 		if(HasImage())
 		{
-			TimeFrequencyMetaDataCPtr metaData = TimeFrequencyMetaData();
+			TimeFrequencyMetaDataCPtr metaData = SelectedMetaData();
 			TimeFrequencyData data(GetActiveData());
 			FringeTestCreater::AddStaticFringe(data, metaData, 1.0L);
 			_timeFrequencyWidget.SetNewData(data, metaData);
@@ -1081,12 +1081,12 @@ void RFIGuiWindow::onAdd1SigmaFringe()
 	try {
 		if(HasImage())
 		{
-			TimeFrequencyMetaDataCPtr metaData = TimeFrequencyMetaData();
+			TimeFrequencyMetaDataCPtr metaData = SelectedMetaData();
 			num_t mean, stddev;
 			TimeFrequencyData data(GetActiveData());
 			ThresholdTools::MeanAndStdDev(data.GetRealPart(), data.GetSingleMask(), mean, stddev);
 			FringeTestCreater::AddStaticFringe(data, metaData, stddev);
-			_timeFrequencyWidget.SetNewData(data, _timeFrequencyWidget.GetMetaData());
+			_timeFrequencyWidget.SetNewData(data, _timeFrequencyWidget.GetSelectedMetaData());
 			_timeFrequencyWidget.Update();
 		}
 	} catch(std::exception &e)
@@ -1107,7 +1107,7 @@ void RFIGuiWindow::onSetToOne()
 		imaginary->SetAll(0.0);
 		TimeFrequencyData newData(data.Polarisation(), real, imaginary);
 		newData.SetMask(data);
-		_timeFrequencyWidget.SetNewData(newData, _timeFrequencyWidget.GetMetaData());
+		_timeFrequencyWidget.SetNewData(newData, _timeFrequencyWidget.GetSelectedMetaData());
 		_timeFrequencyWidget.Update();
 	} catch(std::exception &e)
 	{
@@ -1127,7 +1127,7 @@ void RFIGuiWindow::onSetToI()
 		imaginary->SetAll(1.0);
 		TimeFrequencyData newData(data.Polarisation(), real, imaginary);
 		newData.SetMask(data);
-		_timeFrequencyWidget.SetNewData(newData, _timeFrequencyWidget.GetMetaData());
+		_timeFrequencyWidget.SetNewData(newData, _timeFrequencyWidget.GetSelectedMetaData());
 		_timeFrequencyWidget.Update();
 	} catch(std::exception &e)
 	{
@@ -1147,7 +1147,7 @@ void RFIGuiWindow::onSetToOnePlusI()
 		imaginary->SetAll(1.0);
 		TimeFrequencyData newData(data.Polarisation(), real, imaginary);
 		newData.SetMask(data);
-		_timeFrequencyWidget.SetNewData(newData, _timeFrequencyWidget.GetMetaData());
+		_timeFrequencyWidget.SetNewData(newData, _timeFrequencyWidget.GetSelectedMetaData());
 		_timeFrequencyWidget.Update();
 	} catch(std::exception &e)
 	{
@@ -1303,7 +1303,7 @@ void RFIGuiWindow::showPhasePart(enum TimeFrequencyData::PhaseRepresentation pha
 	{
 		try {
 			TimeFrequencyData *newPart =  _timeFrequencyWidget.GetActiveData().CreateTFData(phaseRepresentation);
-			_timeFrequencyWidget.SetNewData(*newPart, _timeFrequencyWidget.GetMetaData());
+			_timeFrequencyWidget.SetNewData(*newPart, _timeFrequencyWidget.GetSelectedMetaData());
 			delete newPart;
 			_timeFrequencyWidget.Update();
 		} catch(std::exception &e)
@@ -1331,7 +1331,7 @@ void RFIGuiWindow::showPolarisation(enum PolarisationType polarisation)
 		try {
 			TimeFrequencyData *newData =
 				_timeFrequencyWidget.GetActiveData().CreateTFData(polarisation);
-			_timeFrequencyWidget.SetNewData(*newData, _timeFrequencyWidget.GetMetaData());
+			_timeFrequencyWidget.SetNewData(*newData, _timeFrequencyWidget.GetSelectedMetaData());
 			delete newData;
 			_timeFrequencyWidget.Update();
 		} catch(std::exception &e)
@@ -1466,14 +1466,14 @@ void RFIGuiWindow::onTFWidgetMouseMoved(size_t x, size_t y)
 	_statusbar.pop();
 	std::stringstream s;
 		s << "x=" << x << ",y=" << y << ",value=" << v;
-	TimeFrequencyMetaDataCPtr metaData =_timeFrequencyWidget.GetMetaData();
+	TimeFrequencyMetaDataCPtr metaData =_timeFrequencyWidget.GetFullMetaData();
 	if(metaData != 0)
 	{
 		if(metaData->HasObservationTimes() && metaData->HasBand())
 		{
-			const std::vector<double> &times = _timeFrequencyWidget.GetMetaData()->ObservationTimes();
+			const std::vector<double> &times = metaData->ObservationTimes();
 			s << " (t=" << Date::AipsMJDToString(times[x]) <<
-			", f=" << Frequency::ToString(_timeFrequencyWidget.GetMetaData()->Band().channels[y].frequencyHz);
+			", f=" << Frequency::ToString(metaData->Band().channels[y].frequencyHz);
 		}
 		
 		if(metaData->HasUVW())
@@ -1503,7 +1503,7 @@ void RFIGuiWindow::onSetAndShowImagePlane()
 void RFIGuiWindow::onAddToImagePlane()
 {
 	try {
-		if(_timeFrequencyWidget.GetMetaData() != 0 && _timeFrequencyWidget.GetMetaData()->HasUVW())
+		if(_timeFrequencyWidget.GetFullMetaData() != 0 && _timeFrequencyWidget.GetFullMetaData()->HasUVW())
 		{
 			TimeFrequencyData activeData = GetActiveData();
 			if(activeData.PolarisationCount() != 1)
@@ -1512,7 +1512,7 @@ void RFIGuiWindow::onAddToImagePlane()
 				activeData = *singlePolarization;
 				delete singlePolarization;
 			}
-			_imagePlaneWindow->AddData(activeData, _timeFrequencyWidget.GetMetaData());
+			_imagePlaneWindow->AddData(activeData, _timeFrequencyWidget.GetSelectedMetaData());
 		}
 		else if(_spatialMetaData != 0)
 			_imagePlaneWindow->AddData(GetActiveData(), _spatialMetaData);
@@ -1528,7 +1528,7 @@ void RFIGuiWindow::onMultiplyData()
 {
 	TimeFrequencyData data(GetActiveData());
 	data.MultiplyImages(2.0L);
-	_timeFrequencyWidget.SetNewData(data, _timeFrequencyWidget.GetMetaData());
+	_timeFrequencyWidget.SetNewData(data, _timeFrequencyWidget.GetSelectedMetaData());
 	_timeFrequencyWidget.Update();
 }
 
@@ -1622,7 +1622,7 @@ void RFIGuiWindow::onUnrollPhaseButtonPressed()
 			ThresholdTools::UnrollPhase(image);
 			data->SetImage(i, image);
 		}
-		_timeFrequencyWidget.SetNewData(*data, _timeFrequencyWidget.GetMetaData());
+		_timeFrequencyWidget.SetNewData(*data, _timeFrequencyWidget.GetSelectedMetaData());
 		_timeFrequencyWidget.Update();
 		delete data;
 	}
@@ -1677,7 +1677,7 @@ void RFIGuiWindow::onVertEVD()
 			TimeFrequencyData old(data);
 			VertEVD::Perform(data, true);
 			TimeFrequencyData *diff = TimeFrequencyData::CreateTFDataFromDiff(old, data);
-			_timeFrequencyWidget.SetNewData(data, _timeFrequencyWidget.GetMetaData());
+			_timeFrequencyWidget.SetNewData(data, _timeFrequencyWidget.GetSelectedMetaData());
 			_timeFrequencyWidget.SetRevisedData(*diff);
 			delete diff;
 			_timeFrequencyWidget.Update();
@@ -1722,7 +1722,7 @@ void RFIGuiWindow::onApplyTimeProfile()
 			}
 			data.SetImage(i, output);
 		}
-		_timeFrequencyWidget.SetNewData(data, _timeFrequencyWidget.GetMetaData());
+		_timeFrequencyWidget.SetNewData(data, _timeFrequencyWidget.GetSelectedMetaData());
 		_timeFrequencyWidget.Update();
 	}
 }
@@ -1761,7 +1761,7 @@ void RFIGuiWindow::onApplyVertProfile()
 			}
 			data.SetImage(i, output);
 		}
-		_timeFrequencyWidget.SetNewData(data, _timeFrequencyWidget.GetMetaData());
+		_timeFrequencyWidget.SetNewData(data, _timeFrequencyWidget.GetSelectedMetaData());
 		_timeFrequencyWidget.Update();
 	}
 }
@@ -1794,7 +1794,7 @@ void RFIGuiWindow::onUseTimeProfile(bool inverse)
 				}
 				data.SetImage(i, output);
 			}
-			_timeFrequencyWidget.SetNewData(data, _timeFrequencyWidget.GetMetaData());
+			_timeFrequencyWidget.SetNewData(data, _timeFrequencyWidget.GetSelectedMetaData());
 			_timeFrequencyWidget.Update();
 		}
 	}
@@ -1829,7 +1829,7 @@ void RFIGuiWindow::onUseVertProfile(bool inverse)
 				}
 				data.SetImage(i, output);
 			}
-			_timeFrequencyWidget.SetNewData(data, _timeFrequencyWidget.GetMetaData());
+			_timeFrequencyWidget.SetNewData(data, _timeFrequencyWidget.GetSelectedMetaData());
 			_timeFrequencyWidget.Update();
 		}
 	}
@@ -1840,12 +1840,13 @@ void RFIGuiWindow::onStoreData()
 	if(HasImage())
 	{
 		_storedData = _timeFrequencyWidget.GetActiveData();
+		_storedMetaData = _timeFrequencyWidget.GetSelectedMetaData();
 	}
 }
 
 void RFIGuiWindow::onRecallData()
 {
-	_timeFrequencyWidget.SetNewData(_storedData, _timeFrequencyWidget.GetMetaData());
+	_timeFrequencyWidget.SetNewData(_storedData, _storedMetaData);
 	_timeFrequencyWidget.Update();
 }
 
@@ -1855,7 +1856,7 @@ void RFIGuiWindow::onSubtractDataFromMem()
 	{
 		TimeFrequencyData activeData = _timeFrequencyWidget.GetActiveData();
 		TimeFrequencyData *diffData = TimeFrequencyData::CreateTFDataFromDiff(_storedData, activeData);
-		_timeFrequencyWidget.SetNewData(*diffData, _timeFrequencyWidget.GetMetaData());
+		_timeFrequencyWidget.SetNewData(*diffData, _storedMetaData);
 		delete diffData;
 		_timeFrequencyWidget.Update();
 	}

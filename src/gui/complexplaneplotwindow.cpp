@@ -145,7 +145,7 @@ ComplexPlanePlotWindow::ComplexPlanePlotWindow(RFIGuiWindow &rfiGuiWindow, PlotM
 	add(_mainBox);
 	_mainBox.show();
 
-	_observationTimes = _rfiGuiWindow.TimeFrequencyMetaData()->ObservationTimes();
+	_observationTimes = _rfiGuiWindow.SelectedMetaData()->ObservationTimes();
 
 	setDetailsLabel();
 }
@@ -216,9 +216,9 @@ void ComplexPlanePlotWindow::onPlotPressed()
 				else
 					pointSet = &plot.StartLine("Fit (real)");
 				size_t middleY = (2*y + avgSize) / 2;
-				Baseline baseline(_rfiGuiWindow.TimeFrequencyMetaData()->Antenna1(), _rfiGuiWindow.TimeFrequencyMetaData()->Antenna2());
+				Baseline baseline(_rfiGuiWindow.SelectedMetaData()->Antenna1(), _rfiGuiWindow.SelectedMetaData()->Antenna2());
 				long double fringeCount =
-					UVImager::GetFringeCount(x, x+length, middleY, _rfiGuiWindow.TimeFrequencyMetaData());
+					UVImager::GetFringeCount(x, x+length, middleY, _rfiGuiWindow.SelectedMetaData());
 				long double fringeFrequency = fringeCount / length;
 				Mask2DPtr mask = Mask2D::CreateSetMaskPtr<false>(_rfiGuiWindow.AltMask()->Width(), _rfiGuiWindow.AltMask()->Height());
 				RFIPlots::MakeFittedComplexPlot(*pointSet, data, x, length, y, avgSize, mask, fringeFrequency, realVersusImaginary, false);
@@ -239,7 +239,7 @@ void ComplexPlanePlotWindow::onPlotPressed()
 				fitter.SetReturnFittedValue(true);
 				fitter.SetReturnMeanValue(false);
 				
-				fitter.SetMetaData(_rfiGuiWindow.TimeFrequencyMetaData());
+				fitter.SetMetaData(_rfiGuiWindow.SelectedMetaData());
 				fitter.PerformStaticFrequencyFitOnOneChannel(y);
 
 				Plot2DPointSet *pointSet;
@@ -298,7 +298,7 @@ void ComplexPlanePlotWindow::onPlotPressed()
 				FringeStoppingFitter fitter;
 				fitter.Initialize(data);
 				
-				fitter.SetMetaData(_rfiGuiWindow.TimeFrequencyMetaData());
+				fitter.SetMetaData(_rfiGuiWindow.SelectedMetaData());
 				//fitter.PerformFringeStop();
 				fitter.SetReturnFittedValue(true);
 				if(_dynamicFringeFitButton.get_active())
@@ -338,7 +338,7 @@ void ComplexPlanePlotWindow::setDetailsLabel()
 	size_t length = (size_t) _lengthScale.get_value();
 	size_t avgSize = (size_t) _ySumLengthScale.get_value();
 	size_t middleY = (2*y + avgSize) / 2;
-	TimeFrequencyMetaDataCPtr metaData = _rfiGuiWindow.TimeFrequencyMetaData();
+	TimeFrequencyMetaDataCPtr metaData = _rfiGuiWindow.SelectedMetaData();
 
 	double timeStart = _observationTimes[x];
 	double deltaTime;

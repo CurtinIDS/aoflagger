@@ -98,7 +98,8 @@ class ImageWidget : public Gtk::DrawingArea {
 		double StartVertical() const { return _startVertical; }
 		double EndVertical() const { return _endVertical; }
 		void SetSegmentedImage(SegmentedImageCPtr segmentedImage) { _segmentedImage = segmentedImage; }
-		TimeFrequencyMetaDataCPtr GetMetaData();
+		TimeFrequencyMetaDataCPtr GetSelectedMetaData();
+		const TimeFrequencyMetaDataCPtr& GetFullMetaData() const { return _metaData; }
 		void SetMetaData(TimeFrequencyMetaDataCPtr metaData) { _metaData = metaData; }
 
 		sigc::signal<void, size_t, size_t> &OnMouseMovedEvent() { return _onMouseMoved; }

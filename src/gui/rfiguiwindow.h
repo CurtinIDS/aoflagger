@@ -100,9 +100,9 @@ class RFIGuiWindow : public Gtk::Window, private StrategyController {
 		{
 			_timeFrequencyWidget.SetHighlighting(newValue);
 		}
-		TimeFrequencyMetaDataCPtr TimeFrequencyMetaData()
+		TimeFrequencyMetaDataCPtr SelectedMetaData()
 		{
-			return _timeFrequencyWidget.GetMetaData();
+			return _timeFrequencyWidget.GetSelectedMetaData();
 		}
 		
 		void onExecuteStrategyFinished();
@@ -279,6 +279,7 @@ class RFIGuiWindow : public Gtk::Window, private StrategyController {
 		class SpatialMatrixMetaData *_spatialMetaData;
 		std::vector<double> _horProfile, _vertProfile;
 		TimeFrequencyData _storedData;
+		TimeFrequencyMetaDataCPtr _storedMetaData;
 		class PlotWindow *_plotWindow;
 };
 

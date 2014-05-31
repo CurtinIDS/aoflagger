@@ -57,7 +57,7 @@ class RFIGuiController
 		TimeFrequencyData RevisedData() const;
 		TimeFrequencyData ContaminatedData() const;
 		
-		TimeFrequencyMetaDataCPtr MetaData() const;
+		TimeFrequencyMetaDataCPtr SelectedMetaData() const;
 		
 		class PlotManager &PlotManager() { return *_plotManager; }
 		

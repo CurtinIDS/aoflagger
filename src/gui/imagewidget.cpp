@@ -618,7 +618,7 @@ Mask2DCPtr ImageWidget::GetActiveMask() const
 	}
 }
 
-TimeFrequencyMetaDataCPtr ImageWidget::GetMetaData()
+TimeFrequencyMetaDataCPtr ImageWidget::GetSelectedMetaData()
 {
 	TimeFrequencyMetaDataCPtr metaData = _metaData;
 
