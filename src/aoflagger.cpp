@@ -24,7 +24,7 @@
 #include <libgen.h>
 
 #include "strategy/actions/foreachmsaction.h"
-#include "strategy/actions/strategyaction.h"
+#include "strategy/actions/strategy.h"
 
 #include "strategy/algorithms/baselineselector.h"
 #include "strategy/algorithms/polarizationstatistics.h"

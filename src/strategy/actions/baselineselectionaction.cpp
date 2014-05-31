@@ -27,7 +27,7 @@
 #include "../../msio/mask2d.h"
 #include "../../msio/baselinereader.h"
 
-#include "strategyaction.h"
+#include "strategy.h"
 
 #include "../control/artifactset.h"
 

@@ -17,7 +17,7 @@
 #include "../actions/setimageaction.h"
 #include "../actions/slidingwindowfitaction.h"
 #include "../actions/statisticalflagaction.h"
-#include "../actions/strategyaction.h"
+#include "../actions/strategy.h"
 #include "../actions/sumthresholdaction.h"
 #include "../actions/timeselectionaction.h"
 #include "../actions/writeflagsaction.h"
@@ -309,6 +309,21 @@ namespace rfiStrategy {
 		
 		LoadStrategy(*feBaseBlock, telescopeId, flags, frequency, timeRes, frequencyRes);
 
+		encapsulatePostOperations(destination, feBaseBlock, telescopeId);
+	}
+	
+	void DefaultStrategy::EncapsulateSingleStrategy(ActionBlock& destination, ActionBlock* singleStrategy, enum TelescopeId telescopeId)
+	{
+		ForEachBaselineAction *feBaseBlock = new ForEachBaselineAction();
+		destination.Add(feBaseBlock);
+
+		feBaseBlock->Add(singleStrategy);
+		
+		encapsulatePostOperations(destination, feBaseBlock, telescopeId);
+	}
+
+	void DefaultStrategy::encapsulatePostOperations(ActionBlock& destination, ForEachBaselineAction* feBaseBlock, enum TelescopeId telescopeId)
+	{
 		feBaseBlock->Add(new WriteFlagsAction());
 
 		if(telescopeId != ARECIBO_TELESCOPE && telescopeId != PARKES_TELESCOPE)
@@ -322,14 +337,14 @@ namespace rfiStrategy {
 		frequencyPlotAction->SetPlotKind(PlotAction::FrequencyFlagCountPlot);
 		feBaseBlock->Add(frequencyPlotAction);
 
-		if(telescopeId != ARECIBO_TELESCOPE && telescopeId != PARKES_TELESCOPE)
+		if(telescopeId != ARECIBO_TELESCOPE && telescopeId != PARKES_TELESCOPE && telescopeId != GENERIC_TELESCOPE)
 		{
 			BaselineSelectionAction *baselineSelection = new BaselineSelectionAction();
 			baselineSelection->SetPreparationStep(false);
 			destination.Add(baselineSelection);
 		}
 	}
-	
+
 	void DefaultStrategy::warnIfUnknownTelescope(DefaultStrategy::TelescopeId& telescopeId, const string& telescopeName)
 	{
 		if(telescopeId == GENERIC_TELESCOPE)

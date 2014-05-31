@@ -23,7 +23,7 @@
 #include <gtkmm/messagedialog.h>
 
 #include "../strategy/actions/iterationaction.h"
-#include "../strategy/actions/strategyaction.h"
+#include "../strategy/actions/strategy.h"
 
 #include "../strategy/control/strategyreader.h"
 #include "../strategy/control/strategywriter.h"

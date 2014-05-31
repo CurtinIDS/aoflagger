@@ -64,7 +64,9 @@ namespace rfiStrategy {
 
 			virtual void AddWriteFlagsTask(const ImageSetIndex &index, std::vector<Mask2DCPtr> &flags);
 			
-			virtual void PerformWriteFlagsTask();
+			virtual void PerformWriteFlagsTask()
+			{
+			}
 
 			virtual void Initialize();
 	

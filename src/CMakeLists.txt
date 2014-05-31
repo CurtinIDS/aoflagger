@@ -148,7 +148,7 @@ set(STRATEGY_ACTION_FILES
   strategy/actions/slidingwindowfitaction.cpp
   strategy/actions/spatialcompositionaction.cpp
   strategy/actions/statisticalflagaction.cpp
-  strategy/actions/strategyaction.cpp
+  strategy/actions/strategy.cpp
   strategy/actions/svdaction.cpp
   strategy/actions/timeconvolutionaction.cpp
   strategy/actions/timeselectionaction.cpp

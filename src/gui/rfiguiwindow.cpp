@@ -33,7 +33,7 @@
 #include "../msio/segmentedimage.h"
 #include "../msio/spatialmatrixmetadata.h"
 
-#include "../strategy/actions/strategyaction.h"
+#include "../strategy/actions/strategy.h"
 
 #include "../strategy/control/artifactset.h"
 #include "../strategy/control/defaultstrategy.h"

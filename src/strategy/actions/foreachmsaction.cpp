@@ -23,7 +23,7 @@
 
 #include "../../msio/measurementset.h"
 
-#include "strategyaction.h"
+#include "strategy.h"
 
 #include "../control/artifactset.h"
 #include "../control/defaultstrategy.h"

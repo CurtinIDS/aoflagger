@@ -77,7 +77,7 @@ FilterBankSet::FilterBankSet(const std::string &location) :
 	double memSize = double(pageCount) * double(pageSize);
 	_intervalCount = ceil(sizeOfImage / (memSize / 16.0));
 	if(_intervalCount < 1) _intervalCount = 1;
-	if(_intervalCount*8 > _sampleCount) _intervalCount = _sampleCount*8;
+	if(_intervalCount*8 > _sampleCount) _intervalCount = _sampleCount/8;
 	AOLogger::Debug << round(sizeOfImage*1e-8)*0.1 << " GB/image required of total of " << round(memSize*1e-8)*0.1 << " GB of mem, splitting in " << _intervalCount << " intervals\n";
 }
 
@@ -86,12 +86,11 @@ void FilterBankSet::AddReadRequest(const ImageSetIndex& index)
 	_requests.push_back(new BaselineData(index));
 }
 
-void FilterBankSet::AddWriteFlagsTask(const ImageSetIndex& index, std::vector<Mask2DCPtr>& flags)
-{
-}
-
 BaselineData* FilterBankSet::GetNextRequested()
 {
+	if(_bitCount != 32)
+		throw std::runtime_error("Only support for 32-bit filterbank sets has been added as of yet");
+	
 	BaselineData* baseline = _requests.front();
 	_requests.pop_front();
 	const size_t intervalIndex = reinterpret_cast<const FilterBankSetIndex&>(baseline->Index())._intervalIndex;
@@ -149,6 +148,35 @@ BaselineData* FilterBankSet::GetNextRequested()
 	return baseline;
 }
 
+void FilterBankSet::AddWriteFlagsTask(const ImageSetIndex& index, std::vector<Mask2DCPtr>& flags)
+{
+	if(_bitCount != 32)
+		throw std::runtime_error("Only support for 32-bit filterbank sets has been added as of yet");
+	
+	const size_t intervalIndex = reinterpret_cast<const FilterBankSetIndex&>(index)._intervalIndex;
+	
+	const size_t
+		startIndex = (_sampleCount * intervalIndex) / _intervalCount,
+		endIndex = (_sampleCount * (intervalIndex+1)) / _intervalCount;
+	
+	std::fstream file(_location.c_str());
+	file.seekg(_headerEnd + std::streampos(startIndex * sizeof(float) * _channelCount));
+	
+	std::vector<float> buffer(_channelCount);
+	for(size_t x=0; x!=endIndex - startIndex; ++x)
+	{
+		std::streampos pos = file.tellg();
+		file.read(reinterpret_cast<char*>(&buffer[0]), _channelCount*sizeof(float));
+		for(size_t y=0; y!=_channelCount; ++y)
+		{
+			if(flags[0]->Value(x, y))
+				buffer[y] = std::numeric_limits<float>::quiet_NaN();
+		}
+		file.seekp(pos);
+		file.write(reinterpret_cast<char*>(&buffer[0]), _channelCount*sizeof(float));
+	}
+}
+
 void FilterBankSet::Initialize()
 {
 }
@@ -160,10 +188,6 @@ void FilterBankSet::PerformReadRequests()
 void FilterBankSet::PerformWriteDataTask(const ImageSetIndex& index, std::vector<Image2DCPtr> realImages, std::vector<Image2DCPtr> imaginaryImages)
 {
 	throw std::runtime_error("Can't write data back to filter bank format: not implemented");
-}
-
-void FilterBankSet::PerformWriteFlagsTask()
-{
 }
 
 std::string FilterBankSetIndex::Description() const

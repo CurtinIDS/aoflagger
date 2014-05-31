@@ -59,6 +59,8 @@ namespace rfiStrategy {
 		
 		static void LoadFullStrategy(ActionBlock &destination, enum TelescopeId telescopeId, unsigned flags, double frequency=0.0, double timeRes=0.0, double frequencyRes=0.0);
 		
+		static void EncapsulateSingleStrategy(ActionBlock& destination, ActionBlock* singleStrategy, enum TelescopeId telescopeId);
+		
 		static void LoadSingleStrategy(ActionBlock &destination, int iterationCount, bool keepTransients, bool changeResVertically, bool calPassband, bool channelSelection, bool clearFlags, bool resetContaminated, double sumThresholdSensitivity, bool onStokesIQ, bool includePolStatistics, double verticalSmoothing, bool hasBaselines, bool highTimeResolution);
 
 		static std::string TelescopeName(DefaultStrategy::TelescopeId telescopeId);
@@ -71,6 +73,8 @@ namespace rfiStrategy {
 		
 	private:
 		static void warnIfUnknownTelescope(enum TelescopeId &telescopeId, const std::string &telescopeName);
+		
+		static void encapsulatePostOperations(ActionBlock& destination, class ForEachBaselineAction* feBaseBlock, enum TelescopeId telescopeId);
 	};
 
 

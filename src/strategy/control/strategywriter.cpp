@@ -48,7 +48,7 @@
 #include "../actions/setimageaction.h"
 #include "../actions/slidingwindowfitaction.h"
 #include "../actions/statisticalflagaction.h"
-#include "../actions/strategyaction.h"
+#include "../actions/strategy.h"
 #include "../actions/svdaction.h"
 #include "../actions/sumthresholdaction.h"
 #include "../actions/timeconvolutionaction.h"

@@ -5,7 +5,7 @@
 #include "../msio/image2d.h"
 #include "../msio/mask2d.h"
 
-#include "../strategy/actions/strategyaction.h"
+#include "../strategy/actions/strategy.h"
 
 #include "../strategy/control/artifactset.h"
 #include "../strategy/control/defaultstrategy.h"

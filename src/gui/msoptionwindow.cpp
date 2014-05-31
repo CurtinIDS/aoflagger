@@ -25,7 +25,7 @@
 
 #include "msoptionwindow.h"
 
-#include "../strategy/actions/strategyaction.h"
+#include "../strategy/actions/strategy.h"
 
 #include "../strategy/imagesets/msimageset.h"
 

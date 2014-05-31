@@ -21,7 +21,7 @@
 #include <iostream>
 #include <libgen.h>
 
-#include "strategy/actions/strategyaction.h"
+#include "strategy/actions/strategy.h"
 
 #include "strategy/control/strategyreader.h"
 #include "strategy/control/strategywriter.h"
