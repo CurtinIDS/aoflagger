@@ -103,6 +103,7 @@ BaselineData* FilterBankSet::GetNextRequested()
 	file.seekg(_headerEnd + std::streampos(startIndex * sizeof(float) * _channelCount));
 	
 	Image2DPtr image = Image2D::CreateUnsetImagePtr(endIndex - startIndex, _channelCount);
+	Mask2DPtr mask = Mask2D::CreateUnsetMaskPtr(endIndex - startIndex, _channelCount);
 	std::vector<float> buffer(_channelCount);
 	for(size_t x=0; x!=endIndex - startIndex; ++x)
 	{
@@ -110,9 +111,11 @@ BaselineData* FilterBankSet::GetNextRequested()
 		for(size_t y=0; y!=_channelCount; ++y)
 		{
 			image->SetValue(x, y, buffer[y]);
+			mask->SetValue(x, y, !std::isfinite(buffer[y]));
 		}
 	}
 	TimeFrequencyData tfData(TimeFrequencyData::AmplitudePart, StokesIPolarisation, image);
+	tfData.SetGlobalMask(mask);
 	TimeFrequencyMetaDataPtr metaData(new TimeFrequencyMetaData());
 	AntennaInfo antenna;
 	antenna.diameter = 0;
