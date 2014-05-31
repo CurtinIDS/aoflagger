@@ -431,17 +431,17 @@ class TimeTickSet : public TickSet
 			else
 			{
 				double factor = 1.0;
-				while(lowerLimit < 0.1 && std::isfinite(lowerLimit))
+				while(lowerLimit <= 0.1 && std::isfinite(lowerLimit))
 				{
 					factor *= 0.1;
 					lowerLimit *= 10.0;
 				}
-				if(lowerLimit <= 0.1)
-					return 0.1 * factor;
-				else if(lowerLimit <= 0.2)
+				if(lowerLimit <= 0.2)
 					return 0.2 * factor;
-				else
+				else if(lowerLimit <= 0.5)
 					return 0.5 * factor;
+				else
+					return factor;
 			}
 		}
 		
