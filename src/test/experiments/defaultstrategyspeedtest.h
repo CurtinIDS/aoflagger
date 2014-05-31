@@ -40,7 +40,7 @@
 #include "../../strategy/actions/setimageaction.h"
 #include "../../strategy/actions/slidingwindowfitaction.h"
 #include "../../strategy/actions/statisticalflagaction.h"
-#include "../../strategy/actions/strategyaction.h"
+#include "../../strategy/actions/strategy.h"
 #include "../../strategy/actions/sumthresholdaction.h"
 #include "../../strategy/actions/timeselectionaction.h"
 
