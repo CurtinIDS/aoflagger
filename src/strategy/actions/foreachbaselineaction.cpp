@@ -33,6 +33,7 @@
 #include "../imagesets/fitsimageset.h"
 #include "../imagesets/imageset.h"
 #include "../imagesets/msimageset.h"
+#include "../imagesets/filterbankset.h"
 
 namespace rfiStrategy {
 	
@@ -76,13 +77,17 @@ namespace rfiStrategy {
 					size_t maxThreads = size_t(memSize / estMemorySizePerThread);
 					if(maxThreads < 1) maxThreads = 1;
 					AOLogger::Warn <<
-						"WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING!\n"
 						"This measurement set is TOO LARGE to be processed with " << _threadCount << " threads!\n" <<
 						_threadCount << " threads would require " << memToStr(estMemorySizePerThread*compThreadCount) << " of memory approximately.\n"
 						"Number of threads that will actually be used: " << maxThreads << "\n"
 						"This might hurt performance a lot!\n\n";
 					_threadCount = maxThreads;
 				}
+			}
+			if(dynamic_cast<FilterBankSet*>(imageSet) != 0 && _threadCount != 1)
+			{
+				AOLogger::Info << "This is a Filterbank set -- disabling multithreading\n";
+				_threadCount = 1;
 			}
 			if(!_antennaeToSkip.empty())
 			{
