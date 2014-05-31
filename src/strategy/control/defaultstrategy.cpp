@@ -22,9 +22,10 @@
 #include "../actions/timeselectionaction.h"
 #include "../actions/writeflagsaction.h"
 
-#include "../imagesets/imageset.h"
 #include "../imagesets/bhfitsimageset.h"
+#include "../imagesets/filterbankset.h"
 #include "../imagesets/fitsimageset.h"
+#include "../imagesets/imageset.h"
 #include "../imagesets/msimageset.h"
 
 #include "../../msio/measurementset.h"
@@ -34,20 +35,21 @@
 namespace rfiStrategy {
 
 	const unsigned
-		DefaultStrategy::FLAG_NONE             = aoflagger::StrategyFlags::NONE,
-		DefaultStrategy::FLAG_LOW_FREQUENCY    = aoflagger::StrategyFlags::LOW_FREQUENCY,
-		DefaultStrategy::FLAG_HIGH_FREQUENCY   = aoflagger::StrategyFlags::HIGH_FREQUENCY,
-		DefaultStrategy::FLAG_LARGE_BANDWIDTH  = aoflagger::StrategyFlags::LARGE_BANDWIDTH,
-		DefaultStrategy::FLAG_SMALL_BANDWIDTH  = aoflagger::StrategyFlags::SMALL_BANDWIDTH,
-		DefaultStrategy::FLAG_TRANSIENTS       = aoflagger::StrategyFlags::TRANSIENTS,
-		DefaultStrategy::FLAG_ROBUST           = aoflagger::StrategyFlags::ROBUST,
-		DefaultStrategy::FLAG_FAST             = aoflagger::StrategyFlags::FAST,
-		DefaultStrategy::FLAG_OFF_AXIS_SOURCES = aoflagger::StrategyFlags::OFF_AXIS_SOURCES,
-		DefaultStrategy::FLAG_UNSENSITIVE      = aoflagger::StrategyFlags::UNSENSITIVE,
-		DefaultStrategy::FLAG_SENSITIVE        = aoflagger::StrategyFlags::SENSITIVE,
-		DefaultStrategy::FLAG_GUI_FRIENDLY     = aoflagger::StrategyFlags::GUI_FRIENDLY,
-		DefaultStrategy::FLAG_CLEAR_FLAGS      = aoflagger::StrategyFlags::CLEAR_FLAGS,
-		DefaultStrategy::FLAG_AUTO_CORRELATION = aoflagger::StrategyFlags::AUTO_CORRELATION;
+		DefaultStrategy::FLAG_NONE                = aoflagger::StrategyFlags::NONE,
+		DefaultStrategy::FLAG_LOW_FREQUENCY       = aoflagger::StrategyFlags::LOW_FREQUENCY,
+		DefaultStrategy::FLAG_HIGH_FREQUENCY     = aoflagger::StrategyFlags::HIGH_FREQUENCY,
+		DefaultStrategy::FLAG_LARGE_BANDWIDTH     = aoflagger::StrategyFlags::LARGE_BANDWIDTH,
+		DefaultStrategy::FLAG_SMALL_BANDWIDTH     = aoflagger::StrategyFlags::SMALL_BANDWIDTH,
+		DefaultStrategy::FLAG_TRANSIENTS          = aoflagger::StrategyFlags::TRANSIENTS,
+		DefaultStrategy::FLAG_ROBUST              = aoflagger::StrategyFlags::ROBUST,
+		DefaultStrategy::FLAG_FAST                = aoflagger::StrategyFlags::FAST,
+		DefaultStrategy::FLAG_OFF_AXIS_SOURCES    = aoflagger::StrategyFlags::OFF_AXIS_SOURCES,
+		DefaultStrategy::FLAG_UNSENSITIVE         = aoflagger::StrategyFlags::UNSENSITIVE,
+		DefaultStrategy::FLAG_SENSITIVE           = aoflagger::StrategyFlags::SENSITIVE,
+		DefaultStrategy::FLAG_GUI_FRIENDLY        = aoflagger::StrategyFlags::GUI_FRIENDLY,
+		DefaultStrategy::FLAG_CLEAR_FLAGS         = aoflagger::StrategyFlags::CLEAR_FLAGS,
+		DefaultStrategy::FLAG_AUTO_CORRELATION    = aoflagger::StrategyFlags::AUTO_CORRELATION,
+		DefaultStrategy::FLAG_HIGH_TIME_RESOLUTION= aoflagger::StrategyFlags::HIGH_TIME_RESOLUTION;
 	
 	std::string DefaultStrategy::TelescopeName(DefaultStrategy::TelescopeId telescopeId)
 	{
@@ -108,6 +110,7 @@ namespace rfiStrategy {
 		// Don't remove edges because of channel selection
 		bool channelSelection = (telescopeId != JVLA_TELESCOPE);
 		bool changeResVertically = true;
+		bool hiTimeResolution = (timeRes <= 1e-3 && timeRes != 0.0) || ((flags&FLAG_HIGH_TIME_RESOLUTION)!=0);
 		// WSRT has automatic gain control, which strongly affect autocorrelations
 		if(((flags&FLAG_AUTO_CORRELATION) != 0) && telescopeId == WSRT_TELESCOPE)
 		{
@@ -147,10 +150,10 @@ namespace rfiStrategy {
 		
 		bool hasBaselines = telescopeId!=PARKES_TELESCOPE && telescopeId!=ARECIBO_TELESCOPE && telescopeId!=BIGHORNS_TELESCOPE;
 		
-		LoadSingleStrategy(strategy, iterationCount, keepTransients, changeResVertically, calPassband, channelSelection, clearFlags, resetContaminated, sumThresholdSensitivity, onStokesIQ, assembleStatistics, verticalSmoothing, hasBaselines);
+		LoadSingleStrategy(strategy, iterationCount, keepTransients, changeResVertically, calPassband, channelSelection, clearFlags, resetContaminated, sumThresholdSensitivity, onStokesIQ, assembleStatistics, verticalSmoothing, hasBaselines, hiTimeResolution);
 	}
 	
-	void DefaultStrategy::LoadSingleStrategy(ActionBlock &block, int iterationCount, bool keepTransients, bool changeResVertically, bool calPassband, bool channelSelection, bool clearFlags, bool resetContaminated, double sumThresholdSensitivity, bool onStokesIQ, bool assembleStatistics, double verticalSmoothing, bool hasBaselines)
+	void DefaultStrategy::LoadSingleStrategy(ActionBlock &block, int iterationCount, bool keepTransients, bool changeResVertically, bool calPassband, bool channelSelection, bool clearFlags, bool resetContaminated, double sumThresholdSensitivity, bool onStokesIQ, bool assembleStatistics, double verticalSmoothing, bool hasBaselines, bool highTimeResolution)
 	{
 		ActionBlock *current;
 
@@ -158,6 +161,20 @@ namespace rfiStrategy {
 			block.Add(new SetImageAction());
 		
 		block.Add(new SetFlaggingAction());
+		
+		current = &block;
+		
+		if(highTimeResolution)
+		{
+			ChangeResolutionAction* changeResAction = new ChangeResolutionAction();
+			changeResAction->SetTimeDecreaseFactor(10);
+			changeResAction->SetFrequencyDecreaseFactor(1);
+			changeResAction->SetRestoreRevised(true);
+			changeResAction->SetRestoreContaminated(false);
+			changeResAction->SetRestoreMasks(true);
+			current->Add(changeResAction);
+			current = changeResAction;
+		}
 
 		ForEachPolarisationBlock *fepBlock = new ForEachPolarisationBlock();
 		if(onStokesIQ)
@@ -169,7 +186,7 @@ namespace rfiStrategy {
 			fepBlock->SetOnStokesI(true);
 			fepBlock->SetOnStokesQ(true);
 		}
-		block.Add(fepBlock);
+		current->Add(fepBlock);
 		current = fepBlock;
 
 		ForEachComplexComponentAction *focAction = new ForEachComplexComponentAction();
@@ -384,6 +401,7 @@ namespace rfiStrategy {
 		MSImageSet *msImageSet = dynamic_cast<MSImageSet*>(&measurementSet);
 		FitsImageSet *fitsImageSet = dynamic_cast<FitsImageSet*>(&measurementSet);
 		BHFitsImageSet *bhFitsImageSet = dynamic_cast<BHFitsImageSet*>(&measurementSet);
+		FilterBankSet *fbImageSet = dynamic_cast<FilterBankSet*>(&measurementSet);
 
 		if(msImageSet != 0)
 		{
@@ -420,7 +438,20 @@ namespace rfiStrategy {
 		  flags = 0;
 		  frequency = 0.0;
 		  timeRes = 0.0;
-		  frequencyRes = 0.0;		  
+		  frequencyRes = 0.0;
+		} else if(fbImageSet != 0) {
+		  telescopeId = GENERIC_TELESCOPE;
+			flags = 0;
+			frequency = fbImageSet->CentreFrequency();
+			timeRes = fbImageSet->TimeResolution();
+			frequencyRes = fbImageSet->ChannelWidth();
+			AOLogger::Info <<
+				"The strategy will be optimized for the following settings specified by the FilterBankSet:\n"
+				"Telescope=" << TelescopeName(telescopeId) << ", flags=NONE, frequency="
+				<< Frequency::ToString(frequency) << ",\n"
+				"time resolution=" << timeRes*1e6 << " µs, frequency resolution=" << Frequency::ToString(frequencyRes) << '\n';
+			AOLogger::Warn <<
+				"** Determined some settings from FilterBankSet, but telescope name cannot be determined.\n";
 		} else {
 		  telescopeId = GENERIC_TELESCOPE;
 		  flags = 0;

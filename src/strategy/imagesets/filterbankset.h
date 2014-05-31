@@ -74,6 +74,18 @@ namespace rfiStrategy {
 			
 			virtual void PerformWriteDataTask(const ImageSetIndex &index, std::vector<Image2DCPtr> realImages, std::vector<Image2DCPtr> imaginaryImages);
 			
+			double CentreFrequency() const
+			{
+				return (_fch1 + (_foff*_channelCount*0.5))*1e6;
+			}
+			double ChannelWidth() const
+			{
+				return std::fabs(_foff)*1e6;
+			}
+			double TimeResolution() const
+			{
+				return _timeOfSample;
+			}
 		private:
 			friend class FilterBankSetIndex;
 			std::string _location;

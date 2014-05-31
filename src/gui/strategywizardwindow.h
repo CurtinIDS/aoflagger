@@ -27,7 +27,7 @@ private:
 	Glib::RefPtr<Gtk::ListStore> _telescopeList;
 	Gtk::HButtonBox _buttonBox;
 	Gtk::Button _finishButton, _nextButton, _previousButton;
-	Gtk::CheckButton _transientsButton;
+	Gtk::CheckButton _transientsButton, _highTimeResolutionButton;
 	Gtk::RadioButton _lowFreqRadioButton, _normFreqRadioButton, _highFreqRadioButton;
 	Gtk::RadioButton _smallBandwidthButton, _normBandwidthButton, _largeBandwidthButton;
 	Gtk::RadioButton _robustConvergenceButton, _normConvergenceButton, _fastConvergenceButton;

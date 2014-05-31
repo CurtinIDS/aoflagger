@@ -12,7 +12,7 @@ StrategyWizardWindow::StrategyWizardWindow(class StrategyController &controller)
 	_finishButton(Gtk::Stock::OK),
 	_nextButton(Gtk::Stock::MEDIA_NEXT),
 	_previousButton(Gtk::Stock::MEDIA_PREVIOUS),
-	_transientsButton("Transients"),
+	_transientsButton("Transients"), _highTimeResolutionButton("High time resolution"),
 	_lowFreqRadioButton("Low frequency"), _normFreqRadioButton("Normal frequency"), _highFreqRadioButton("High frequency"),
 	_smallBandwidthButton("Small bandwidth"), _normBandwidthButton("Normal bandwidth"), _largeBandwidthButton("Large bandwidth"),
 	_robustConvergenceButton("Robust convergence"), _normConvergenceButton("Normal convergence"), _fastConvergenceButton("Fast convergence"),
@@ -62,6 +62,7 @@ StrategyWizardWindow::StrategyWizardWindow(class StrategyController &controller)
 void StrategyWizardWindow::initializeOptionPage()
 {
 	_optionsLeftBox.pack_start(_transientsButton, true, true);
+	_optionsLeftBox.pack_start(_highTimeResolutionButton, true, true);
 	Gtk::RadioButton::Group freqGroup;
 	_lowFreqRadioButton.set_group(freqGroup);
 	_optionsLeftBox.pack_start(_lowFreqRadioButton, true, true);
@@ -142,6 +143,8 @@ void StrategyWizardWindow::onFinishClicked()
 		flags |= rfiStrategy::DefaultStrategy::FLAG_SMALL_BANDWIDTH;
 	if(_transientsButton.get_active())
 		flags |= rfiStrategy::DefaultStrategy::FLAG_TRANSIENTS;
+	if(_highTimeResolutionButton.get_active())
+		flags |= rfiStrategy::DefaultStrategy::FLAG_HIGH_TIME_RESOLUTION;
 	if(_robustConvergenceButton.get_active())
 		flags |= rfiStrategy::DefaultStrategy::FLAG_ROBUST;
 	if(_fastConvergenceButton.get_active())

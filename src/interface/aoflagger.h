@@ -130,6 +130,14 @@ namespace aoflagger {
 			
 			/** @brief Optimize for auto-correlations. */
 			static const unsigned AUTO_CORRELATION;
+			
+			/** @brief Optimizes for observations with high time resolution.
+			 * 
+			 * Observations with a high time resolution are those that are sampled much
+			 * faster than the typical second-scale resolution required for imaging
+			 * observations. Examples are observations for fast pulsars or fast radio burst.
+			 */
+			static const unsigned HIGH_TIME_RESOLUTION;
 		private:
 			StrategyFlags();
 	};
