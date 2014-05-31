@@ -92,7 +92,9 @@ class ImageWidget : public Gtk::DrawingArea {
 			_startVertical = start;
 			_endVertical = end;
 		}
-		void ResetDomains();
+		void ZoomFit();
+		void ZoomIn();
+		void ZoomOut();
 		double StartHorizontal() const { return _startHorizontal; }
 		double EndHorizontal() const { return _endHorizontal; }
 		double StartVertical() const { return _startVertical; }

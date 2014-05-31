@@ -43,7 +43,7 @@ void ImageComparisonWidget::SetNewData(const TimeFrequencyData &data, TimeFreque
 	
 	SetOriginalMask(data.GetSingleMask());
 	SetMetaData(metaData);
-	ResetDomains();
+	ZoomFit();
 }
 
 void ImageComparisonWidget::updateVisualizedImage()

@@ -645,6 +645,12 @@ void RFIGuiWindow::createToolbar()
   sigc::mem_fun(*this, &RFIGuiWindow::onPlotTimeScatterComparisonPressed) );
 	_actionGroup->add( Gtk::Action::create("PlotSingularValues", "Plot _singular values"),
   sigc::mem_fun(*this, &RFIGuiWindow::onPlotSingularValuesPressed) );
+	_actionGroup->add( Gtk::Action::create("ZoomFit", Gtk::Stock::ZOOM_FIT, "Zoom _fit"),
+	sigc::mem_fun(*this, &RFIGuiWindow::onZoomFit) );
+	_actionGroup->add( Gtk::Action::create("ZoomIn", Gtk::Stock::ZOOM_IN, "Zoom in"),
+	sigc::mem_fun(*this, &RFIGuiWindow::onZoomIn) );
+	_actionGroup->add( Gtk::Action::create("ZoomOut", Gtk::Stock::ZOOM_OUT, "Zoom out"),
+	sigc::mem_fun(*this, &RFIGuiWindow::onZoomOut) );
 	_actionGroup->add( Gtk::Action::create("ShowImagePlane", "_Show image plane"),
 		Gtk::AccelKey("<control>I"),
   sigc::mem_fun(*this, &RFIGuiWindow::onShowImagePlane) );
@@ -889,6 +895,10 @@ void RFIGuiWindow::createToolbar()
     "      <menuitem action='AlternativeFlags'/>"
     "      <menuitem action='Highlight'/>"
     "      <separator/>"
+    "      <menuitem action='ZoomFit'/>"
+    "      <menuitem action='ZoomIn'/>"
+    "      <menuitem action='ZoomOut'/>"
+    "      <separator/>"
     "      <menuitem action='ShowImagePlane'/>"
     "      <menuitem action='SetAndShowImagePlane'/>"
     "      <menuitem action='AddToImagePlane'/>"
@@ -1009,8 +1019,9 @@ void RFIGuiWindow::createToolbar()
 	uiManager->add_ui_from_string(ui_info);
 	Gtk::Widget* pMenubar = uiManager->get_widget("/MenuBar");
 	_mainVBox.pack_start(*pMenubar, Gtk::PACK_SHRINK);
-	Gtk::Widget* pToolbar = uiManager->get_widget("/ToolBar");
-	static_cast<Gtk::Toolbar *>(pToolbar)->set_toolbar_style(Gtk::TOOLBAR_BOTH);
+	Gtk::Toolbar* pToolbar = static_cast<Gtk::Toolbar *>(uiManager->get_widget("/ToolBar"));
+	pToolbar->set_toolbar_style(Gtk::TOOLBAR_BOTH);
+	pToolbar->set_icon_size(Gtk::ICON_SIZE_SMALL_TOOLBAR);
 	_mainVBox.pack_start(*pToolbar, Gtk::PACK_SHRINK);
 	pMenubar->show();
 }

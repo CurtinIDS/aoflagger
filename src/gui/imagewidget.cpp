@@ -120,12 +120,51 @@ bool ImageWidget::onDraw(const Cairo::RefPtr<Cairo::Context>& cr)
 	return true;
 }
 
-void ImageWidget::ResetDomains()
+void ImageWidget::ZoomFit()
 {
 	_startHorizontal = 0.0;
 	_endHorizontal = 1.0;
 	_startVertical = 0.0;
 	_endVertical = 1.0;
+}
+
+void ImageWidget::ZoomIn()
+{
+	double distX = (_endHorizontal-_startHorizontal)*0.25;
+	_startHorizontal += distX;
+	_endHorizontal -= distX;
+	double distY = (_endVertical-_startVertical)*0.25;
+	_startVertical += distY;
+	_endVertical -= distY;
+}
+
+void ImageWidget::ZoomOut()
+{
+	double distX = (_endHorizontal-_startHorizontal)*0.5;
+	_startHorizontal -= distX;
+	_endHorizontal += distX;
+	if(_startHorizontal < 0.0) {
+		_endHorizontal -= _startHorizontal;
+		_startHorizontal = 0.0;
+	}
+	if(_endHorizontal > 1.0) {
+		_startHorizontal -= _endHorizontal-1.0;
+		_endHorizontal = 1.0;
+	}
+	if(_startHorizontal < 0.0) _startHorizontal = 0.0;
+	
+	double distY = (_endVertical-_startVertical)*0.5;
+	_startVertical -= distY;
+	_endVertical += distY;
+	if(_startVertical < 0.0) {
+		_endVertical -= _startVertical;
+		_startVertical = 0.0;
+	}
+	if(_endVertical > 1.0) {
+		_startVertical -= _endVertical-1.0;
+		_endVertical = 1.0;
+	}
+	if(_startVertical < 0.0) _startVertical = 0.0;
 }
 
 void ImageWidget::Update()
