@@ -57,6 +57,8 @@
 #include "../actions/writedataaction.h"
 #include "../actions/writeflagsaction.h"
 
+#include "../../version.h"
+
 namespace rfiStrategy {
 
 	void StrategyWriter::write(const Strategy &strategy)
@@ -64,8 +66,9 @@ namespace rfiStrategy {
 		_describedActions.clear();
 
 		std::string commentStr = 
-			"This is a Strategy configuration file for the\n"
-			"rfi detector by André Offringa (offringa@astro.rug.nl).\n";
+			"This is a strategy configuration file for the AOFlagger RFI\n"
+			"detector by André Offringa (offringa@gmail.com).\n"
+			"Created by AOFlagger " AOFLAGGER_VERSION_STR " (" AOFLAGGER_VERSION_DATE_STR ")\n";
 		if(_writeDescriptions)
 			commentStr += "\nIf you like to take a look at the structure of this file,\n"
 				"try opening it in e.g. Firefox.\n";
