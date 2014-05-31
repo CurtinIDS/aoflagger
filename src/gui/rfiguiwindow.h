@@ -125,7 +125,14 @@ class RFIGuiWindow : public Gtk::Window, private StrategyController {
 		void onActionDirectoryOpenForSpatial();
 		void onActionDirectoryOpenForST();
 		void onZoomFit() { _timeFrequencyWidget.ZoomFit(); _timeFrequencyWidget.Update();  }
-		void onZoomIn() { _timeFrequencyWidget.ZoomIn();  _timeFrequencyWidget.Update(); }
+		void onZoomIn()
+		{ 
+			if(_timeFrequencyWidget.IsMouseInImage())
+				_timeFrequencyWidget.ZoomInOn(_timeFrequencyWidget.MouseX(), _timeFrequencyWidget.MouseY());
+			else
+				_timeFrequencyWidget.ZoomIn();
+			_timeFrequencyWidget.Update();
+		}
 		void onZoomOut() { _timeFrequencyWidget.ZoomOut();  _timeFrequencyWidget.Update(); }
 		void onShowImagePlane();
 		void onSetAndShowImagePlane();

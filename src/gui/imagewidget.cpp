@@ -138,6 +138,37 @@ void ImageWidget::ZoomIn()
 	_endVertical -= distY;
 }
 
+void ImageWidget::ZoomInOn(size_t x, size_t y)
+{
+	double xr = double(x) / _image->Width(), yr = double(y) / _image->Height();
+	double distX = (_endHorizontal-_startHorizontal)*0.25;
+	_startHorizontal = xr - distX;
+	_endHorizontal = xr + distX;
+	if(_startHorizontal < 0.0)
+	{
+		_endHorizontal -= _startHorizontal;
+		_startHorizontal = 0.0;
+	}
+	if(_endHorizontal > 1.0)
+	{
+		_startHorizontal -= _endHorizontal - 1.0;
+		_endHorizontal = 1.0;
+	}
+	double distY = (_endVertical-_startVertical)*0.25;
+	_startVertical = yr - distY;
+	_endVertical = yr + distY;
+	if(_startVertical < 0.0)
+	{
+		_endVertical -= _startVertical;
+		_startVertical = 0.0;
+	}
+	if(_endVertical > 1.0)
+	{
+		_startVertical -= _endVertical - 1.0;
+		_endVertical = 1.0;
+	}
+}
+
 void ImageWidget::ZoomOut()
 {
 	double distX = (_endHorizontal-_startHorizontal)*0.5;
@@ -708,6 +739,8 @@ bool ImageWidget::onMotion(GdkEventMotion *event)
 		int posX, posY;
 		if(toUnits(event->x, event->y, posX, posY))
 		{
+			_mouseX = posX;
+			_mouseY = posY;
 			_mouseIsIn = true;
 			_onMouseMoved(posX, posY);
 		} else if(_mouseIsIn) {

@@ -94,6 +94,7 @@ class ImageWidget : public Gtk::DrawingArea {
 		}
 		void ZoomFit();
 		void ZoomIn();
+		void ZoomInOn(size_t x, size_t y);
 		void ZoomOut();
 		double StartHorizontal() const { return _startHorizontal; }
 		double EndHorizontal() const { return _endHorizontal; }
@@ -201,6 +202,10 @@ class ImageWidget : public Gtk::DrawingArea {
 		{
 			_manualZAxisDescription = manualDesc;
 		}
+		
+		bool IsMouseInImage() const { return _mouseIsIn; }
+		size_t MouseX() { return _mouseX; }
+		size_t MouseY() { return _mouseY; }
 
 	private:
 		void findMinMax(Image2DCPtr image, Mask2DCPtr mask, num_t &min, num_t &max);
@@ -258,6 +263,7 @@ class ImageWidget : public Gtk::DrawingArea {
 		bool _manualYAxisDescription;
 		bool _manualZAxisDescription;
 		bool _mouseIsIn;
+		size_t _mouseX, _mouseY;
 
 		sigc::signal<void, size_t, size_t> _onMouseMoved;
 		sigc::signal<void> _onMouseLeft;

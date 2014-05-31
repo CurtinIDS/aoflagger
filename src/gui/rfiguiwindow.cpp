@@ -646,10 +646,13 @@ void RFIGuiWindow::createToolbar()
 	_actionGroup->add( Gtk::Action::create("PlotSingularValues", "Plot _singular values"),
   sigc::mem_fun(*this, &RFIGuiWindow::onPlotSingularValuesPressed) );
 	_actionGroup->add( Gtk::Action::create("ZoomFit", Gtk::Stock::ZOOM_FIT, "Zoom _fit"),
-	sigc::mem_fun(*this, &RFIGuiWindow::onZoomFit) );
+		Gtk::AccelKey("<control>0"),
+		sigc::mem_fun(*this, &RFIGuiWindow::onZoomFit) );
 	_actionGroup->add( Gtk::Action::create("ZoomIn", Gtk::Stock::ZOOM_IN, "Zoom in"),
-	sigc::mem_fun(*this, &RFIGuiWindow::onZoomIn) );
+		Gtk::AccelKey("<control>equal"),
+		sigc::mem_fun(*this, &RFIGuiWindow::onZoomIn) );
 	_actionGroup->add( Gtk::Action::create("ZoomOut", Gtk::Stock::ZOOM_OUT, "Zoom out"),
+		Gtk::AccelKey("<control>minus"),
 	sigc::mem_fun(*this, &RFIGuiWindow::onZoomOut) );
 	_actionGroup->add( Gtk::Action::create("ShowImagePlane", "_Show image plane"),
 		Gtk::AccelKey("<control>I"),
@@ -1898,7 +1901,7 @@ void RFIGuiWindow::onHelpAbout()
 	authors.push_back("André Offringa <offringa@gmail.com>");
 	aboutDialog.set_authors(authors);
 	
-	aboutDialog.set_copyright("Copyright 2008 - 2013 A. R. Offringa");
+	aboutDialog.set_copyright("Copyright 2008 - 2014 A. R. Offringa");
 	aboutDialog.set_license_type(Gtk::LICENSE_GPL_3_0);
 	aboutDialog.set_logo_default();
 	aboutDialog.set_program_name("AOFlagger's RFI Gui");
