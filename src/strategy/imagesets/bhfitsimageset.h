@@ -81,10 +81,6 @@ namespace rfiStrategy {
 			  return _timeRanges[rangeIndex].name;
 			}
 
-			virtual void WriteFlags(const ImageSetIndex &, TimeFrequencyData &)
-			{
-				throw BadUsageException("Fits format is not supported for writing flags yet");
-			}
 			virtual void AddReadRequest(const ImageSetIndex &index)
 			{
 				_baselineData.push(loadData(index));

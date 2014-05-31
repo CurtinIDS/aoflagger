@@ -70,8 +70,6 @@ namespace rfiStrategy {
 	
 			virtual ImageSetIndex* StartIndex() { return new FilterBankSetIndex(*this); }
 
-			virtual void WriteFlags(const ImageSetIndex &index, TimeFrequencyData &data);
-			
 			virtual void PerformWriteDataTask(const ImageSetIndex &index, std::vector<Image2DCPtr> realImages, std::vector<Image2DCPtr> imaginaryImages);
 			
 			double CentreFrequency() const

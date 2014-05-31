@@ -204,12 +204,6 @@ namespace rfiStrategy {
 		throw BadUsageException("Baseline not found");
 	}
 
-	void MSImageSet::WriteFlags(const ImageSetIndex &index, TimeFrequencyData &data)
-	{
-		ImageSet::AddWriteFlagsTask(index, data);
-		_reader->PerformFlagWriteRequests();
-	}
-
 	void MSImageSet::AddReadRequest(const ImageSetIndex &index)
 	{
 		BaselineData newRequest(index);

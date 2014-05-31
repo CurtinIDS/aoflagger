@@ -65,7 +65,7 @@ FilterBankSet::FilterBankSet(const std::string &location) :
 		size_t dataSize = endPos - _headerEnd;
 		_sampleCount = (dataSize * 8) / _channelCount / _bitCount;
 	}
-	std::cout <<
+	AOLogger::Debug <<
 		"tsamp=" << _timeOfSample << ", tstart=" << _timeStart << ", fch1=" << _fch1 << ", foff=" << _foff << '\n' <<
 		"nChans=" << _channelCount << ", nIFs=" << _ifCount << ", nBits=" << _bitCount << ", nSamples=" << _sampleCount
 		<< "\nmachine_ID=" << _machineId << ", telescope_ID=" << _telescopeId << '\n';
@@ -78,7 +78,7 @@ FilterBankSet::FilterBankSet(const std::string &location) :
 	_intervalCount = ceil(sizeOfImage / (memSize / 16.0));
 	if(_intervalCount < 1) _intervalCount = 1;
 	if(_intervalCount*8 > _sampleCount) _intervalCount = _sampleCount*8;
-	std::cout << round(sizeOfImage*1e-8)*0.1 << " GB/image required of total of " << round(memSize*1e-8)*0.1 << " GB of mem, splitting in " << _intervalCount << " intervals\n";
+	AOLogger::Debug << round(sizeOfImage*1e-8)*0.1 << " GB/image required of total of " << round(memSize*1e-8)*0.1 << " GB of mem, splitting in " << _intervalCount << " intervals\n";
 }
 
 void FilterBankSet::AddReadRequest(const ImageSetIndex& index)
@@ -164,12 +164,6 @@ void FilterBankSet::PerformWriteDataTask(const ImageSetIndex& index, std::vector
 
 void FilterBankSet::PerformWriteFlagsTask()
 {
-	throw std::runtime_error("Writing flags not implemented for filter bank format");
-}
-
-void FilterBankSet::WriteFlags(const ImageSetIndex& index, TimeFrequencyData& data)
-{
-	throw std::runtime_error("Writing flags not implemented");
 }
 
 std::string FilterBankSetIndex::Description() const

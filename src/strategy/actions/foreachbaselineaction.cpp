@@ -86,19 +86,19 @@ namespace rfiStrategy {
 			}
 			if(dynamic_cast<FilterBankSet*>(imageSet) != 0 && _threadCount != 1)
 			{
-				AOLogger::Info << "This is a Filterbank set -- disabling multithreading\n";
+				AOLogger::Info << "This is a Filterbank set -- disabling multi-threading\n";
 				_threadCount = 1;
 			}
 			if(!_antennaeToSkip.empty())
 			{
-				AOLogger::Debug << "The following antenna's will be skipped: ";
+				AOLogger::Debug << "The following antennas will be skipped: ";
 				for(std::set<size_t>::const_iterator i=_antennaeToSkip.begin();i!=_antennaeToSkip.end(); ++i)
 					AOLogger::Debug << (*i) << ' ';
 				AOLogger::Debug <<'\n';
 			}
 			if(!_antennaeToInclude.empty())
 			{
-				AOLogger::Debug << "Only the following antenna's will be included: ";
+				AOLogger::Debug << "Only the following antennas will be included: ";
 				for(std::set<size_t>::const_iterator i=_antennaeToInclude.begin();i!=_antennaeToInclude.end(); ++i)
 					AOLogger::Debug << (*i) << ' ';
 				AOLogger::Debug <<'\n';
@@ -192,7 +192,7 @@ namespace rfiStrategy {
 		// For SD/BHFits files, we want to select everything -- it's confusing
 		// if the default option "only flag cross correlations" would also
 		// hold for sdfits files.
-		if(dynamic_cast<FitsImageSet*>(imageSet)!=0 || dynamic_cast<BHFitsImageSet*>(imageSet)!=0)
+		if(dynamic_cast<FitsImageSet*>(imageSet)!=0 || dynamic_cast<BHFitsImageSet*>(imageSet)!=0 || dynamic_cast<FilterBankSet*>(imageSet)!=0)
 			return true;
 
 		switch(_selection)

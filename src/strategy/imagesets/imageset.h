@@ -125,10 +125,6 @@ namespace rfiStrategy {
 			virtual void Initialize() = 0;
 			virtual std::string Name() = 0;
 			virtual std::string File() = 0;
-			virtual void WriteFlags(const ImageSetIndex &/*index*/, TimeFrequencyData &/*data*/)
-			{
-				throw std::runtime_error("Not implemented");
-			}
 			static class ImageSet *Create(const std::string &file, BaselineIOMode ioMode, bool readUVW=false);
 			static bool IsFitsFile(const std::string &file);
 			static bool IsBHFitsFile(const std::string &file);

@@ -148,7 +148,7 @@ namespace rfiStrategy {
 		if(telescopeId == JVLA_TELESCOPE)
 			verticalSmoothing = 1.0;
 		
-		bool hasBaselines = telescopeId!=PARKES_TELESCOPE && telescopeId!=ARECIBO_TELESCOPE && telescopeId!=BIGHORNS_TELESCOPE;
+		bool hasBaselines = telescopeId!=PARKES_TELESCOPE && telescopeId!=ARECIBO_TELESCOPE && telescopeId!=BIGHORNS_TELESCOPE && telescopeId!=GENERIC_TELESCOPE;
 		
 		LoadSingleStrategy(strategy, iterationCount, keepTransients, changeResVertically, calPassband, channelSelection, clearFlags, resetContaminated, sumThresholdSensitivity, onStokesIQ, assembleStatistics, verticalSmoothing, hasBaselines, hiTimeResolution);
 	}

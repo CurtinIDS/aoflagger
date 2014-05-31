@@ -81,10 +81,6 @@ namespace rfiStrategy {
 			const std::vector<std::pair<size_t,size_t> > &Baselines() const throw() { return _baselines; }
 			size_t BandCount() { return _bandCount; }
 			class AntennaInfo GetAntennaInfo(unsigned antennaIndex) { return _antennaInfos[antennaIndex]; }
-			virtual void WriteFlags(const ImageSetIndex &, TimeFrequencyData &)
-			{
-				throw BadUsageException("Fits format is not supported for writing flags yet");
-			}
 			virtual void AddReadRequest(const ImageSetIndex &index)
 			{
 				_baselineData.push(loadData(index));

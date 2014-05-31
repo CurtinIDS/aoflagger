@@ -193,7 +193,6 @@ namespace rfiStrategy {
 			size_t BandCount() const { return _bandCount; }
 			size_t FieldCount() const { return _fieldCount; }
 			size_t SequenceCount() const { return _sequencesPerBaselineCount; }
-			virtual void WriteFlags(const ImageSetIndex &index, TimeFrequencyData &data);
 			void SetReadFlags(bool readFlags) { _readFlags = readFlags; }
 			BaselineReaderPtr Reader() { return _reader; }
 			virtual void PerformWriteDataTask(const ImageSetIndex &index, std::vector<Image2DCPtr> realImages, std::vector<Image2DCPtr> imaginaryImages)

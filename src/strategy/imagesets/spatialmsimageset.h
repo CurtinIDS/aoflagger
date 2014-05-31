@@ -103,9 +103,6 @@ namespace rfiStrategy {
 				metaData.SetTimeIndex(sIndex._timeIndex);
 				return metaData;
 			}
-			virtual void WriteFlags(const ImageSetIndex &/*index*/, TimeFrequencyData &/*data*/)
-			{
-			}
 			virtual size_t GetPart(const ImageSetIndex &/*index*/)
 			{
 				return 0;
