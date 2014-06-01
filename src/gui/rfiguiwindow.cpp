@@ -558,13 +558,13 @@ void RFIGuiWindow::createToolbar()
 	sigc::mem_fun(*this, &RFIGuiWindow::onOpenTestSetH) );
 	_actionGroup->add( Gtk::Action::create("OpenTestSetNoise", "Noise"),
 	sigc::mem_fun(*this, &RFIGuiWindow::onOpenTestSetNoise));
-	_actionGroup->add( Gtk::Action::create("OpenTestSetModel3", "3-stars model"),
+	_actionGroup->add( Gtk::Action::create("OpenTestSetModel3", "3-source model"),
 	sigc::mem_fun(*this, &RFIGuiWindow::onOpenTestSet3Model));
-	_actionGroup->add( Gtk::Action::create("OpenTestSetModel5", "5-stars model"),
+	_actionGroup->add( Gtk::Action::create("OpenTestSetModel5", "5-source model"),
 	sigc::mem_fun(*this, &RFIGuiWindow::onOpenTestSet5Model));
-	_actionGroup->add( Gtk::Action::create("OpenTestSetNoiseModel3", "3-stars model with noise"),
+	_actionGroup->add( Gtk::Action::create("OpenTestSetNoiseModel3", "3-source model with noise"),
 	sigc::mem_fun(*this, &RFIGuiWindow::onOpenTestSetNoise3Model));
-	_actionGroup->add( Gtk::Action::create("OpenTestSetNoiseModel5", "5-stars model with noise"),
+	_actionGroup->add( Gtk::Action::create("OpenTestSetNoiseModel5", "5-source model with noise"),
 	sigc::mem_fun(*this, &RFIGuiWindow::onOpenTestSetNoise5Model));
 	_actionGroup->add( Gtk::Action::create("OpenTestSetBStrong", "Test set B (strong RFI)"),
 	sigc::mem_fun(*this, &RFIGuiWindow::onOpenTestSetBStrong));

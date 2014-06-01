@@ -68,6 +68,12 @@ namespace rfiStrategy {
 			
 			std::set<size_t> &AntennaeToInclude() { return _antennaeToInclude; }
 			const std::set<size_t> &AntennaToInclude() const { return _antennaeToInclude; }
+			
+			std::set<size_t>& Fields() { return _fields; }
+			const std::set<size_t>& Fields() const { return _fields; }
+			
+			std::set<size_t>& Bands() { return _bands; }
+			const std::set<size_t>& Bands() const { return _bands; }
 		private:
 			bool IsBaselineSelected(ImageSetIndex &index);
 			class ImageSetIndex *GetNextIndex();
@@ -180,6 +186,8 @@ namespace rfiStrategy {
 			size_t _initPartIndex;
 			std::set<size_t> _antennaeToInclude;
 			std::set<size_t> _antennaeToSkip;
+			std::set<size_t> _fields;
+			std::set<size_t> _bands;
 	};
 }
 

@@ -24,6 +24,8 @@
 
 #include "../../msio/types.h"
 
+#include <set>
+
 /**
 	@author A.R. Offringa <offringa@astro.rug.nl>
 */
@@ -75,6 +77,12 @@ namespace rfiStrategy {
 			
 			size_t LoadStrategyThreadCount() const { return _threadCount; }
 			void SetLoadStrategyThreadCount(size_t threadCount) { _threadCount = threadCount; }
+			
+			std::set<size_t>& Fields() { return _fields; }
+			const std::set<size_t>& Fields() const { return _fields; }
+			
+			std::set<size_t>& Bands() { return _bands; }
+			const std::set<size_t>& Bands() const { return _bands; }
 		private:
 			std::vector<std::string> _filenames;
 			bool _readUVW;
@@ -85,6 +93,8 @@ namespace rfiStrategy {
 			bool _loadOptimizedStrategy;
 			BaselineIOMode _baselineIOMode;
 			size_t _threadCount;
+			std::set<size_t> _fields;
+			std::set<size_t> _bands;
 	};
 
 }

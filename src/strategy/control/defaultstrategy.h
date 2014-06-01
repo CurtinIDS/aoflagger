@@ -75,6 +75,8 @@ namespace rfiStrategy {
 		
 		static bool StrategyContainsAction(Strategy& strategy, ActionType actionType);
 		
+		static std::vector<Action*> FindActions(ActionBlock& strategy, ActionType actionType);
+		
 	private:
 		static void warnIfUnknownTelescope(enum TelescopeId &telescopeId, const std::string &telescopeName);
 		

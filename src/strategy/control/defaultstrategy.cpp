@@ -492,5 +492,19 @@ namespace rfiStrategy {
 		}
 		return false;
 	}
+	
+	std::vector<Action*> DefaultStrategy::FindActions(ActionBlock& strategy, ActionType actionType)
+	{
+		std::vector<Action*> foundActions;
+		StrategyIterator iterator = StrategyIterator::NewStartIterator(strategy);
+		while(!iterator.PastEnd())
+		{
+			const Action& action = *iterator;
+			if(action.Type() == actionType)
+				foundActions.push_back(&*iterator);
+			++iterator;
+		}
+		return foundActions;
+	}
 }
 

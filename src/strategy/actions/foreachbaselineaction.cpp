@@ -180,6 +180,10 @@ namespace rfiStrategy {
 		{
 			a1id = msImageSet->GetAntenna1(index);
 			a2id = msImageSet->GetAntenna2(index);
+			if(!_bands.empty() && _bands.count(msImageSet->GetBand(index))==0)
+				return false;
+			if(!_fields.empty() && _fields.count(msImageSet->GetField(index))==0)
+				return false;
 		} else {
 			a1id = 0;
 			a2id = 0;

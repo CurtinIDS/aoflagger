@@ -51,6 +51,8 @@ class IntegerDomain {
 			}
 			return unsigned(-1);
 		}
+		typename std::vector<int>::const_iterator begin() const { return _values.begin(); }
+		typename std::vector<int>::const_iterator end() const { return _values.end(); }
 	private:
 		std::vector<int> _values;
 };

@@ -41,6 +41,7 @@
 #include "util/parameter.h"
 #include "util/progresslistener.h"
 #include "util/stopwatch.h"
+#include "util/numberlist.h"
 
 #include "version.h"
 
@@ -131,7 +132,10 @@ int main(int argc, char **argv)
 		"  -skip-flagged will skip an ms if it has already been processed by AOFlagger according\n"
 		"     to its HISTORY table.\n"
 		"  -uvw reads uvw values (some exotic strategies require these)\n"
-		"  -column <NAME> specify column to flag\n\n"
+		"  -column <name> specify column to flag\n"
+		"  -bands <list> comma separated list of (zero-indexed) band ids to process\n"
+		"  -fields <list> comma separated list of (zero-indexed) field ids to process\n"
+		"\n"
 		"This tool supports at least the Casa measurement set, the SDFITS and Filterbank formats. See\n"
 		"the documentation for support of other file types.\n";
 		
@@ -151,6 +155,7 @@ int main(int argc, char **argv)
 	Parameter<bool> logVerbose;
 	Parameter<bool> skipFlagged;
 	Parameter<std::string> dataColumn;
+	std::set<size_t> bands, fields;
 
 	size_t parameterIndex = 1;
 	while(parameterIndex < (size_t) argc && argv[parameterIndex][0]=='-')
@@ -163,13 +168,12 @@ int main(int argc, char **argv)
 		
 		if(flag=="j" && parameterIndex < (size_t) (argc-1))
 		{
-			threadCount = atoi(argv[parameterIndex+1]);
-			parameterIndex+=2;
+			++parameterIndex;
+			threadCount = atoi(argv[parameterIndex]);
 		}
 		else if(flag=="v")
 		{
 			logVerbose = true;
-			++parameterIndex;
 		}
 		else if(flag == "version")
 		{
@@ -180,43 +184,47 @@ int main(int argc, char **argv)
 		else if(flag=="direct-read")
 		{
 			readMode = DirectReadMode;
-			++parameterIndex;
 		}
 		else if(flag=="indirect-read")
 		{
 			readMode = IndirectReadMode;
-			++parameterIndex;
 		}
 		else if(flag=="memory-read")
 		{
 			readMode = MemoryReadMode;
-			++parameterIndex;
 		}
 		else if(flag=="auto-read-mode")
 		{
 			readMode = AutoReadMode;
-			++parameterIndex;
 		}
 		else if(flag=="strategy")
 		{
-			strategyFile = argv[parameterIndex+1];
-			parameterIndex+=2;
+			parameterIndex++;
+			strategyFile = argv[parameterIndex];
 		}
 		else if(flag=="skip-flagged")
 		{
 			skipFlagged = true;
-			++parameterIndex;
 		}
 		else if(flag=="uvw")
 		{
 			readUVW = true;
-			++parameterIndex;
 		}
 		else if(flag == "column")
 		{
-			std::string columnStr(argv[parameterIndex+1]);
-			parameterIndex+=2;
+			parameterIndex++;
+			std::string columnStr(argv[parameterIndex]);
 			dataColumn = columnStr; 
+		}
+		else if(flag == "bands")
+		{
+			++parameterIndex;
+			NumberList::ParseIntList(argv[parameterIndex], bands);
+		}
+		else if(flag == "fields")
+		{
+			++parameterIndex;
+			NumberList::ParseIntList(argv[parameterIndex], fields);
 		}
 		else
 		{
@@ -224,6 +232,7 @@ int main(int argc, char **argv)
 			AOLogger::Error << "Incorrect usage; parameter \"" << argv[parameterIndex] << "\" not understood.\n";
 			return 1;
 		}
+		++parameterIndex;
 	}
 
 	try {
@@ -247,6 +256,10 @@ int main(int argc, char **argv)
 			fomAction->SetReadUVW(readUVW);
 		if(dataColumn.IsSet())
 			fomAction->SetDataColumnName(dataColumn);
+		if(!bands.empty())
+			fomAction->Bands() = bands;
+		if(!fields.empty())
+			fomAction->Fields() = fields;
 		std::stringstream commandLineStr;
 		commandLineStr << argv[0];
 		for(int i=1;i<argc;++i)
