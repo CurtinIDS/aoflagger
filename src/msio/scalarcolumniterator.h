@@ -21,6 +21,7 @@
 #define SCALARCOLUMNITERATOR_H
 
 #include <ms/MeasurementSets/MSColumns.h>
+#include <tables/Tables/ScalarColumn.h>
 
 /**
 	@author A.R. Offringa <offringa@astro.rug.nl>
@@ -62,12 +63,8 @@ class ScalarColumnIterator {
 		{
 			return ScalarColumnIterator<T>(column, 0);
 		}
-		static ScalarColumnIterator First(casa::ROScalarColumn<T> &column)
-		{
-			return ScalarColumnIterator<T>(column, 0);
-		}
 	private:
-		casa::ROScalarColumn<T> *_column;
+		casa::ScalarColumn<T> *_column;
 		unsigned _row;
 };
 
