@@ -29,7 +29,7 @@
 template<typename T>
 class ScalarColumnIterator {
 	public:
-		ScalarColumnIterator(class casa::ROScalarColumn<T> &column, unsigned row) :
+		ScalarColumnIterator(class casa::ScalarColumn<T> &column, unsigned row) :
 			_column(&column), _row(row)
 		{
 		}

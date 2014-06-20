@@ -65,8 +65,8 @@ TimeFrequencyData BaselineMatrixLoader::LoadSummed(size_t timeIndex)
 	}
 
 	casa::Table table = _tableIter->table();
-	casa::ROScalarColumn<int> antenna1Column(table, "ANTENNA1"); 
-	casa::ROScalarColumn<int> antenna2Column(table, "ANTENNA2");
+	casa::ScalarColumn<int> antenna1Column(table, "ANTENNA1"); 
+	casa::ScalarColumn<int> antenna2Column(table, "ANTENNA2");
 
 	ScalarColumnIterator<int> antenna1Iter = ScalarColumnIterator<int>::First(antenna1Column);
 	ScalarColumnIterator<int> antenna2Iter = ScalarColumnIterator<int>::First(antenna2Column);
