@@ -99,7 +99,11 @@ class SummaryPage : public Gtk::HBox {
 			
 			double rfiRatioValue = round(((double) totalRFICount * 10000.0 / (double) totalCount)) * 0.01;
 			
+			double countExp = floor(log10(totalCount));
+			double countMantissa = totalCount / exp10(countExp);
+			
 			std::ostringstream s;
+			s << "Sample count = " << round(countMantissa*100.0)*0.01 << " x 10^" << countExp << "\n";
 			s << "Total RFI ratio = " << rfiRatioValue << "%\n";
 			s << "Standard deviation amplitude = ";
 			addValues(&stdDev[0], polarizationCount, s);
