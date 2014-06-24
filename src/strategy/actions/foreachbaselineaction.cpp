@@ -24,16 +24,20 @@
 #include "../../util/aologger.h"
 #include "../../util/stopwatch.h"
 
-#include <iostream>
-#include <sstream>
-
-#include <boost/thread.hpp>
-
 #include "../imagesets/bhfitsimageset.h"
 #include "../imagesets/fitsimageset.h"
 #include "../imagesets/imageset.h"
 #include "../imagesets/msimageset.h"
 #include "../imagesets/filterbankset.h"
+
+#include <sys/types.h>
+#include <sys/sysctl.h>
+
+#include <iostream>
+#include <sstream>
+
+#include <boost/thread.hpp>
+
 
 namespace rfiStrategy {
 	

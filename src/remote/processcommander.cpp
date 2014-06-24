@@ -20,6 +20,7 @@
 
 #include "processcommander.h"
 
+#include <climits>
 #include <unistd.h> //gethostname
 #include <boost/mem_fn.hpp>
 
@@ -192,8 +193,15 @@ void ProcessCommander::continueWriteDataRowsTask(ServerConnectionPtr serverConne
 
 std::string ProcessCommander::GetHostName()
 {
+#if defined _POSIX_HOST_NAME_MAX
+	char name[_POSIX_HOST_NAME_MAX];
+	if(gethostname(name, _POSIX_HOST_NAME_MAX) == 0)
+#elif defined HOSTNAME_MAX
 	char name[HOST_NAME_MAX];
 	if(gethostname(name, HOST_NAME_MAX) == 0)
+#else
+	if(false)
+#endif
 	{
 		return std::string(name);
 	} else {

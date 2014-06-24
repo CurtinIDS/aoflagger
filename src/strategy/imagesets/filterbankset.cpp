@@ -4,6 +4,9 @@
 
 #include <fstream>
 
+#include <sys/types.h>
+#include <sys/sysctl.h>
+
 namespace rfiStrategy {
 
 FilterBankSet::FilterBankSet(const std::string &location) :
