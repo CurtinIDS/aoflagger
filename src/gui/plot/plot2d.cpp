@@ -116,7 +116,7 @@ void Plot2D::render(Cairo::RefPtr<Cairo::Context> cr)
 				_horizontalScale.InitializeTimeTicks(_system.XRangeMin(refPointSet), _system.XRangeMax(refPointSet));
 			else
 				_horizontalScale.InitializeNumericTicks(_system.XRangeMin(refPointSet), _system.XRangeMax(refPointSet));
-			_horizontalScale.SetUnitsCaption(refPointSet.XUnits());
+			_horizontalScale.SetUnitsCaption(_customHAxisDescription.empty() ? refPointSet.XUnits() : _customHAxisDescription);
 			_topMargin = 10.0;
 			_horizontalScale.SetPlotDimensions(_width, _height, _topMargin, 0.0);
 			horiScaleHeight = _horizontalScale.GetHeight(cr);
@@ -124,10 +124,10 @@ void Plot2D::render(Cairo::RefPtr<Cairo::Context> cr)
 			double rightMargin = _horizontalScale.GetRightMargin(cr);
 			_verticalScale.SetDrawWithDescription(_showAxisDescriptions);
 			if(_logarithmicYAxis)
-				_verticalScale.InitializeLogarithmicTicks(MinY(), MaxY());
+				_verticalScale.InitializeLogarithmicTicks(MinPositiveY(), MaxPositiveY());
 			else
 				_verticalScale.InitializeNumericTicks(MinY(), MaxY());
-			_verticalScale.SetUnitsCaption(refPointSet.YUnits());
+			_verticalScale.SetUnitsCaption(_customVAxisDescription.empty() ? refPointSet.YUnits() : _customVAxisDescription);
 			_verticalScale.SetPlotDimensions(_width - rightMargin, _height - horiScaleHeight - _topMargin, _topMargin);
 
 			verticalScaleWidth =  _verticalScale.GetWidth(cr);

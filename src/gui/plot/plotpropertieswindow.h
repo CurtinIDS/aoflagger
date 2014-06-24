@@ -65,6 +65,7 @@ class PlotPropertiesWindow : public Gtk::Window {
 		void initVRangeWidgets();
 		void initHRangeWidgets();
 		void initOptionsWidgets();
+		void initAxesDescriptionWidgets();
 		
 		void updateMinMaxEntries();
 
@@ -73,6 +74,7 @@ class PlotPropertiesWindow : public Gtk::Window {
 		Gtk::HButtonBox _bottomButtonBox;
 		Gtk::VBox _topVBox;
 		Gtk::HBox _framesHBox;
+		Gtk::VBox _framesRightVBox;
 		
 		Gtk::Button _applyButton, _exportButton, _closeButton;
 		Gtk::Image _saveImage;
@@ -92,6 +94,11 @@ class PlotPropertiesWindow : public Gtk::Window {
 		Gtk::Frame _optionsFrame;
 		Gtk::VBox _optionsBox;
 		Gtk::RadioButton _normalOptionsButton, _logScaleButton, _zeroSymmetricButton;
+		
+		Gtk::Frame _axesDescriptionFrame;
+		Gtk::VBox _axesDescriptionBox;
+		Gtk::CheckButton _hAxisDescriptionButton, _vAxisDescriptionButton;
+		Gtk::Entry _hAxisDescriptionEntry, _vAxisDescriptionEntry;
 		
 		Gtk::CheckButton _showAxes, _showAxisDescriptionsButton;
 };

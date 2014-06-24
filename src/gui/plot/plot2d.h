@@ -154,6 +154,10 @@ class Plot2D : public Plotable {
 			return _showAxisDescriptions;
 		}
 		void SetTitle(const std::string &title) { _title = title; }
+		void SetCustomHorizontalAxisDescription(const std::string& description) { _customHAxisDescription = description; }
+		void SetCustomVerticalAxisDescription(const std::string& description) { _customVAxisDescription = description; }
+		void SetAutomaticHorizontalAxisDescription() { _customHAxisDescription = std::string(); }
+		void SetAutomaticVerticalAxisDescription() { _customVAxisDescription = std::string(); }
 		void SavePdf(const std::string &filename);
 		void SaveSvg(const std::string &filename);
 		void SavePng(const std::string &filename);
@@ -172,7 +176,7 @@ class Plot2D : public Plotable {
 		bool _logarithmicYAxis, _showAxes, _showAxisDescriptions;
 		double _specifiedMinY, _specifiedMaxY;
 		enum RangeDetermination _vRangeDetermination;
-		std::string _title;
+		std::string _title, _customHAxisDescription, _customVAxisDescription;
 };
 
 #endif

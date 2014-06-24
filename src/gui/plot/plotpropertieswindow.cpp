@@ -59,6 +59,12 @@ PlotPropertiesWindow::PlotPropertiesWindow(Plot2D &plot, const std::string &titl
 	_logScaleButton("Logarithmic scale"),
 	_zeroSymmetricButton("Symmetric around zero"),
 	
+	_axesDescriptionFrame("Axes"),
+	_hAxisDescriptionButton("Horizontal description"),
+	_vAxisDescriptionButton("Vertical description"),
+	_hAxisDescriptionEntry(),
+	_vAxisDescriptionEntry(),
+	
 	_showAxes("Show axes"),
 	_showAxisDescriptionsButton("Show axis descriptions")
 {
@@ -67,6 +73,9 @@ PlotPropertiesWindow::PlotPropertiesWindow(Plot2D &plot, const std::string &titl
 	initVRangeWidgets();
 	initHRangeWidgets();
 	initOptionsWidgets();
+	initAxesDescriptionWidgets();
+	
+	_framesHBox.pack_start(_framesRightVBox);
 	
 	_applyButton.signal_clicked().connect(sigc::mem_fun(*this, &PlotPropertiesWindow::onApplyClicked));
 	_bottomButtonBox.pack_start(_applyButton);
@@ -154,7 +163,19 @@ void PlotPropertiesWindow::initOptionsWidgets()
 
 	_optionsFrame.add(_optionsBox);
 	
-	_framesHBox.pack_start(_optionsFrame);
+	_framesRightVBox.pack_start(_optionsFrame);
+}
+
+void PlotPropertiesWindow::initAxesDescriptionWidgets()
+{
+	_axesDescriptionBox.pack_start(_hAxisDescriptionButton);
+	_axesDescriptionBox.pack_start(_hAxisDescriptionEntry);
+	_axesDescriptionBox.pack_start(_vAxisDescriptionButton);
+	_axesDescriptionBox.pack_start(_vAxisDescriptionEntry);
+	
+	_axesDescriptionFrame.add(_axesDescriptionBox);
+	
+	_framesRightVBox.pack_start(_axesDescriptionFrame);
 }
 
 void PlotPropertiesWindow::updateMinMaxEntries()
@@ -186,8 +207,19 @@ void PlotPropertiesWindow::onApplyClicked()
 	else if(_logScaleButton.get_active())
 		_plot.SetLogarithmicYAxis(true);
 	
+	if(_hAxisDescriptionButton.get_active())
+		_plot.SetCustomHorizontalAxisDescription(_hAxisDescriptionEntry.get_text().c_str());
+	else
+		_plot.SetAutomaticHorizontalAxisDescription();
+		
+	if(_vAxisDescriptionButton.get_active())
+		_plot.SetCustomVerticalAxisDescription(_vAxisDescriptionEntry.get_text().c_str());
+	else
+		_plot.SetAutomaticVerticalAxisDescription();
+		
 	_plot.SetShowAxes(_showAxes.get_active());
 	_plot.SetShowAxisDescriptions(_showAxisDescriptionsButton.get_active());
+	
 	
 	if(OnChangesApplied)
 		OnChangesApplied();
