@@ -189,6 +189,21 @@ class HistogramCollection : public Serializable
 				}
 			}
 		}
+		
+		void CreateMissingBins()
+		{
+			for(unsigned p=0;p<_polarizationCount;++p)
+			{
+				for(std::map<AntennaPair, LogHistogram*>::iterator i=_totalHistograms[p].begin(); i!=_totalHistograms[p].end(); ++i)
+				{
+					i->second->CreateMissingBins();
+				}
+				for(std::map<AntennaPair, LogHistogram*>::iterator i=_rfiHistograms[p].begin(); i!=_rfiHistograms[p].end(); ++i)
+				{
+					i->second->CreateMissingBins();
+				}
+			}
+		}
 	private:
 		unsigned _polarizationCount;
 		std::map<AntennaPair, LogHistogram*> *_totalHistograms;

@@ -483,6 +483,15 @@ class LogHistogram : public Serializable
 				insertPos = _amplitudes.insert(insertPos, p);
 			}
 		}
+		
+		void CreateMissingBins()
+		{
+			double first = MinPositiveAmplitude(), last = MaxAmplitude();
+			for(double i=first; i<last; i *= 1.01)
+			{
+				getBin(getCentralAmplitude(i));
+			}
+		}
 	private:
 		std::map<double, AmplitudeBin> _amplitudes;
 		

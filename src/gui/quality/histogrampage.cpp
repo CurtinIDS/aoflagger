@@ -51,6 +51,8 @@ HistogramPage::HistogramPage() :
 	_nsButton("N(S)"),
 	_dndsButton("dN(S)/dS"),
 	_deltaSEntry(),
+	_staircaseFunctionButton("Staircase"),
+	_normalizeButton("Normalize"),
 	_plotPropertiesButton("Properties"),
 	_dataExportButton("Data"),
 	_slopeFrame("Slope"),
@@ -128,6 +130,11 @@ HistogramPage::HistogramPage() :
 	_functionBox.pack_start(_deltaSEntry, Gtk::PACK_SHRINK);
 	_deltaSEntry.set_text("2");
 	_deltaSEntry.signal_activate().connect(sigc::mem_fun(*this, &HistogramPage::updatePlot));
+	_functionBox.pack_start(_staircaseFunctionButton, Gtk::PACK_SHRINK);
+	_staircaseFunctionButton.signal_clicked().connect(sigc::mem_fun(*this, &HistogramPage::updatePlot));
+	_functionBox.pack_start(_normalizeButton, Gtk::PACK_SHRINK);
+	_normalizeButton.set_active(true);
+	_normalizeButton.signal_clicked().connect(sigc::mem_fun(*this, &HistogramPage::updatePlot));
 	
 	_functionFrame.add(_functionBox);
 	_sideBox.pack_start(_functionFrame, Gtk::PACK_SHRINK);
@@ -216,6 +223,8 @@ void HistogramPage::SetStatistics(HistogramCollection &collection)
 	CloseStatistics();
 	_histograms = new HistogramCollection(collection);
 	_summedPolarizationHistograms = _histograms->CreateSummedPolarizationCollection();
+	_histograms->CreateMissingBins();
+	_summedPolarizationHistograms->CreateMissingBins();
 	updatePlot();
 }
 
@@ -348,23 +357,34 @@ void HistogramPage::plotFit(const LogHistogram &histogram, const std::string &ti
 void HistogramPage::addHistogramToPlot(const LogHistogram &histogram)
 {
 	const bool derivative = _dndsButton.get_active();
+	const bool staircase = _staircaseFunctionButton.get_active();
+	const bool normalize = _normalizeButton.get_active();
 	double deltaS = atof(_deltaSEntry.get_text().c_str());
 	if(deltaS <= 1.0001) deltaS = 1.0001;
 	for(LogHistogram::iterator i=histogram.begin();i!=histogram.end();++i)
 	{
+		double x = i.value(), logxStart, logxEnd;
+		if(staircase)
+		{
+			logxStart = log10(i.binStart());
+			logxEnd = log10(i.binEnd());
+		}
+		else {
+			logxStart = log10(x);
+		}
 		if(derivative)
 		{
-			const double x = i.value();
-			const double logx = log10(x);
 			const double cslope = histogram.NormalizedSlope(x/deltaS, x*deltaS);
-			if(std::isfinite(logx) && std::isfinite(cslope))
-				_plot.PushDataPoint(logx, cslope);
+			//if(std::isfinite(logxStart) && std::isfinite(cslope))
+				_plot.PushDataPoint(logxStart, cslope);
+			if(staircase)// && std::isfinite(logxEnd) && std::isfinite(cslope))
+				_plot.PushDataPoint(logxEnd, cslope);
 		} else {
-			const double x = i.value();
-			const double logx = log10(x);
-			const double logc = log10(i.normalizedCount());
-			if(std::isfinite(logx) && std::isfinite(logc))
-				_plot.PushDataPoint(logx, logc);
+			const double logc = log10(normalize ? i.normalizedCount() : i.unnormalizedCount());
+			//if(std::isfinite(logxStart) && std::isfinite(logc))
+				_plot.PushDataPoint(logxStart, logc);
+			if(staircase)// && std::isfinite(logxEnd) && std::isfinite(logc))
+				_plot.PushDataPoint(logxEnd, logc);
 		}
 	}
 }
