@@ -41,17 +41,17 @@ class Dimension {
 				_yRangePositiveMin = pointSet.YRangePositiveMin();
 				_yRangePositiveMax = pointSet.YRangePositiveMax();
 			} else {
-				if(_xRangeMin > pointSet.XRangeMin())
+				if(_xRangeMin > pointSet.XRangeMin() && std::isfinite(pointSet.XRangeMin()))
 					_xRangeMin = pointSet.XRangeMin();
-				if(_xRangeMax < pointSet.XRangeMax())
+				if(_xRangeMax < pointSet.XRangeMax() && std::isfinite(pointSet.XRangeMax()))
 					_xRangeMax = pointSet.XRangeMax();
 				
-				if(_yRangeMin > pointSet.YRangeMin())
+				if(_yRangeMin > pointSet.YRangeMin() && std::isfinite(pointSet.YRangeMin()))
 					_yRangeMin = pointSet.YRangeMin();
 				if(_yRangePositiveMin > pointSet.YRangePositiveMin() && std::isfinite(pointSet.YRangePositiveMin())) 
 					_yRangePositiveMin = pointSet.YRangePositiveMin();
 				
-				if(_yRangeMax < pointSet.YRangeMax())
+				if(_yRangeMax < pointSet.YRangeMax() && std::isfinite(pointSet.YRangeMax()))
 					_yRangeMax = pointSet.YRangeMax();
 				if(_yRangePositiveMax < pointSet.YRangePositiveMax() && std::isfinite(pointSet.YRangePositiveMax())) 
 					_yRangePositiveMin = pointSet.YRangePositiveMax();

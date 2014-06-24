@@ -64,7 +64,8 @@ class Plot2DPointSet{
 
 		void PushDataPoint(double x, double y)
 		{
-			_points.push_back(Point2D(x,y));
+			if(std::isfinite(x))
+				_points.push_back(Point2D(x,y));
 		}
 		double GetX(size_t index) const { return _points[index].x; }
 		double GetY(size_t index) const { return _points[index].y; }
@@ -214,7 +215,12 @@ class Plot2DPointSet{
 			double x, y;
 			bool operator<(const Point2D &other) const
 			{
-				return x < other.x;
+				if(!std::isfinite(x))
+					return false;
+				else if(!std::isfinite(other.x))
+					return true;
+				else
+					return x < other.x;
 			}
 		};
 
