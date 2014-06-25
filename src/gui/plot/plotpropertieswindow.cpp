@@ -128,7 +128,7 @@ void PlotPropertiesWindow::initVRangeWidgets()
 	}
 	onVRangeChanged();
 
-	updateMinMaxEntries();
+	updateVMinMaxEntries();
 
 	_vRangeBox.pack_start(_vRangeMinLabel);
 	_vRangeBox.pack_start(_vRangeMinEntry);
@@ -141,6 +141,25 @@ void PlotPropertiesWindow::initVRangeWidgets()
 
 void PlotPropertiesWindow::initHRangeWidgets()
 {
+	_hRangeFrame.add(_hRangeBox);
+	
+	Gtk::RadioButton::Group group;
+	
+	_hRangeBox.pack_start(_automaticHRangeButton);
+	_automaticHRangeButton.set_active(_plot.HRangeDetermination() != Plot2D::SpecifiedRange);
+	_automaticHRangeButton.signal_clicked().connect(sigc::mem_fun(*this, &PlotPropertiesWindow::onHRangeChanged));
+
+	onHRangeChanged();
+
+	updateHMinMaxEntries();
+
+	_hRangeBox.pack_start(_hRangeMinLabel);
+	_hRangeBox.pack_start(_hRangeMinEntry);
+	
+	_hRangeBox.pack_start(_hRangeMaxLabel);
+	_hRangeBox.pack_start(_hRangeMaxEntry);
+	
+	_framesHBox.pack_start(_hRangeFrame);
 }
 
 void PlotPropertiesWindow::initOptionsWidgets()
@@ -178,7 +197,18 @@ void PlotPropertiesWindow::initAxesDescriptionWidgets()
 	_framesRightVBox.pack_start(_axesDescriptionFrame);
 }
 
-void PlotPropertiesWindow::updateMinMaxEntries()
+void PlotPropertiesWindow::updateHMinMaxEntries()
+{
+	std::stringstream minStr;
+	minStr << _plot.MinX();
+	_hRangeMinEntry.set_text(minStr.str());
+	
+	std::stringstream maxStr;
+	maxStr << _plot.MaxX();
+	_hRangeMaxEntry.set_text(maxStr.str());
+}
+
+void PlotPropertiesWindow::updateVMinMaxEntries()
 {
 	std::stringstream minStr;
 	minStr << _plot.MinY();
@@ -200,6 +230,14 @@ void PlotPropertiesWindow::onApplyClicked()
 		_plot.SetVRangeDetermination(Plot2D::SpecifiedRange);
 		_plot.SetMinY(atof(_vRangeMinEntry.get_text().c_str()));
 		_plot.SetMaxY(atof(_vRangeMaxEntry.get_text().c_str()));
+	}
+	
+	if(_automaticHRangeButton.get_active())
+		_plot.SetHRangeDetermination(Plot2D::MinMaxRange);
+	else {
+		_plot.SetHRangeDetermination(Plot2D::SpecifiedRange);
+		_plot.SetMinX(atof(_hRangeMinEntry.get_text().c_str()));
+		_plot.SetMaxX(atof(_hRangeMaxEntry.get_text().c_str()));
 	}
 	
 	if(_normalOptionsButton.get_active())
@@ -224,7 +262,8 @@ void PlotPropertiesWindow::onApplyClicked()
 	if(OnChangesApplied)
 		OnChangesApplied();
 	
-	updateMinMaxEntries();
+	updateHMinMaxEntries();
+	updateVMinMaxEntries();
 }
 
 void PlotPropertiesWindow::onCloseClicked()

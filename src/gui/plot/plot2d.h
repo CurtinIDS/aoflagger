@@ -88,12 +88,47 @@ class Plot2D : public Plotable {
 		{
 			return _logarithmicYAxis;
 		}
+		void SetHRangeDetermination(enum RangeDetermination range) {
+			_hRangeDetermination = range;
+		}
+		enum RangeDetermination HRangeDetermination() const
+		{
+			return _hRangeDetermination;
+		}
 		void SetVRangeDetermination(enum RangeDetermination range) {
 			_vRangeDetermination = range;
 		}
 		enum RangeDetermination VRangeDetermination() const
 		{
 			return _vRangeDetermination;
+		}
+		void SetMaxX(double maxX)
+		{
+			_hRangeDetermination = SpecifiedRange;
+			_specifiedMaxX = maxX;
+		}
+		double MaxX() const
+		{
+			if(_hRangeDetermination == SpecifiedRange)
+				return _specifiedMaxX;
+			else if(_pointSets.empty())
+				return 1.0;
+			else
+				return _system.XRangeMax(**_pointSets.begin());
+		}
+		void SetMinX(double minX)
+		{
+			_hRangeDetermination = SpecifiedRange;
+			_specifiedMinX = minX;
+		}
+		double MinX() const
+		{
+			if(_hRangeDetermination == SpecifiedRange)
+				return _specifiedMinX;
+			else if(_pointSets.empty())
+				return 1.0;
+			else
+				return _system.XRangeMin(**_pointSets.begin());
 		}
 		void SetMaxY(double maxY)
 		{
@@ -174,8 +209,8 @@ class Plot2D : public Plotable {
 		double _topMargin;
 		System _system;
 		bool _logarithmicYAxis, _showAxes, _showAxisDescriptions;
-		double _specifiedMinY, _specifiedMaxY;
-		enum RangeDetermination _vRangeDetermination;
+		double _specifiedMinX, _specifiedMaxX, _specifiedMinY, _specifiedMaxY;
+		enum RangeDetermination _hRangeDetermination, _vRangeDetermination;
 		std::string _title, _customHAxisDescription, _customVAxisDescription;
 };
 

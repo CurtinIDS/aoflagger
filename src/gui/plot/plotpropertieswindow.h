@@ -67,7 +67,8 @@ class PlotPropertiesWindow : public Gtk::Window {
 		void initOptionsWidgets();
 		void initAxesDescriptionWidgets();
 		
-		void updateMinMaxEntries();
+		void updateHMinMaxEntries();
+		void updateVMinMaxEntries();
 
 		class Plot2D &_plot;
 
@@ -86,7 +87,7 @@ class PlotPropertiesWindow : public Gtk::Window {
 		Gtk::Entry _vRangeMinEntry, _vRangeMaxEntry;
 		
 		Gtk::Frame _hRangeFrame;
-		Gtk::HBox _hRangeBox;
+		Gtk::VBox _hRangeBox;
 		Gtk::CheckButton _automaticHRangeButton;
 		Gtk::Label _hRangeMinLabel, _hRangeMaxLabel;
 		Gtk::Entry _hRangeMinEntry, _hRangeMaxEntry;

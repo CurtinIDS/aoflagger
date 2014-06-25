@@ -115,7 +115,7 @@ void Plot2D::render(Cairo::RefPtr<Cairo::Context> cr)
 			else if(refPointSet.XIsTime())
 				_horizontalScale.InitializeTimeTicks(_system.XRangeMin(refPointSet), _system.XRangeMax(refPointSet));
 			else
-				_horizontalScale.InitializeNumericTicks(_system.XRangeMin(refPointSet), _system.XRangeMax(refPointSet));
+				_horizontalScale.InitializeNumericTicks(MinX(), MaxX());
 			_horizontalScale.SetUnitsCaption(_customHAxisDescription.empty() ? refPointSet.XUnits() : _customHAxisDescription);
 			_topMargin = 10.0;
 			_horizontalScale.SetPlotDimensions(_width, _height, _topMargin, 0.0);
@@ -177,8 +177,8 @@ void Plot2D::render(Cairo::RefPtr<Cairo::Context> cr, Plot2DPointSet &pointSet)
 	pointSet.Sort();
 
 	double
-		xLeft = _system.XRangeMin(pointSet),
-		xRight = _system.XRangeMax(pointSet),
+		xLeft = MinX(),
+		xRight = MaxX(),
 		yMin = _logarithmicYAxis ? MinPositiveY() : MinY(),
 		yMax = _logarithmicYAxis ? MaxPositiveY() : MaxY();
 	if(!std::isfinite(xLeft) || !std::isfinite(xRight))
