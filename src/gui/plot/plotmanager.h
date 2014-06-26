@@ -59,9 +59,9 @@ class PlotManager
 		
 		void Update() { _onUpdate(); }
 		
-		boost::function<void()> &OnUpdate() { return _onUpdate; }
+		boost::function<void()>& OnUpdate() { return _onUpdate; }
 		
-		const std::vector<Plot2D*> Items() const { return _items; }
+		const std::vector<Plot2D*>& Items() const { return _items; }
 		
 		void Clear()
 		{
