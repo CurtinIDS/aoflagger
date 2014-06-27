@@ -332,10 +332,38 @@ void actionQueryGlobalStat(const std::string &kindName, const std::string &filen
 	DefaultStatistics statistics(polarizationCount);
 	collection.GetGlobalCrossBaselineStatistics(statistics);
 	StatisticsDerivator derivator(collection);
+	const DefaultStatistics singlePol(statistics.ToSinglePolarization());
 	
 	double start = band.channels.begin()->frequencyHz;
 	double end = band.channels.rbegin()->frequencyHz;
-	std::cout << round(start/10000.0)/100.0 << '\t' << round(end/10000.0)/100.0;
+	std::cout << round(start/10000.0)/100.0 << '\t' << round(end/10000.0)/100.0
+		<< '\t' << derivator.GetStatisticAmplitude(kind, singlePol, 0);
+	for(unsigned p=0;p<polarizationCount;++p)
+	{
+		long double val = derivator.GetStatisticAmplitude(kind, statistics, p);
+		std::cout << '\t' << val;
+	}
+	std::cout << '\n';
+}
+
+void actionQueryFrequencyRange(const std::string &kindName, const std::string &filename, double startFreqMHz, double endFreqMHz)
+{
+	MeasurementSet *ms = new MeasurementSet(filename);
+	const unsigned polarizationCount = ms->PolarizationCount();
+	const BandInfo band = ms->GetBandInfo(0);
+	delete ms;
+	
+	const QualityTablesFormatter::StatisticKind kind = QualityTablesFormatter::NameToKind(kindName);
+	
+	QualityTablesFormatter formatter(filename);
+	StatisticsCollection collection(polarizationCount);
+	collection.Load(formatter);
+	DefaultStatistics statistics(polarizationCount);
+	collection.GetFrequencyRangeStatistics(statistics, startFreqMHz*1e6, endFreqMHz*1e6);
+	StatisticsDerivator derivator(collection);
+	const DefaultStatistics singlePol(statistics.ToSinglePolarization());
+	
+	std::cout << startFreqMHz << '\t' << endFreqMHz << '\t' << derivator.GetStatisticAmplitude(kind, singlePol, 0);
 	for(unsigned p=0;p<polarizationCount;++p)
 	{
 		long double val = derivator.GetStatisticAmplitude(kind, statistics, p);
@@ -369,6 +397,34 @@ void actionQueryBaselines(const std::string &kindName, const std::string &filena
 		for(unsigned p=0;p<polarizationCount;++p)
 		{
 			const std::complex<long double> val = derivator.GetComplexBaselineStatistic(kind, antenna1, antenna2, p);
+			std::cout << '\t' << val.real() << '\t' << val.imag();
+		}
+		std::cout << '\n';
+	}
+}
+
+void actionQueryFrequency(const std::string &kindName, const std::string &filename)
+{
+	const unsigned polarizationCount = MeasurementSet::PolarizationCount(filename);
+	const QualityTablesFormatter::StatisticKind kind = QualityTablesFormatter::NameToKind(kindName);
+	
+	QualityTablesFormatter formatter(filename);
+	StatisticsCollection collection(polarizationCount);
+	collection.Load(formatter);
+	const std::map<double, DefaultStatistics> &freqStats = collection.FrequencyStatistics();
+	StatisticsDerivator derivator(collection);
+
+	std::cout << "TIME";
+	for(unsigned p=0;p<polarizationCount;++p)
+		std::cout << '\t' << kindName << "_POL" << p << "_R\t" << kindName << "_POL" << p << "_I" ;
+	std::cout << '\n';
+	for(std::map<double, DefaultStatistics>::const_iterator i=freqStats.begin();i!=freqStats.end();++i)
+	{
+		const double frequency = i->first;
+		std::cout << frequency*1e-6;
+		for(unsigned p=0;p<polarizationCount;++p)
+		{
+			const std::complex<long double> val = derivator.GetComplexStatistic(kind, i->second, p);
 			std::cout << '\t' << val.real() << '\t' << val.imag();
 		}
 		std::cout << '\n';
@@ -593,12 +649,17 @@ void printSyntax(std::ostream &stream, char *argv[])
 		"\t              and writes them in the quality tables.\n"
 		"\tcombine     - Combine several tables.\n"
 		"\thistogram   - Various histogram actions.\n"
-		"\tquery_b     - Query baselines.\n"
-		"\tquery_t     - Query time.\n"
+		"\tquery_b     - Query per baseline.\n"
+		"\tquery_t     - Query per time step.\n"
+		"\tquery_f     - Query per frequency.\n"
 		"\tquery_g     - Query single global statistic.\n"
 		"\tremove      - Remove all quality tables.\n"
 		"\tsummarize   - Give a summary of the statistics currently in the quality tables.\n"
-		"\tsummarizerfi- Give a summary of the rfi statistics.\n";
+		"\tsummarizerfi- Give a summary of the rfi statistics.\n"
+		"\n\n"
+		"A few actions take a statistic kind. Some common statistic kinds are: StandardDeviation,\n"
+		"Variance, Mean, RFIPercentage, RFIRatio, Count. These are case sensitive.\n";
+
 }
 
 int main(int argc, char *argv[])
@@ -653,6 +714,11 @@ int main(int argc, char *argv[])
 				{
 					std::cout << "Syntax: " << argv[0] << " query_t <kind> <ms>\n\n"
 						"Print the given statistic for each time step.\n";
+				}
+				else if(helpAction == "query_f")
+				{
+					std::cout << "Syntax: " << argv[0] << " query_f <kind> <ms>\n\n"
+						"Print the given statistic for each frequency.\n";
 				}
 				else if(helpAction == "query_g")
 				{
@@ -779,6 +845,30 @@ int main(int argc, char *argv[])
 			}
 			else {
 				actionQueryBaselines(argv[2], argv[3]);
+			}
+		}
+		else if(action == "query_f")
+		{
+			if(argc != 4)
+			{
+				std::cerr << "Syntax for query times: 'aoquality query_t <KIND> <MS>'\n";
+				return -1;
+			}
+			else {
+				actionQueryFrequency(argv[2], argv[3]);
+				return 0;
+			}
+		}
+		else if(action == "query_fr")
+		{
+			if(argc != 6)
+			{
+				std::cerr << "Syntax for query times: 'aoquality query_fr <KIND> <MS> <START MHZ> <END MHZ>'\n";
+				return -1;
+			}
+			else {
+				actionQueryFrequencyRange(argv[2], argv[3], atof(argv[4]), atof(argv[5]));
+				return 0;
 			}
 		}
 		else if(action == "query_t")
