@@ -50,7 +50,7 @@ void PlotWindow::handleUpdate()
 {
 	updatePlotList();
 	
-	const std::vector<Plot2D*> &plots = _plotManager.Items();
+	const std::vector<Plot2D*>& plots = _plotManager.Items();
 	if(!plots.empty())
 	{
 		Plot2D &lastPlot = **plots.rbegin();
@@ -76,8 +76,9 @@ void PlotWindow::handleUpdate()
 
 void PlotWindow::updatePlotList()
 {
-	const std::vector<Plot2D*> &plots = _plotManager.Items();
+	const std::vector<Plot2D*>& plots = _plotManager.Items();
 	
+	_plotListView.get_selection()->unselect_all();
 	_plotListStore->clear();
 	for(size_t index=0; index!=plots.size(); ++index)
 	{
@@ -86,6 +87,7 @@ void PlotWindow::updatePlotList()
 		row[_plotListColumns._index] = index;
 		row[_plotListColumns._name] = plot.Title();
 	}
+	onSelectedPlotChange();
 }
 
 void PlotWindow::onSelectedPlotChange()
