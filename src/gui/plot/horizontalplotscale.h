@@ -46,6 +46,7 @@ class HorizontalPlotScale {
 		void InitializeNumericTicks(double min, double max);
 		void InitializeTimeTicks(double timeMin, double timeMax);
 		void InitializeTextTicks(const std::vector<std::string> &labels);
+		void InitializeLogarithmicTicks(double min, double max);
 		void SetDrawWithDescription(bool drawWithDescription)
 		{
 			_drawWithDescription = drawWithDescription;
@@ -84,7 +85,7 @@ class HorizontalPlotScale {
 		std::string _unitsCaption;
 		double _descriptionFontSize;
 		double _tickValuesFontSize;
-		bool _rotateUnits;
+		bool _rotateUnits, _isLogarithmic;
 };
 
 #endif

@@ -22,7 +22,7 @@
 #include "tickset.h"
 
 HorizontalPlotScale::HorizontalPlotScale()
-	: _plotWidth(0), _plotHeight(0), _metricsAreInitialized(false), _tickSet(0), _drawWithDescription(true), _unitsCaption("x"), _descriptionFontSize(14), _tickValuesFontSize(14), _rotateUnits(false)
+	: _plotWidth(0), _plotHeight(0), _metricsAreInitialized(false), _tickSet(0), _drawWithDescription(true), _unitsCaption("x"), _descriptionFontSize(14), _tickValuesFontSize(14), _rotateUnits(false), _isLogarithmic(false)
 {
 }
 
@@ -167,6 +167,16 @@ void HorizontalPlotScale::InitializeNumericTicks(double min, double max)
 	if(_tickSet != 0)
 		delete _tickSet;
 	_tickSet = new NumericTickSet(min, max, 25);
+	_isLogarithmic = false;
+	_metricsAreInitialized = false;
+}
+
+void HorizontalPlotScale::InitializeLogarithmicTicks(double min, double max)
+{
+	if(_tickSet == 0)
+		delete _tickSet;
+	_tickSet = new LogarithmicTickSet(min, max, 25);
+	_isLogarithmic = true;
 	_metricsAreInitialized = false;
 }
 
@@ -175,6 +185,7 @@ void HorizontalPlotScale::InitializeTimeTicks(double timeMin, double timeMax)
 	if(_tickSet != 0)
 		delete _tickSet;
 	_tickSet = new TimeTickSet(timeMin, timeMax, 25);
+	_isLogarithmic = false;
 	_metricsAreInitialized = false;
 }
 
@@ -183,6 +194,7 @@ void HorizontalPlotScale::InitializeTextTicks(const std::vector<std::string> &la
 	if(_tickSet != 0)
 		delete _tickSet;
 	_tickSet = new TextTickSet(labels, 100);
+	_isLogarithmic = false;
 	_metricsAreInitialized = false;
 }
 
