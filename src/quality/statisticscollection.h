@@ -141,6 +141,11 @@ class StatisticsCollection : public Serializable
 			statistics = getGlobalBaselineStatistics<false>();
 		}
 		
+		void GetFrequencyRangeStatistics(DefaultStatistics& statistics, double startFrequency, double endFrequency)
+		{
+			statistics = getFrequencyRangeStatistics(startFrequency, endFrequency);
+		}
+		
 		const BaselineStatisticsMap &BaselineStatistics() const
 		{
 			if(_baselineStatistics.size() == 1)
@@ -693,6 +698,21 @@ class StatisticsCollection : public Serializable
 				}
 			}
 			return global;
+		}
+		
+		DefaultStatistics getFrequencyRangeStatistics(double startFrequency, double endFrequency) const
+		{
+			DefaultStatistics rangeStats(_polarizationCount);
+			
+			for(DoubleStatMap::const_iterator f=_frequencyStatistics.begin();f!=_frequencyStatistics.end();++f)
+			{
+				const double frequency = f->first;
+				const DefaultStatistics &stat = f->second;
+				
+				if(frequency>=startFrequency && frequency < endFrequency)
+					rangeStats += stat;
+			}
+			return rangeStats;
 		}
 		
 		void serializeTime(std::ostream &stream) const
