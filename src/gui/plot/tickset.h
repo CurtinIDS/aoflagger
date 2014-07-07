@@ -6,8 +6,6 @@
 
 #include "../../msio/date.h"
 
-#include "../../util/aologger.h"
-
 typedef std::pair<double, std::string> Tick;
 
 class TickSet

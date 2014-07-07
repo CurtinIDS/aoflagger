@@ -21,6 +21,8 @@
 
 #include <iostream>
 
+#include "../../util/aologger.h"
+
 Plot2D::Plot2D() :
 	_logarithmicYAxis(false),
 	_showAxes(true),

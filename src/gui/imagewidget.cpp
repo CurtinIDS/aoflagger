@@ -31,6 +31,8 @@
 #include "plot/verticalplotscale.h"
 #include "plot/title.h"
 
+#include "../util/aologger.h"
+
 ImageWidget::ImageWidget() :
 	_isInitialized(false),
 	_initializedWidth(0),
