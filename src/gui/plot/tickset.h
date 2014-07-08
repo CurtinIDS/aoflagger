@@ -197,7 +197,7 @@ class LogarithmicTickSet : public TickSet
 					return;
 				if(tickEnd > tickStart)
 				{
-					const unsigned distance = (unsigned) log10(tickEnd / tickStart);
+					const unsigned distance = (unsigned) round(log10(tickEnd / tickStart));
 					const unsigned step = (distance + sizeRequest - 1) / sizeRequest;
 					const double factor = exp10((double) step);
 					double pos = tickStart * factor;
