@@ -201,7 +201,7 @@ class LogarithmicTickSet : public TickSet
 					const unsigned step = (distance + sizeRequest - 1) / sizeRequest;
 					const double factor = exp10((double) step);
 					double pos = tickStart * factor;
-					while(pos <= tickEnd && _ticks.size() < sizeRequest)
+					while(pos <= _max && _ticks.size() < sizeRequest)
 					{
 						_ticks.push_back(pos);
 						pos *= factor;
