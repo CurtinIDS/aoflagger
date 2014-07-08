@@ -861,6 +861,22 @@ int main(int argc, char *argv[])
 		}
 		else if(action == "query_fr")
 		{
+			if(argc == 5) {
+				std::string range = argv[4];
+				if(range == "DVB4")
+					actionQueryFrequencyRange(argv[2], argv[3], 167, 174);
+				else if(range == "DVB5")
+					actionQueryFrequencyRange(argv[2], argv[3], 174, 181);
+				else if(range == "DVB6")
+					actionQueryFrequencyRange(argv[2], argv[3], 181, 188);
+				else if(range == "DVB7")
+					actionQueryFrequencyRange(argv[2], argv[3], 188, 195);
+				else {
+					std::cerr << "Syntax for query times: 'aoquality query_fr <KIND> <MS> <START MHZ> <END MHZ>'\n";
+					return -1;
+				}
+				return 0;
+			}
 			if(argc != 6)
 			{
 				std::cerr << "Syntax for query times: 'aoquality query_fr <KIND> <MS> <START MHZ> <END MHZ>'\n";
