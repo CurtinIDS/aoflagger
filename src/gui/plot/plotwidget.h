@@ -72,10 +72,13 @@ class PlotWidget : public Gtk::DrawingArea {
 				_plot->Render(*this);
 			else {
 				Glib::RefPtr<Gdk::Window> window = get_window();
-				Cairo::RefPtr<Cairo::Context> cr = window->create_cairo_context();
-				cr->set_source_rgba(1, 1, 1, 1);
-				cr->paint();
-				cr->fill();
+				if(window != 0)
+				{
+					Cairo::RefPtr<Cairo::Context> cr = window->create_cairo_context();
+					cr->set_source_rgba(1, 1, 1, 1);
+					cr->paint();
+					cr->fill();
+				}
 			}
 		}
 };
