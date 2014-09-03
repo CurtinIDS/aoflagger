@@ -319,6 +319,37 @@ class RedYellowBlueMap : public ColorMap {
 		unsigned char ValueToColorA(long double) const { return 255; }
 };
 
+class FireMap : public ColorMap {
+	public:
+		FireMap() { }
+		~FireMap() { }
+		unsigned char ValueToColorR(long double value) const {
+			if(value < -1.0)
+				return 0;
+			else if(value < 0)
+				return (unsigned char) ((value + 1.0) * 255.0);
+			else
+				return 255;
+		}
+		unsigned char ValueToColorG(long double value) const {
+			if(value < -0.5)
+				return 0;
+			else if(value < 0.5)
+				return (unsigned char) ((value + 0.5) * 255.0);
+			else
+				return 255;
+		}
+		unsigned char ValueToColorB(long double value) const {
+			if(value < 0)
+				return 0;
+			else if(value < 1.0)
+				return(unsigned char) (value * 255.0);
+			else
+				return 255;
+		}
+		unsigned char ValueToColorA(long double) const { return 255; }
+};
+
 /**
  * ColorMap that turns negative values into blue and positive values into red. Zero is represented with black.
  */

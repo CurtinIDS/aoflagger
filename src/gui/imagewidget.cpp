@@ -512,6 +512,8 @@ ColorMap *ImageWidget::createColorMap()
 			return new class RedBlueMap();
 		case RedYellowBlueMap:
 			return new class RedYellowBlueMap();
+		case FireMap:
+			return new class FireMap();
 		case BlackRedMap:
 			return new class BlackRedMap();
 		default:
