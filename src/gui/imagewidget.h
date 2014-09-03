@@ -164,14 +164,18 @@ class ImageWidget : public Gtk::DrawingArea {
 		{
 			_titleText = title;
 		}
+		
+		const std::string& XAxisDescription() const { return _xAxisDescription; }
 		void SetXAxisDescription(const std::string &description)
 		{
 			_xAxisDescription = description;
 		}
+		const std::string& YAxisDescription() const { return _yAxisDescription; }
 		void SetYAxisDescription(const std::string &description)
 		{
 			_yAxisDescription = description;
 		}
+		const std::string& ZAxisDescription() const { return _zAxisDescription; }
 		void SetZAxisDescription(const std::string &description)
 		{
 			_zAxisDescription = description;

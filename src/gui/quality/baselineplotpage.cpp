@@ -31,7 +31,9 @@ BaselinePlotPage::BaselinePlotPage() :
 {
 	GrayScaleWidget().OnMouseMovedEvent().connect(sigc::mem_fun(*this, &BaselinePlotPage::onMouseMoved));
 	GrayScaleWidget().SetXAxisDescription("Antenna 1 index");
+	GrayScaleWidget().SetManualXAxisDescription(true);
 	GrayScaleWidget().SetYAxisDescription("Antenna 2 index");
+	GrayScaleWidget().SetManualYAxisDescription(true);
 }
 
 BaselinePlotPage::~BaselinePlotPage()

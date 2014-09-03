@@ -254,6 +254,7 @@ void ImagePropertiesWindow::initAxisWidgets()
 	_manualXAxisDescription.set_active(_imageWidget.ManualXAxisDescription());
 	_xAxisBox.pack_start(_manualXAxisDescription);
 	
+	_xAxisDescriptionEntry.set_text(_imageWidget.XAxisDescription());
 	_xAxisBox.pack_start(_xAxisDescriptionEntry);
 	
 	_axesVisibilityBox.pack_start(_xAxisBox);
@@ -264,6 +265,7 @@ void ImagePropertiesWindow::initAxisWidgets()
 	_manualYAxisDescription.set_active(_imageWidget.ManualYAxisDescription());
 	_yAxisBox.pack_start(_manualYAxisDescription);
 	
+	_yAxisDescriptionEntry.set_text(_imageWidget.YAxisDescription());
 	_yAxisBox.pack_start(_yAxisDescriptionEntry);
 	
 	_axesVisibilityBox.pack_start(_yAxisBox);
@@ -274,6 +276,7 @@ void ImagePropertiesWindow::initAxisWidgets()
 	_manualZAxisDescription.set_active(_imageWidget.ManualZAxisDescription());
 	_zAxisBox.pack_start(_manualZAxisDescription);
 	
+	_zAxisDescriptionEntry.set_text(_imageWidget.ZAxisDescription());
 	_zAxisBox.pack_start(_zAxisDescriptionEntry);
 	
 	_axesVisibilityBox.pack_start(_zAxisBox);
@@ -348,15 +351,19 @@ void ImagePropertiesWindow::onApplyClicked()
 	_imageWidget.SetShowXAxisDescription(_showXAxisDescriptionButton.get_active());
 	_imageWidget.SetShowYAxisDescription(_showYAxisDescriptionButton.get_active());
 	_imageWidget.SetShowZAxisDescription(_showZAxisDescriptionButton.get_active());
+	
 	_imageWidget.SetManualXAxisDescription(_manualXAxisDescription.get_active());
 	if(_manualXAxisDescription.get_active())
 		_imageWidget.SetXAxisDescription(_xAxisDescriptionEntry.get_text());
+	
 	_imageWidget.SetManualYAxisDescription(_manualYAxisDescription.get_active());
 	if(_manualYAxisDescription.get_active())
 		_imageWidget.SetYAxisDescription(_yAxisDescriptionEntry.get_text());
+	
 	_imageWidget.SetManualZAxisDescription(_manualZAxisDescription.get_active());
 	if(_manualZAxisDescription.get_active())
 		_imageWidget.SetZAxisDescription(_zAxisDescriptionEntry.get_text());
+	
 	_imageWidget.SetShowColorScale(_showColorScale.get_active());
 	
 	_imageWidget.Update();
