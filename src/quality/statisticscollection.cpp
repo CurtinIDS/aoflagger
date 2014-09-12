@@ -193,3 +193,49 @@ void StatisticsCollection::AddImage(unsigned antenna1, unsigned antenna2, const 
 		}
 	}
 }
+
+void StatisticsCollection::lowerResolution(StatisticsCollection::DoubleStatMap& map, size_t maxSteps) const
+{
+	if(map.size() > maxSteps)
+	{
+		DoubleStatMap newMap;
+		double gridStep, gridStart;
+		if(maxSteps > 1)
+		{
+			double oldGridStep =  (map.rbegin()->first - map.begin()->first) / (map.size() - 1);
+			gridStep = (map.rbegin()->first - map.begin()->first + oldGridStep) / maxSteps;
+			gridStart = map.begin()->first - 0.5*oldGridStep;
+		}
+		else {
+			gridStep = map.rbegin()->first - map.begin()->first;
+			gridStart = map.begin()->first;
+		}
+		size_t gridIndex = 0;
+		for(DoubleStatMap::iterator i=map.begin();i!=map.end();)
+		{
+			DefaultStatistics integratedStat(_polarizationCount);
+			double cellMid = (gridIndex+0.5)*gridStep + gridStart, cellEnd =(gridIndex+1)*gridStep + gridStart;
+			size_t count = 0;
+			while(i!=map.end() && i->first<cellEnd)
+			{
+				++count;
+				integratedStat += i->second;
+				++i;
+			}
+			++gridIndex;
+			// If the last items are not yet gridded, they might be just over the border due to rounding errors; put them in the last bucket:
+			if(gridIndex == maxSteps)
+			{
+				while(i != map.end())
+				{
+					++count;
+					integratedStat += i->second;
+					++i;
+				}
+			}
+			if(count > 0)
+				newMap.insert(std::pair<double, DefaultStatistics>(cellMid, integratedStat));
+		}
+		map = newMap;
+	}
+}

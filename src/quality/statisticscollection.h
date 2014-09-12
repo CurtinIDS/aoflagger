@@ -866,30 +866,7 @@ class StatisticsCollection : public Serializable
 			}
 		}
 		
-		void lowerResolution(DoubleStatMap &map, size_t maxSteps) const
-		{
-			if(map.size() > maxSteps)
-			{
-				DoubleStatMap newMap;
-				const size_t factor = (map.size() + maxSteps - 1) / maxSteps;
-				for(DoubleStatMap::iterator i=map.begin();i!=map.end();)
-				{
-					DefaultStatistics integratedStat(_polarizationCount);
-					double keySum = 0.0;
-					size_t count = 0;
-					for(size_t x=0;x<factor && i!=map.end();++x)
-					{
-						++count;
-						keySum += i->first;
-						integratedStat += i->second;
-						++i;
-					}
-					if(count > 0)
-						newMap.insert(std::pair<double, DefaultStatistics>(keySum / count, integratedStat));
-				}
-				map = newMap;
-			}
-		}
+		void lowerResolution(DoubleStatMap &map, size_t maxSteps) const;
 		
 		static void regrid(const DoubleStatMap &referenceMap, DoubleStatMap &regridMap)
 		{
