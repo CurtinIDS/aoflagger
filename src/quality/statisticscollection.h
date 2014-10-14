@@ -39,11 +39,11 @@ class StatisticsCollection : public Serializable
 	private:
 		typedef std::map<double, DefaultStatistics> DoubleStatMap;
 	public:
-		StatisticsCollection() : _polarizationCount(0)
+		StatisticsCollection() : _polarizationCount(0), _emptyBaselineStatisticsMap(0)
 		{
 		}
 		
-		explicit StatisticsCollection(unsigned polarizationCount) : _polarizationCount(polarizationCount)
+		explicit StatisticsCollection(unsigned polarizationCount) : _polarizationCount(polarizationCount), _emptyBaselineStatisticsMap(polarizationCount)
 		{
 		}
 		
@@ -51,7 +51,8 @@ class StatisticsCollection : public Serializable
 			_timeStatistics(source._timeStatistics),
 			_frequencyStatistics(source._frequencyStatistics),
 			_baselineStatistics(source._baselineStatistics),
-			_polarizationCount(source._polarizationCount)
+			_polarizationCount(source._polarizationCount),
+			_emptyBaselineStatisticsMap(source._polarizationCount)
 		{
 		}
 		
@@ -72,11 +73,14 @@ class StatisticsCollection : public Serializable
 			_bands.insert(std::pair<unsigned, std::vector<DefaultStatistics *> >(band, pointers));
 			double centralFrequency = (frequencies[0] + frequencies[channelCount-1]) / 2.0;
 			_centralFrequencies.insert(std::pair<unsigned, double>(band, centralFrequency));
+			
+			std::vector<double> freqVect(frequencies, frequencies+channelCount);
+			_bandFrequencies.insert(std::pair<double, std::vector<double> >(band, freqVect));
 		}
 		
-		void Add(unsigned antenna1, unsigned antenna2, double time, unsigned band, int polarization, const float *reals, const float *imags, const bool *isRFI, const bool* origFlags, unsigned nsamples, unsigned step, unsigned stepRFI, unsigned stepFlags);
+		void Add(unsigned antenna1, unsigned antenna2, double time, unsigned band, int polarization, const float* reals, const float* imags, const bool* isRFI, const bool* origFlags, unsigned nsamples, unsigned step, unsigned stepRFI, unsigned stepFlags);
 		
-		void Add(unsigned antenna1, unsigned antenna2, double time, unsigned band, int polarization, const std::vector<std::complex<float> > &samples, const bool *isRFI)
+		void Add(unsigned antenna1, unsigned antenna2, double time, unsigned band, int polarization, const std::vector<std::complex<float> >& samples, const bool* isRFI)
 		{
 			const float *dataPtr = reinterpret_cast<const float*>(&(samples[0]));
 			
@@ -86,7 +90,9 @@ class StatisticsCollection : public Serializable
 					isRFI, &origFlag, samples.size(), 2, 1, 0);
 		}
 		
-		void AddImage(unsigned antenna1, unsigned antenna2, const double *times, unsigned band, int polarization, const Image2DCPtr &realImage, const Image2DCPtr &imagImage, const Mask2DCPtr &rfiMask, const Mask2DCPtr &correlatorMask);
+		void AddToTimeFrequency(unsigned antenna1, unsigned antenna2, double time, unsigned band, int polarization, const float* reals, const float* imags, const bool* isRFI, const bool* origFlags, unsigned nsamples, unsigned step, unsigned stepRFI, unsigned stepFlags);
+		
+		void AddImage(unsigned antenna1, unsigned antenna2, const double* times, unsigned band, int polarization, const Image2DCPtr& realImage, const Image2DCPtr& imagImage, const Mask2DCPtr& rfiMask, const Mask2DCPtr& correlatorMask);
 		
 		void Save(QualityTablesFormatter &qualityData) const
 		{
@@ -150,6 +156,8 @@ class StatisticsCollection : public Serializable
 		{
 			if(_baselineStatistics.size() == 1)
 				return _baselineStatistics.begin()->second;
+			else if(_baselineStatistics.size() == 0)
+				return _emptyBaselineStatisticsMap;
 			else
 				throw std::runtime_error("Requesting single band single baseline statistics in statistics collection with multiple bands");
 		}
@@ -180,6 +188,7 @@ class StatisticsCollection : public Serializable
 		void SetPolarizationCount(unsigned newCount)
 		{
 			_polarizationCount = newCount;
+			_emptyBaselineStatisticsMap = BaselineStatisticsMap(_polarizationCount);
 		}
 		
 		virtual void Serialize(std::ostream &stream) const
@@ -193,6 +202,7 @@ class StatisticsCollection : public Serializable
 		virtual void Unserialize(std::istream &stream)
 		{
 			_polarizationCount = UnserializeUInt64(stream);
+			_emptyBaselineStatisticsMap = BaselineStatisticsMap(_polarizationCount);
 			unserializeTime(stream);
 			unserializeFrequency(stream);
 			unserializeBaselines(stream);
@@ -330,6 +340,9 @@ class StatisticsCollection : public Serializable
 		void addTimeAndBaseline(unsigned antenna1, unsigned antenna2, double time, double centralFrequency, int polarization, const float *reals, const float *imags, const bool *isRFI, const bool* origFlags, unsigned nsamples, unsigned step, unsigned stepRFI, unsigned stepFlags);
 		
 		template<bool IsDiff>
+		void addToTimeFrequency(double time, const double* frequencies, int polarization, const float *reals, const float *imags, const bool *isRFI, const bool* origFlags, unsigned nsamples, unsigned step, unsigned stepRFI, unsigned stepFlags, bool shiftOneUp);
+		
+		template<bool IsDiff>
 		void addToStatistic(DefaultStatistics &statistic, unsigned polarization, unsigned long count, long double sum_R, long double sum_I, long double sumP2_R, long double sumP2_I, unsigned long rfiCount)
 		{
 			if(IsDiff)
@@ -406,82 +419,11 @@ class StatisticsCollection : public Serializable
 			saver.Save(value, indices.kindDSumP2);
 		}
 		
-		void saveTime(QualityTablesFormatter &qd) const
-		{
-			initializeEmptyStatistics(qd, QualityTablesFormatter::TimeDimension);
-			
-			Indices indices;
-			indices.fill(qd);
-				
-			StatisticSaver saver;
-			saver.dimension = QualityTablesFormatter::TimeDimension;
-			saver.qualityData = &qd;
-			
-			for(std::map<double, DoubleStatMap>::const_iterator j=_timeStatistics.begin();j!=_timeStatistics.end();++j)
-			{
-				saver.frequency = j->first;
-				const DoubleStatMap &map = j->second;
-				
-				for(DoubleStatMap::const_iterator i=map.begin();i!=map.end();++i)
-				{
-					saver.time = i->first;
-					const DefaultStatistics &stat = i->second;
-					
-					saveEachStatistic(saver, stat, indices);
-				}
-			}
-		}
+		void saveTime(QualityTablesFormatter &qd) const;
 		
-		void saveFrequency(QualityTablesFormatter &qd) const
-		{
-			initializeEmptyStatistics(qd, QualityTablesFormatter::FrequencyDimension);
-			
-			Indices indices;
-			indices.fill(qd);
-				
-			StatisticSaver saver;
-			saver.dimension = QualityTablesFormatter::FrequencyDimension;
-			saver.qualityData = &qd;
-			
-			for(DoubleStatMap::const_iterator i=_frequencyStatistics.begin();i!=_frequencyStatistics.end();++i)
-			{
-				saver.frequency = i->first;
-				const DefaultStatistics &stat = i->second;
-				
-				saveEachStatistic(saver, stat, indices);
-			}
-		}
+		void saveFrequency(QualityTablesFormatter &qd) const;
 		
-		void saveBaseline(QualityTablesFormatter &qd) const
-		{
-			initializeEmptyStatistics(qd, QualityTablesFormatter::BaselineDimension);
-			
-			Indices indices;
-			indices.fill(qd);
-			
-			StatisticSaver saver;
-			saver.dimension = QualityTablesFormatter::BaselineDimension;
-			saver.frequency = centralFrequency();
-			saver.qualityData = &qd;
-			
-			for(std::map<double, BaselineStatisticsMap>::const_iterator j=_baselineStatistics.begin();j!=_baselineStatistics.end();++j)
-			{
-				saver.frequency = j->first;
-				const BaselineStatisticsMap &map = j->second;
-				
-				const std::vector<std::pair<unsigned, unsigned> > baselines = map.BaselineList();
-			
-				for(std::vector<std::pair<unsigned, unsigned> >::const_iterator i=baselines.begin();i!=baselines.end();++i)
-				{
-					saver.antenna1 = i->first;
-					saver.antenna2 = i->second;
-					
-					const DefaultStatistics &stat = map.GetStatistics(saver.antenna1, saver.antenna2);
-					
-					saveEachStatistic(saver, stat, indices);
-				}
-			}
-		}
+		void saveBaseline(QualityTablesFormatter &qd) const;
 		
 		DefaultStatistics &getTimeStatistic(double time, double centralFrequency)
 		{
@@ -901,8 +843,10 @@ class StatisticsCollection : public Serializable
 		
 		std::map<unsigned, std::vector< DefaultStatistics *> > _bands;
 		std::map<unsigned, double> _centralFrequencies;
+		std::map<unsigned, std::vector<double> > _bandFrequencies;
 		
 		unsigned _polarizationCount;
+		BaselineStatisticsMap _emptyBaselineStatisticsMap;
 };
 
 #endif

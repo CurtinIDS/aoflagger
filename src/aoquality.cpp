@@ -55,7 +55,8 @@ void reportProgress(unsigned step, unsigned totalSteps)
 enum CollectingMode
 {
 	CollectDefault,
-	CollectHistograms
+	CollectHistograms,
+	CollectTimeFrequency
 };
 
 void actionCollect(const std::string &filename, enum CollectingMode mode, StatisticsCollection &statisticsCollection, HistogramCollection &histogramCollection, bool mwaChannels, size_t flaggedTimesteps, const std::set<size_t> &flaggedAntennae, bool useCorrected)
@@ -86,12 +87,10 @@ void actionCollect(const std::string &filename, enum CollectingMode mode, Statis
 		<< "Channels/band: " << (totalChannels / bandCount) << '\n';
 	if(ignoreChannelZero)
 		std::cout << "Channel zero will be ignored, as this looks like a LOFAR data set with bad channel 0.\n";
-	else
-		std::cout << "Channel zero will be included in the statistics, as it seems that channel 0 is okay.\n";
 	
 	// Initialize statisticscollection
 	statisticsCollection.SetPolarizationCount(polarizationCount);
-	if(mode == CollectDefault)
+	if(mode != CollectHistograms)
 	{
 		for(unsigned b=0;b<bandCount;++b)
 		{
@@ -212,6 +211,12 @@ void actionCollect(const std::string &filename, enum CollectingMode mode, Statis
 				case CollectHistograms:
 					histogramCollection.Add(antenna1Index, antenna2Index, p, samples[p], isRFI[p], band.channels.size() - startChannel);
 					break;
+				case CollectTimeFrequency:
+					if(antennaIsFlagged || timestepIndex < flaggedTimesteps)
+						statisticsCollection.Add(antenna1Index, antenna2Index, time, bandIndex, p, &samples[p]->real(), &samples[p]->imag(), isRFI[p], correlatorFlagsForBadAntenna, band.channels.size() - startChannel, 2, 1, 1);
+					else
+						statisticsCollection.AddToTimeFrequency(antenna1Index, antenna2Index, time, bandIndex, p, &samples[p]->real(), &samples[p]->imag(), isRFI[p], correlatorFlags, band.channels.size() - startChannel, 2, 1, 1);
+					break;
 			}
 		}
 
@@ -244,6 +249,7 @@ void actionCollect(const std::string &filename, enum CollectingMode mode, bool m
 	switch(mode)
 	{
 		case CollectDefault:
+		case CollectTimeFrequency:
 			{
 				std::cout << "Writing quality tables..." << std::endl;
 				
@@ -762,7 +768,8 @@ int main(int argc, char *argv[])
 			else {
 				bool histograms = (std::string(argv[2]) == "-h");
 				bool useCorrected = (std::string(argv[2]) == "-c");
-				int argi = (histograms||useCorrected) ? 3 : 2;
+				bool timeFrequency = (std::string(argv[2]) == "-tf");
+				int argi = (histograms||useCorrected||timeFrequency) ? 3 : 2;
 				std::string filename = argv[argi];
 				size_t flaggedTimesteps = 0;
 				++argi;
@@ -775,7 +782,14 @@ int main(int argc, char *argv[])
 						++argi;
 					}
 				}
-				actionCollect(filename, histograms ? CollectHistograms : CollectDefault, mwacollect, flaggedTimesteps, flaggedAntennae, useCorrected);
+				CollectingMode mode;
+				if(histograms)
+					mode = CollectHistograms;
+				else if(timeFrequency)
+					mode = CollectTimeFrequency;
+				else
+					mode = CollectDefault;
+				actionCollect(filename, mode, mwacollect, flaggedTimesteps, flaggedAntennae, useCorrected);
 			}
 		}
 		else if(action == "combine")

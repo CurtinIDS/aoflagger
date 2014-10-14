@@ -35,12 +35,6 @@ class BaselineStatisticsMap : public Serializable
 		{
 		}
 		
-		BaselineStatisticsMap(const BaselineStatisticsMap &source) :
-			_map(source._map),
-			_polarizationCount(source._polarizationCount)
-		{
-		}
-		
 		void operator+=(const BaselineStatisticsMap &other)
 		{
 			for(OuterMap::const_iterator i=other._map.begin();i!=other._map.end();++i)
@@ -145,8 +139,6 @@ class BaselineStatisticsMap : public Serializable
 		}
 		
 	private:
-		void operator=(BaselineStatisticsMap &) { } // don't allow assignment
-		
 		typedef std::map<unsigned, DefaultStatistics> InnerMap;
 		typedef std::pair<unsigned, DefaultStatistics> InnerPair;
 		typedef std::map<unsigned, InnerMap > OuterMap;
