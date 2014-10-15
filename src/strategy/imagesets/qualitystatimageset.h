@@ -23,7 +23,7 @@ public:
 		_filename(filename),
 		_statisticKind(QualityTablesFormatter::StandardDeviationStatistic)
 	{
-		if(*_filename.rbegin() == '/')
+		if(!_filename.empty() && (*_filename.rbegin()) == '/')
 			_filename.resize(_filename.size()-1);
 		boost::filesystem::path p(_filename);
 		if(p.filename() == "QUALITY_TIME_STATISTIC")
@@ -46,9 +46,21 @@ public:
 		std::pair<TimeFrequencyData, TimeFrequencyMetaDataCPtr> data =
 			derivator.CreateTFData(_statisticKind);
 			
+		TimeFrequencyData& tfData = data.first;
 		TimeFrequencyMetaDataCPtr& metaData = data.second;
-		
-		return new BaselineData(data.first, metaData);
+		Mask2DPtr mask = Mask2D::CreateUnsetMaskPtr(tfData.ImageWidth(), tfData.ImageHeight());
+		for(size_t y=0; y!=tfData.ImageHeight(); ++y)
+		{
+			for(size_t x=0; x!=tfData.ImageWidth(); ++x)
+			{
+				for(size_t i=0; i!=tfData.ImageCount(); ++i)
+					mask->SetValue(x, y, !std::isfinite(tfData.GetImage(i)->Value(x, y)));
+			}
+		}
+		tfData.SetGlobalMask(mask);
+
+		BaselineData* baselineData = new BaselineData(tfData, metaData);
+		return baselineData;
 	}
 	
 	virtual ImageSet *Copy()
