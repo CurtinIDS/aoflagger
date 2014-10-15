@@ -26,6 +26,7 @@
 #include "msimageset.h"
 #include "parmimageset.h"
 #include "pngreader.h"
+#include "qualitystatimageset.h"
 
 #include <boost/algorithm/string.hpp>
 
@@ -48,6 +49,8 @@ namespace rfiStrategy {
 			return new PngReader(file);
 		else if(IsFilterBankFile(file))
 			return new FilterBankSet(file);
+		else if(IsQualityStatSet(file))
+			return new QualityStatImageSet(file);
 		else {
 			MSImageSet *set = new MSImageSet(file, ioMode);
 			set->SetReadUVW(readUVW);
@@ -125,8 +128,14 @@ namespace rfiStrategy {
 		return file.size()>=4 && file.substr(file.size()-4) == ".fil";
 	}
 	
+	bool ImageSet::IsQualityStatSet(const string& file)
+	{
+		boost::filesystem::path p(file);
+		return p.filename() == "QUALITY_TIME_STATISTIC";
+	}
+	
 	bool ImageSet::IsMSFile(const std::string &file)
 	{
-	  return (!IsBHFitsFile(file)) && (!IsFitsFile(file)) && (!IsRCPRawFile(file)) && (!IsTKPRawFile(file)) && (!IsRawDescFile(file)) && (!IsParmFile(file)) && (!IsTimeFrequencyStatFile(file)) && (!IsNoiseStatFile(file)) && (!IsPngFile(file)) && (!IsFilterBankFile(file));
+	  return (!IsBHFitsFile(file)) && (!IsFitsFile(file)) && (!IsRCPRawFile(file)) && (!IsTKPRawFile(file)) && (!IsRawDescFile(file)) && (!IsParmFile(file)) && (!IsTimeFrequencyStatFile(file)) && (!IsNoiseStatFile(file)) && (!IsPngFile(file)) && (!IsFilterBankFile(file)) && (!IsQualityStatSet(file));
 	}
 }

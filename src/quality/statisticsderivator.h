@@ -160,6 +160,8 @@ class StatisticsDerivator
 			TimeFrequencyMetaDataPtr metaData(new TimeFrequencyMetaData());
 			metaData->SetObservationTimes(observationTimes);
 			metaData->SetBand(band);
+			metaData->SetValueDescription(GetDescription(kind));
+			metaData->SetValueUnits(GetUnits(kind));
 			return std::pair<TimeFrequencyData, TimeFrequencyMetaDataPtr>(data, metaData);
 		}
 		static std::string GetDescription(QualityTablesFormatter::StatisticKind kind)

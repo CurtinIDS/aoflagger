@@ -138,6 +138,7 @@ namespace rfiStrategy {
 			static bool IsHarishFile(const std::string &file);
 			static bool IsPngFile(const std::string &file);
 			static bool IsFilterBankFile(const std::string& file);
+			static bool IsQualityStatSet(const std::string& file);
 
 			virtual void AddReadRequest(const ImageSetIndex &index) = 0;
 			virtual void PerformReadRequests() = 0;

@@ -103,6 +103,7 @@ class StatisticsCollection : public Serializable
 		
 		void Load(QualityTablesFormatter &qualityData)
 		{
+			SetPolarizationCount(qualityData.GetPolarizationCount());
 			loadTime<false>(qualityData);
 			loadFrequency<false>(qualityData);
 			loadBaseline<false>(qualityData);
@@ -187,8 +188,14 @@ class StatisticsCollection : public Serializable
 		
 		void SetPolarizationCount(unsigned newCount)
 		{
-			_polarizationCount = newCount;
-			_emptyBaselineStatisticsMap = BaselineStatisticsMap(_polarizationCount);
+			if(newCount != _polarizationCount)
+			{
+				_polarizationCount = newCount;
+				_emptyBaselineStatisticsMap = BaselineStatisticsMap(_polarizationCount);
+				_timeStatistics.clear();
+				_frequencyStatistics.clear();
+				_baselineStatistics.clear();
+			}
 		}
 		
 		virtual void Serialize(std::ostream &stream) const
