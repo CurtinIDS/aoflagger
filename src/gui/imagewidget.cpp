@@ -206,7 +206,10 @@ void ImageWidget::Update()
 	{
 		Glib::RefPtr<Gdk::Window> window = get_window();
 		if(window != 0 && get_width() > 0 && get_height() > 0)
+		{
 			update(window->create_cairo_context(), get_width(), get_height());
+			window->invalidate(false);
+		}
 	}
 }
 
