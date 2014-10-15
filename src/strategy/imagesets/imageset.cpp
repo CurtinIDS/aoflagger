@@ -130,7 +130,11 @@ namespace rfiStrategy {
 	
 	bool ImageSet::IsQualityStatSet(const string& file)
 	{
-		boost::filesystem::path p(file);
+		if(file.empty()) return false;
+		std::string copy(file);
+		if(*copy.rbegin() == '/')
+			copy.resize(copy.size()-1);
+		boost::filesystem::path p(copy);
 		return p.filename() == "QUALITY_TIME_STATISTIC";
 	}
 	

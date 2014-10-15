@@ -51,12 +51,14 @@ namespace rfiStrategy {
 	
 	class SingleImageSet : public ImageSet {
 		public:
-			SingleImageSet() : ImageSet(), _readCount(0), _lastRead(0)
+			SingleImageSet() : ImageSet(), _readCount(0), _lastRead(0), _writeFlagsIndex(0)
 			{
 			}
 			
 			virtual ~SingleImageSet()
 			{
+				delete _writeFlagsIndex;
+				delete _lastRead;
 			}
 
 			virtual ImageSetIndex *StartIndex()
@@ -92,9 +94,35 @@ namespace rfiStrategy {
 			}
 			
 			virtual BaselineData *Read() = 0;
+			
+			virtual void Write(const std::vector<Mask2DCPtr>& flags)
+			{
+				throw std::runtime_error("Flag writing is not implemented for this file (SingleImageSet)");
+			}
+			
+			virtual void AddWriteFlagsTask(const ImageSetIndex &index, std::vector<Mask2DCPtr> &flags)
+			{
+				delete _writeFlagsIndex;
+				_writeFlagsIndex = index.Copy();
+				_writeFlagsMasks = flags;
+			}
+			
+			virtual void PerformWriteFlagsTask()
+			{
+				if(_writeFlagsIndex == 0)
+					throw std::runtime_error("Nothing to write");
+				
+				Write(_writeFlagsMasks);
+				
+				delete _writeFlagsIndex;
+				_writeFlagsIndex = 0;
+			}
+			
 		private:
 			int _readCount;
 			BaselineData *_lastRead;
+			ImageSetIndex *_writeFlagsIndex;
+			std::vector<Mask2DCPtr> _writeFlagsMasks;
 	};
 
 }
