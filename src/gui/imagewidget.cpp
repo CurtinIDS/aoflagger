@@ -323,7 +323,7 @@ void ImageWidget::update(Cairo::RefPtr<Cairo::Context> cairo, unsigned width, un
 		if(_metaData != 0 && _metaData->HasObservationTimes())
 		{
 			_horiScale->InitializeTimeTicks(_metaData->ObservationTimes()[startTimestep], _metaData->ObservationTimes()[endTimestep-1]);
-			_horiScale->SetUnitsCaption("Time");
+			_horiScale->SetUnitsCaption("Time (UTC, hh:mm:ss)");
 		} else {
 			_horiScale->InitializeNumericTicks(-0.5 + startTimestep, 0.5 + endTimestep - 1.0);
 		}
