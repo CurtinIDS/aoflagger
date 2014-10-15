@@ -88,7 +88,7 @@ namespace rfiStrategy {
 					throw std::runtime_error("All data reads have already been requested");
 				if(_lastRead == 0)
 					throw std::runtime_error("GetNextRequested() was called before PerformReadRequests()");
-				return _lastRead;
+				return new BaselineData(*_lastRead);
 			}
 			
 			virtual BaselineData *Read() = 0;
