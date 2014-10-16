@@ -54,6 +54,7 @@ class ImagePropertiesWindow : public Gtk::Window {
 		void initColorMapButtons();
 		void initScaleWidgets();
 		void initOptionsWidgets();
+		void initFilterWidgets();
 		void initZoomWidgets();
 		void initAxisWidgets();
 		
@@ -77,9 +78,15 @@ class ImagePropertiesWindow : public Gtk::Window {
 		Gtk::Label _scaleMinLabel, _scaleMaxLabel;
 		Gtk::Entry _scaleMinEntry, _scaleMaxEntry;
 		
+		Gtk::VBox _filterAndOptionsBox;
+		
 		Gtk::Frame _optionsFrame;
 		Gtk::VBox _optionsBox;
 		Gtk::RadioButton _normalOptionsButton, _logScaleButton, _zeroSymmetricButton;
+		
+		Gtk::Frame _filterFrame;
+		Gtk::VBox _filterBox;
+		Gtk::RadioButton _bestFilterButton, _nearestFilterButton;
 		
 		Gtk::Frame _zoomFrame;
 		Gtk::HBox _zoomHBox;

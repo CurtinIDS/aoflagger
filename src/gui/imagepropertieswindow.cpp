@@ -58,6 +58,10 @@ ImagePropertiesWindow::ImagePropertiesWindow(ImageWidget &imageWidget, const std
 	_logScaleButton("Logarithmic scale"),
 	_zeroSymmetricButton("Symmetric around zero"),
 	
+	_filterFrame("Interpolation"),
+	_bestFilterButton("Best"),
+	_nearestFilterButton("Nearest"),
+	
 	_hStartScale(0, 1.01, 0.01),
 	_hStopScale(0, 1.01, 0.01),
 	_vStartScale(0, 1.01, 0.01),
@@ -80,6 +84,8 @@ ImagePropertiesWindow::ImagePropertiesWindow(ImageWidget &imageWidget, const std
 	initColorMapButtons();
 	initScaleWidgets();
 	initOptionsWidgets();
+	initFilterWidgets();
+	_framesHBox.pack_start(_filterAndOptionsBox);
 	initZoomWidgets();
 	initAxisWidgets();
 	
@@ -204,7 +210,29 @@ void ImagePropertiesWindow::initOptionsWidgets()
 
 	_optionsFrame.add(_optionsBox);
 	
-	_framesHBox.pack_start(_optionsFrame);
+	_filterAndOptionsBox.pack_start(_optionsFrame);
+}
+
+void ImagePropertiesWindow::initFilterWidgets()
+{
+	Gtk::RadioButton::Group group;
+	
+	_filterBox.pack_start(_bestFilterButton);
+	_bestFilterButton.set_group(group);
+
+	_filterBox.pack_start(_nearestFilterButton);
+	_nearestFilterButton.set_group(group);
+
+	switch(_imageWidget.CairoFilter())
+	{
+		default:
+		case Cairo::FILTER_BEST:    _bestFilterButton.set_active(true); break;
+		case Cairo::FILTER_NEAREST: _nearestFilterButton.set_active(true); break;
+	}
+
+	_filterFrame.add(_filterBox);
+	
+	_filterAndOptionsBox.pack_start(_filterFrame);
 }
 
 void ImagePropertiesWindow::initZoomWidgets()
@@ -332,6 +360,11 @@ void ImagePropertiesWindow::onApplyClicked()
 		_imageWidget.SetScaleOption(ImageWidget::LogScale);
 	else if(_zeroSymmetricButton.get_active())
 		_imageWidget.SetScaleOption(ImageWidget::ZeroSymmetricScale);
+	
+	if(_bestFilterButton.get_active())
+		_imageWidget.SetCairoFilter(Cairo::FILTER_BEST);
+	else if(_nearestFilterButton.get_active())
+		_imageWidget.SetCairoFilter(Cairo::FILTER_NEAREST);
 	
 	double
 		timeStart = _hStartScale.get_value(),

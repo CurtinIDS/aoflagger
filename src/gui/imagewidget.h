@@ -160,6 +160,7 @@ class ImageWidget : public Gtk::DrawingArea {
 		{
 			_cairoFilter = filter;
 		}
+		Cairo::Filter CairoFilter() const { return _cairoFilter; }
 		void SetTitleText(const std::string &title)
 		{
 			_titleText = title;
