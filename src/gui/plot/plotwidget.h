@@ -56,6 +56,9 @@ class PlotWidget : public Gtk::DrawingArea {
 		void Update()
 		{
 			redraw();
+			Glib::RefPtr<Gdk::Window> window = get_window();
+			if(window != 0)
+				window->invalidate(false);
 		}
 	private:
 		Plotable *_plot;
