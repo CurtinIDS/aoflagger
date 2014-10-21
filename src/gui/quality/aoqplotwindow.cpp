@@ -200,8 +200,11 @@ void AOQPlotWindow::readStatistics(const std::vector<std::string>& files, bool d
 			_statCollection = new StatisticsCollection(_polarizationCount);
 			_histCollection = new HistogramCollection(_polarizationCount);
 			
-			for(std::vector<std::string>::const_iterator i=files.begin(); i!=files.end(); ++i)
-				readAndCombine(*i);
+			for(size_t i=0; i!=files.size(); ++i)
+			{
+				std::cout << " (" << (i+1) << "/" << files.size() << ") ";
+				readAndCombine(files[i]);
+			}
 		}
 		setShowHistograms(!_histCollection->Empty());
 		if(downsampleTime)
