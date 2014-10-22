@@ -228,6 +228,7 @@ if(BOOST_ASIO_H_FOUND AND SIGCXX_FOUND)
 		remote/processcommander.cpp
 		remote/clusteredobservation.cpp
 		remote/vdsfile.cpp)
+
 else()
 	set(REMOTE_FILES
 		remote/clusteredobservation.cpp)
@@ -237,11 +238,17 @@ add_library(aoflagger ${IMAGING_FILES} ${INTERFACE_FILES} ${MSIO_FILES} ${QUALIT
 target_link_libraries(aoflagger ${PNG_LIBRARIES} ${LIBXML2_LIBRARIES})
 link_libraries(aoflagger)
 
+add_library(aoflaggerremote ${REMOTE_FILES})
+
+if(BOOST_ASIO_H_FOUND AND SIGCXX_FOUND)
+  add_executable(aoquality aoquality.cpp)
+  target_link_libraries(aoquality aoflaggerremote ${SIGCXX_LIBRARIES})
+endif(BOOST_ASIO_H_FOUND AND SIGCXX_FOUND)
+
 if(GTKMM_FOUND)
   include_directories(${GTKMM_INCLUDE_DIRS})
 
 	add_library(aoflaggergui ${GUI_FILES})
-	add_library(aoflaggerremote ${REMOTE_FILES})
 
   link_directories(${GTKMM_LIBDIR})
   
@@ -272,9 +279,6 @@ add_executable(colormapper colormapper.cpp)
 # add_executable(imgzenith imgzenith.cpp imaging/zenithimager.cpp)
 
 if(BOOST_ASIO_H_FOUND AND SIGCXX_FOUND AND GTKMM_FOUND)
-  add_executable(aoquality aoquality.cpp)
-  target_link_libraries(aoquality aoflaggerremote ${SIGCXX_LIBRARIES})
-
 	add_executable(aoremoteclient aoremoteclient.cpp)
   target_link_libraries(aoremoteclient aoflaggerremote ${SIGCXX_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
 endif(BOOST_ASIO_H_FOUND AND SIGCXX_FOUND AND GTKMM_FOUND)
