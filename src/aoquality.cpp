@@ -64,7 +64,7 @@ void actionCollect(const std::string &filename, enum CollectingMode mode, Statis
 	MeasurementSet *ms = new MeasurementSet(filename);
 	const unsigned polarizationCount = ms->PolarizationCount();
 	const unsigned bandCount = ms->BandCount();
-	const bool ignoreChannelZero = ms->IsChannelZeroRubish();
+	const bool ignoreChannelZero = ms->IsChannelZeroRubish() && mode!=CollectTimeFrequency;
 	const std::string stationName = ms->GetStationName();
 	BandInfo *bands = new BandInfo[bandCount];
 	double **frequencies = new double*[bandCount];
@@ -550,14 +550,14 @@ void actionCombine(const std::string outFilename, const std::vector<std::string>
 		{
 			if(remote)
 			{
-				/*aoRemote::ClusteredObservation *observation = aoRemote::ClusteredObservation::Load(firstInFilename);
+				aoRemote::ClusteredObservation *observation = aoRemote::ClusteredObservation::Load(firstInFilename);
 				aoRemote::ProcessCommander commander(*observation);
-				commander.PushReadAntennaTablesTask();
-				commander.PushReadQualityTablesTask();
+				//commander.PushReadAntennaTablesTask();
+				//commander.PushReadQualityTablesTask();
 				commander.Run();
 				QualityTablesFormatter formatter(outFilename);
 				commander.Statistics().Save(formatter);
-				delete observation;*/
+				delete observation;
 			} else {
 				// TODO read antenna tables from "firstInFilename"
 				// TODO read quality tables from all inFilenames
