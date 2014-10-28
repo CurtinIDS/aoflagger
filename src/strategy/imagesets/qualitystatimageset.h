@@ -92,7 +92,11 @@ public:
 			if(flagsCopy.size() != polCount)
 				throw std::runtime_error("Polarization counts don't match");
 			if(flagsCopy[0]->Height() != channelCount)
-				throw std::runtime_error("Channel counts don't match");
+			{
+				std::ostringstream s;
+				s << "Channel counts don't match (" << flagsCopy[0]->Height() << " in mask, " << channelCount << " in data)";
+				throw std::runtime_error(s.str());
+			}
 			size_t timeIndex = size_t(-1);
 			double time = -1.0;
 			bool* timestepFlags = new bool[channelCount*polCount];
