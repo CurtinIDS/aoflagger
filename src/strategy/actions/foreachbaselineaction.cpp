@@ -29,6 +29,7 @@
 #include "../imagesets/imageset.h"
 #include "../imagesets/msimageset.h"
 #include "../imagesets/filterbankset.h"
+#include "../imagesets/qualitystatimageset.h"
 
 #include <sys/types.h>
 #include <sys/sysctl.h>
@@ -197,10 +198,10 @@ namespace rfiStrategy {
 		if(!_antennaeToInclude.empty() && (_antennaeToInclude.count(a1id) == 0 && _antennaeToInclude.count(a2id) == 0))
 			return false;
 		
-		// For SD/BHFits files, we want to select everything -- it's confusing
+		// For SD/BHFits/QS files, we want to select everything -- it's confusing
 		// if the default option "only flag cross correlations" would also
 		// hold for sdfits files.
-		if(dynamic_cast<FitsImageSet*>(imageSet)!=0 || dynamic_cast<BHFitsImageSet*>(imageSet)!=0 || dynamic_cast<FilterBankSet*>(imageSet)!=0)
+		if(dynamic_cast<FitsImageSet*>(imageSet)!=0 || dynamic_cast<BHFitsImageSet*>(imageSet)!=0 || dynamic_cast<FilterBankSet*>(imageSet)!=0 || dynamic_cast<QualityStatImageSet*>(imageSet)!=0)
 			return true;
 
 		switch(_selection)

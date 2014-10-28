@@ -83,6 +83,7 @@ namespace rfiStrategy {
 			virtual void PerformReadRequests()
 			{
 				_lastRead = Read();
+				_lastRead->SetIndex(SingleImageSetIndex(*this, Name()));
 			}
 			virtual BaselineData *GetNextRequested()
 			{
