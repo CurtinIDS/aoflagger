@@ -20,6 +20,7 @@
 
 #include <iostream>
 
+#include <tables/Tables/ArrColDesc.h>
 #include <tables/Tables/SetupNewTab.h>
 #include <tables/Tables/TableCopy.h>
 
@@ -536,45 +537,118 @@ void actionSummarizeRFI(const std::string &filename)
 		<< StatisticsDerivator::GetStatisticAmplitude(QualityTablesFormatter::RFIPercentageStatistic, singlePolStat, 0) << '\n';
 }
 
+void WriteAntennae(casa::MeasurementSet& ms, const std::vector<AntennaInfo> &antennae)
+{
+	casa::MSAntenna antTable = ms.antenna();
+	casa::ScalarColumn<casa::String> nameCol = casa::ScalarColumn<casa::String>(antTable, antTable.columnName(casa::MSAntennaEnums::NAME));
+	casa::ScalarColumn<casa::String> stationCol = casa::ScalarColumn<casa::String>(antTable, antTable.columnName(casa::MSAntennaEnums::STATION));
+	casa::ScalarColumn<casa::String> typeCol = casa::ScalarColumn<casa::String>(antTable, antTable.columnName(casa::MSAntennaEnums::TYPE));
+	casa::ScalarColumn<casa::String> mountCol = casa::ScalarColumn<casa::String>(antTable, antTable.columnName(casa::MSAntennaEnums::MOUNT));
+	casa::ArrayColumn<double> positionCol = casa::ArrayColumn<double>(antTable, antTable.columnName(casa::MSAntennaEnums::POSITION));
+	casa::ScalarColumn<double> dishDiameterCol = casa::ScalarColumn<double>(antTable, antTable.columnName(casa::MSAntennaEnums::DISH_DIAMETER));
+	
+	size_t rowIndex = antTable.nrow();
+	antTable.addRow(antennae.size());
+	for(std::vector<AntennaInfo>::const_iterator antPtr=antennae.begin(); antPtr!=antennae.end(); ++antPtr)
+	{
+		const AntennaInfo& ant = *antPtr;
+		nameCol.put(rowIndex, ant.name);
+		stationCol.put(rowIndex, ant.station);
+		typeCol.put(rowIndex, "");
+		mountCol.put(rowIndex, ant.mount);
+		casa::Vector<double> posArr(3);
+		posArr[0] = ant.position.x; posArr[1] = ant.position.y; posArr[2] = ant.position.z;
+		positionCol.put(rowIndex, posArr);
+		dishDiameterCol.put(rowIndex, ant.diameter);
+		++rowIndex;
+	}
+}
+
+void WritePolarizationForLinearPols(casa::MeasurementSet& ms, bool flagRow = false)
+{
+	casa::MSPolarization polTable = ms.polarization();
+	casa::ScalarColumn<int> numCorrCol = casa::ScalarColumn<int>(polTable, polTable.columnName(casa::MSPolarizationEnums::NUM_CORR));
+	casa::ArrayColumn<int> corrTypeCol = casa::ArrayColumn<int>(polTable, polTable.columnName(casa::MSPolarizationEnums::CORR_TYPE));
+	casa::ArrayColumn<int> corrProductCol = casa::ArrayColumn<int>(polTable, polTable.columnName(casa::MSPolarizationEnums::CORR_PRODUCT));
+	casa::ScalarColumn<bool> flagRowCol = casa::ScalarColumn<bool>(polTable, polTable.columnName(casa::MSPolarizationEnums::FLAG_ROW));
+	
+	size_t rowIndex = polTable.nrow();
+	polTable.addRow(1);
+	numCorrCol.put(rowIndex, 4);
+	
+	casa::Vector<int> cTypeVec(4);
+	cTypeVec[0] = 9; cTypeVec[1] = 10; cTypeVec[2] = 11; cTypeVec[3] = 12;
+	corrTypeCol.put(rowIndex, cTypeVec);
+	
+	casa::Array<int> cProdArr(casa::IPosition(2, 2, 4));
+	casa::Array<int>::iterator i=cProdArr.begin();
+	*i = 0; ++i; *i = 0; ++i;
+	*i = 0; ++i; *i = 1; ++i;
+	*i = 1; ++i; *i = 0; ++i;
+	*i = 1; ++i; *i = 1;
+	corrProductCol.put(rowIndex, cProdArr);
+	
+	flagRowCol.put(rowIndex, flagRow);
+}
+
 void actionCombine(const std::string outFilename, const std::vector<std::string> inFilenames)
 {
 	if(!inFilenames.empty())
 	{
 		const std::string &firstInFilename = *inFilenames.begin();
 		bool remote = aoRemote::ClusteredObservation::IsClusteredFilename(firstInFilename);
-		
+		std::cout << "Combining " << inFilenames.size() << " sets into " << outFilename << '\n';
 		if(remote && inFilenames.size() != 1)
 			throw std::runtime_error("Can only open one remote observation file at a time");
 		
-		if(!casa::Table::isReadable(outFilename))
+		std::vector<AntennaInfo> antennae;
+		StatisticsCollection statisticsCollection;
+		HistogramCollection histogramCollection;
+		if(remote)
 		{
-			if(remote)
+			std::auto_ptr<aoRemote::ClusteredObservation> observation( aoRemote::ClusteredObservation::Load(firstInFilename));
+			aoRemote::ProcessCommander commander(*observation);
+			commander.PushReadAntennaTablesTask();
+			commander.PushReadQualityTablesTask(&statisticsCollection, &histogramCollection);
+			commander.Run();
+			antennae = commander.Antennas();
+		} else {
+			std::cout << "Reading antenna table...\n";
+			std::auto_ptr<MeasurementSet> ms(new MeasurementSet(firstInFilename));
+			antennae.resize(ms->AntennaCount());
+			for(size_t i=0; i!=ms->AntennaCount(); ++i)
+				antennae[i] = ms->GetAntennaInfo(i);
+			ms.reset();
+			
+			for(std::vector<std::string>::const_iterator i=inFilenames.begin(); i!=inFilenames.end(); ++i)
 			{
-				aoRemote::ClusteredObservation *observation = aoRemote::ClusteredObservation::Load(firstInFilename);
-				aoRemote::ProcessCommander commander(*observation);
-				//commander.PushReadAntennaTablesTask();
-				//commander.PushReadQualityTablesTask();
-				commander.Run();
-				QualityTablesFormatter formatter(outFilename);
-				commander.Statistics().Save(formatter);
-				delete observation;
-			} else {
-				// TODO read antenna tables from "firstInFilename"
+				std::cout << "Reading " << *i << "...\n";
 				// TODO read quality tables from all inFilenames
+				QualityTablesFormatter formatter(*i);
+				StatisticsCollection collectionPart;
+				collectionPart.Load(formatter);
+				if(i == inFilenames.begin())
+					statisticsCollection.SetPolarizationCount(collectionPart.PolarizationCount());
+				statisticsCollection.Add(collectionPart);
 			}
-			// TODO: create main table
-			//casa::SetupNewTable mainTableSetup(outFilename, templateSet.tableDesc(), casa::Table::New);
-			//casa::Table mainOutputTable(mainTableSetup);
-			
-			// TODO: create antenna table			
-			//casa::SetupNewTable antennaTableSetup(outFilename + "/ANTENNA", templateAntennaTable.tableDesc(), casa::Table::New);
-			//casa::Table antennaOutputTable(antennaTableSetup);
-			//mainOutputTable.rwKeywordSet().defineTable("ANTENNA", antennaOutputTable);
-			
-			// TODO fill antenna table
-			
-			// TODO fill quality table
 		}
+		// Create main table
+		casa::TableDesc tableDesc = casa::MS::requiredTableDesc();
+		casa::ArrayColumnDesc<std::complex<float> > dataColumnDesc = casa::ArrayColumnDesc<std::complex<float> >(casa::MS::columnName(casa::MSMainEnums::DATA));
+		tableDesc.addColumn(dataColumnDesc);
+		casa::SetupNewTable newTab(outFilename, tableDesc, casa::Table::New);
+		casa::MeasurementSet ms(newTab);
+		ms.createDefaultSubtables(casa::Table::New);
+		
+		std::cout << "Writing antenna table...\n";
+		WriteAntennae(ms, antennae);
+		
+		std::cout << "Writing polarization table (" << statisticsCollection.PolarizationCount() << " pols)...\n";
+		WritePolarizationForLinearPols(ms);
+		
+		std::cout << "Writing quality table...\n";
+		QualityTablesFormatter formatter(outFilename);
+		statisticsCollection.Save(formatter);
 	}
 }
 

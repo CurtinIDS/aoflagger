@@ -141,13 +141,14 @@ void MeasurementSet::initializeObservation(casa::MeasurementSet& ms)
 {
 	casa::MSObservation obsTable = ms.observation();
 	casa::ROScalarColumn<casa::String> telescopeNameCol(obsTable, obsTable.columnName(casa::MSObservationEnums::TELESCOPE_NAME));
-	if(obsTable.nrow() == 0)
-		throw std::runtime_error("The OBSERVATION table is empty: expecting at least one row. Measurement set corrupt?");
-	_telescopeName = telescopeNameCol(0);
-	for(size_t row=1; row!=obsTable.nrow(); ++row)
+	if(obsTable.nrow() != 0)
 	{
-		if(std::string(telescopeNameCol(row)) != _telescopeName)
-			throw std::runtime_error("The OBSERVATION table contains multiple entries from different telescopes. I do not know how to handle such sets.");
+		_telescopeName = telescopeNameCol(0);
+		for(size_t row=1; row!=obsTable.nrow(); ++row)
+		{
+			if(std::string(telescopeNameCol(row)) != _telescopeName)
+				throw std::runtime_error("The OBSERVATION table contains multiple entries from different telescopes. I do not know how to handle such sets.");
+		}
 	}
 }
 

@@ -56,6 +56,16 @@ class StatisticsCollection : public Serializable
 		{
 		}
 		
+		StatisticsCollection & operator=(const StatisticsCollection &source)
+		{
+			_timeStatistics = source._timeStatistics;
+			_frequencyStatistics = source._frequencyStatistics;
+			_baselineStatistics = source._baselineStatistics;
+			_polarizationCount = source._polarizationCount;
+			_emptyBaselineStatisticsMap = source._emptyBaselineStatisticsMap;
+			return *this;
+		}
+
 		void Clear()
 		{
 			_timeStatistics.clear();
@@ -338,11 +348,6 @@ class StatisticsCollection : public Serializable
 			}
 		};
 		
-		StatisticsCollection & operator=(const StatisticsCollection &/*source*/) // don't allow assignment
-		{
-			return *this;
-		}
-
 		template<bool IsDiff>
 		void addTimeAndBaseline(unsigned antenna1, unsigned antenna2, double time, double centralFrequency, int polarization, const float *reals, const float *imags, const bool *isRFI, const bool* origFlags, unsigned nsamples, unsigned step, unsigned stepRFI, unsigned stepFlags);
 		
