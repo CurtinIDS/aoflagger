@@ -20,6 +20,7 @@
 #include "foreachbaselineaction.h"
 
 #include "../../msio/antennainfo.h"
+#include "../../msio/system.h"
 
 #include "../../util/aologger.h"
 #include "../../util/stopwatch.h"
@@ -73,8 +74,7 @@ namespace rfiStrategy {
 				size_t compThreadCount = _threadCount;
 				if(compThreadCount > 0) --compThreadCount;
 				
-				long int pageCount = sysconf(_SC_PHYS_PAGES), pageSize = sysconf(_SC_PAGE_SIZE);
-				int64_t memSize = int64_t(pageCount) * int64_t(pageSize);
+				int64_t memSize = System::TotalMemory();
 				AOLogger::Debug << "Detected " << memToStr(memSize) << " of system memory.\n";
 				
 				if(estMemorySizePerThread * double(compThreadCount) > memSize)
