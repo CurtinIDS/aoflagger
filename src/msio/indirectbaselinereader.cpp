@@ -199,6 +199,7 @@ void IndirectBaselineReader::preAllocate(const char *filename, size_t fileSize)
 		s << "Error while opening file '" << filename << "', check access rights and free space";
 		throw std::runtime_error(s.str());
 	}
+#if defined(HAVE_POSIX_FALLOCATE)
 	int allocResult = posix_fallocate(fd, 0, fileSize);
 	close(fd);
 	if(allocResult != 0)
@@ -208,6 +209,10 @@ void IndirectBaselineReader::preAllocate(const char *filename, size_t fileSize)
 			"Tried to allocate " << (fileSize/(1024*1024)) << " MB.\n"
 			"Disk could be full or filesystem could not support fallocate.\n";
 	}
+#else
+	close(fd);
+	AOLogger::Warn << "Compiled without posix_fallocate() support: skipping pre-allocation.\n";
+#endif
 }
 
 void IndirectBaselineReader::reorderFull()
