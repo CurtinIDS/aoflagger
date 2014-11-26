@@ -62,8 +62,6 @@ add_executable(rficonsole rficonsole.cpp)
 
 add_executable(rfihistory rfihistory.cpp)
 
-add_executable(aorefscript aorefscript.cpp)
-
 set(GUI_QUALITY_FILES
   gui/quality/aoqplotwindow.cpp
   gui/quality/baselineplotpage.cpp
