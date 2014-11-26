@@ -6,6 +6,10 @@
 
 #include "../../msio/date.h"
 
+#ifndef HAVE_EXP10
+#define exp10(x) exp( (2.3025850929940456840179914546844) * (x) )
+#endif
+
 typedef std::pair<double, std::string> Tick;
 
 class TickSet
