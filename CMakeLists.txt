@@ -38,6 +38,18 @@ include_directories(${LIBXML2_INCLUDE_DIR})
 include_directories(${CFITSIO_INCLUDE_DIR})
 include_directories(${FFTW3_INCLUDE_DIR})
 
+if(GTKMM_FOUND)
+  message(STATUS "GTKMM found.") 
+  include_directories(${GTKMM_INCLUDE_DIR})
+  link_directories(${GTKMM_LIBDIR})
+endif(GTKMM_FOUND)
+
+if(SIGCXX_FOUND)
+  message(STATUS "SIGCXX found.") 
+  include_directories(${SIGCXX_INCLUDE_DIR})
+  link_directories(${SIGCXX_LIBDIR})
+endif(SIGCXX_FOUND)
+
 # The following stuff will set the "rpath" correctly, so that
 # LD_LIBRARY_PATH doesn't have to be set.
 

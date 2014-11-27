@@ -251,12 +251,8 @@ if(BOOST_ASIO_H_FOUND AND SIGCXX_FOUND)
 endif(BOOST_ASIO_H_FOUND AND SIGCXX_FOUND)
 
 if(GTKMM_FOUND)
-  include_directories(${GTKMM_INCLUDE_DIRS})
-
 	add_library(aoflaggergui ${GUI_FILES})
 
-  link_directories(${GTKMM_LIBDIR})
-  
   add_executable(rfigui rfigui.cpp)
   target_link_libraries(rfigui aoflaggergui ${GTKMM_LIBRARIES})
   
