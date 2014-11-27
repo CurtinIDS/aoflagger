@@ -5,9 +5,6 @@
 
 #include <fstream>
 
-#include <sys/types.h>
-#include <sys/sysctl.h>
-
 namespace rfiStrategy {
 
 FilterBankSet::FilterBankSet(const std::string &location) :
@@ -77,7 +74,6 @@ FilterBankSet::FilterBankSet(const std::string &location) :
 	_timeStart = Date::MJDToAipsMJD(_timeStart);
 	
 	double sizeOfImage = double(_channelCount) * _sampleCount * _bitCount / 8.0;
-	long int pageCount = sysconf(_SC_PHYS_PAGES), pageSize = sysconf(_SC_PAGE_SIZE);
 	double memSize = System::TotalMemory();
 	_intervalCount = ceil(sizeOfImage / (memSize / 16.0));
 	if(_intervalCount < 1) _intervalCount = 1;
