@@ -233,7 +233,6 @@ if(BOOST_ASIO_H_FOUND AND SIGCXX_FOUND)
 		remote/processcommander.cpp
 		remote/clusteredobservation.cpp
 		remote/vdsfile.cpp)
-
 else()
 	set(REMOTE_FILES
 		remote/clusteredobservation.cpp)

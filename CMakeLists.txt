@@ -40,13 +40,13 @@ include_directories(${FFTW3_INCLUDE_DIR})
 
 if(GTKMM_FOUND)
   message(STATUS "GTKMM found.") 
-  include_directories(${GTKMM_INCLUDE_DIR})
+  include_directories(${GTKMM_INCLUDE_DIRS})
   link_directories(${GTKMM_LIBDIR})
 endif(GTKMM_FOUND)
 
 if(SIGCXX_FOUND)
   message(STATUS "SIGCXX found.") 
-  include_directories(${SIGCXX_INCLUDE_DIR})
+  include_directories(${SIGCXX_INCLUDE_DIRS})
   link_directories(${SIGCXX_LIBDIR})
 endif(SIGCXX_FOUND)
 
