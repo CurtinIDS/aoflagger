@@ -38,27 +38,6 @@ include_directories(${LIBXML2_INCLUDE_DIR})
 include_directories(${CFITSIO_INCLUDE_DIR})
 include_directories(${FFTW3_INCLUDE_DIR})
 
-if(GTKMM_FOUND)
-  message(STATUS "GTKMM found.") 
-  include_directories(${GTKMM_INCLUDE_DIRS})
-  link_directories(${GTKMM_LIBDIR})
-endif(GTKMM_FOUND)
-
-if(SIGCXX_FOUND)
-  message(STATUS "SIGCXX found.") 
-  include_directories(${SIGCXX_INCLUDE_DIRS})
-  link_directories(${SIGCXX_LIBDIR})
-endif(SIGCXX_FOUND)
-
-link_libraries(${BLAS_LIBRARIES} ${LAPACK_LIBRARIES})
-link_libraries(${Boost_THREAD_LIBRARY} ${Boost_SYSTEM_LIBRARY} ${Boost_FILESYSTEM_LIBRARY} ${Boost_DATE_TIME_LIBRARY} ${Boost_SIGNALS_LIBRARY})
-link_libraries(${FFTW3_LIB})
-link_libraries(${CASACORE_LIBRARIES} ${CASA_MEASURES_LIB})
-link_libraries(${LAPACK_lapack_LIBRARY})
-link_libraries(${CFITSIO_LIBRARY})
-link_libraries(${PTHREAD_LIB})
-link_libraries(${PNG_LIBRARIES} ${LIBXML2_LIBRARIES})
-
 # The following stuff will set the "rpath" correctly, so that
 # LD_LIBRARY_PATH doesn't have to be set.
 

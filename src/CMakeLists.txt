@@ -52,8 +52,6 @@ endif(GSL_LIB AND GSL_CBLAS_LIB AND GSL_INCLUDE_DIR)
 
 add_executable(rficonsole rficonsole.cpp)
 
-add_executable(rfihistory rfihistory.cpp)
-
 set(GUI_QUALITY_FILES
   gui/quality/aoqplotwindow.cpp
   gui/quality/baselineplotpage.cpp
@@ -229,30 +227,60 @@ else()
 		remote/clusteredobservation.cpp)
 endif(BOOST_ASIO_H_FOUND AND SIGCXX_FOUND)
 
+set(ALL_LIBRARIES
+	${BLAS_LIBRARIES} ${LAPACK_LIBRARIES}
+	${Boost_THREAD_LIBRARY} ${Boost_SYSTEM_LIBRARY}
+	${Boost_FILESYSTEM_LIBRARY} ${Boost_DATE_TIME_LIBRARY} ${Boost_SIGNALS_LIBRARY}
+	${FFTW3_LIB}
+	${CASACORE_LIBRARIES} ${CASA_MEASURES_LIB}
+	${LAPACK_lapack_LIBRARY}
+	${CFITSIO_LIBRARY}
+	${PTHREAD_LIB}
+	${PNG_LIBRARIES} ${LIBXML2_LIBRARIES}
+	${CMAKE_THREAD_LIBS_INIT})
+
+if(GTKMM_FOUND)
+  message(STATUS "GTKMM found.") 
+  include_directories(${GTKMM_INCLUDE_DIRS})
+  link_directories(${GTKMM_LIBDIR})
+  set(ALL_LIBRARIES ${ALL_LIBRARIES} ${GTKMM_LIBRARIES})
+endif(GTKMM_FOUND)
+
+if(SIGCXX_FOUND)
+  message(STATUS "SIGCXX found.") 
+  include_directories(${SIGCXX_INCLUDE_DIRS})
+  link_directories(${SIGCXX_LIBDIR})
+  set(ALL_LIBRARIES ${ALL_LIBRARIES} ${SIGCXX_LIBRARIES})
+endif(SIGCXX_FOUND)
+
+link_libraries(${ALL_LIBRARIES})
+
+add_executable(rfihistory rfihistory.cpp)
+
 add_library(aoflagger ${IMAGING_FILES} ${INTERFACE_FILES} ${MSIO_FILES} ${QUALITY_FILES} ${STRATEGY_FILES} ${UTIL_FILES})
-target_link_libraries(aoflagger ${PNG_LIBRARIES} ${LIBXML2_LIBRARIES})
+target_link_libraries(aoflagger ${ALL_LIBRARIES})
 link_libraries(aoflagger)
 
 add_library(aoflaggerremote ${REMOTE_FILES})
 
 if(BOOST_ASIO_H_FOUND AND SIGCXX_FOUND)
   add_executable(aoquality aoquality.cpp)
-  target_link_libraries(aoquality aoflaggerremote ${SIGCXX_LIBRARIES})
+  target_link_libraries(aoquality aoflaggerremote)
 endif(BOOST_ASIO_H_FOUND AND SIGCXX_FOUND)
 
 if(GTKMM_FOUND)
 	add_library(aoflaggergui ${GUI_FILES})
 
   add_executable(rfigui rfigui.cpp)
-  target_link_libraries(rfigui aoflaggergui ${GTKMM_LIBRARIES})
+  target_link_libraries(rfigui aoflaggergui)
   
 	if(BOOST_ASIO_H_FOUND AND SIGCXX_FOUND)
 		add_executable(aoqplot aoqplot.cpp)
-		target_link_libraries(aoqplot aoflaggergui aoflaggerremote ${GTKMM_LIBRARIES})
+		target_link_libraries(aoqplot aoflaggergui aoflaggerremote)
 		add_executable(badstations badstations.cpp)
-		target_link_libraries(badstations aoflaggerremote ${GTKMM_LIBRARIES})
+		target_link_libraries(badstations aoflaggerremote)
 		add_executable(aofrequencyfilter aofrequencyfilter.cpp)
-		target_link_libraries(aofrequencyfilter aoflaggerremote ${GTKMM_LIBRARIES})
+		target_link_libraries(aofrequencyfilter aoflaggerremote)
 	endif(BOOST_ASIO_H_FOUND AND SIGCXX_FOUND)
 else()
   message(WARNING " The graphical user interface library GTKMM was not found; rfigui and aoqplot will not be compiled.")
@@ -271,7 +299,7 @@ add_executable(colormapper colormapper.cpp)
 
 if(BOOST_ASIO_H_FOUND AND SIGCXX_FOUND AND GTKMM_FOUND)
 	add_executable(aoremoteclient aoremoteclient.cpp)
-  target_link_libraries(aoremoteclient aoflaggerremote ${SIGCXX_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
+  target_link_libraries(aoremoteclient aoflaggerremote)
 endif(BOOST_ASIO_H_FOUND AND SIGCXX_FOUND AND GTKMM_FOUND)
 
 add_executable(aotest EXCLUDE_FROM_ALL aotest.cpp)
