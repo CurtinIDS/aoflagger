@@ -1,11 +1,3 @@
-link_libraries(${BLAS_LIBRARIES} ${LAPACK_LIBRARIES})
-link_libraries(${Boost_THREAD_LIBRARY} ${Boost_SYSTEM_LIBRARY} ${Boost_FILESYSTEM_LIBRARY} ${Boost_DATE_TIME_LIBRARY} ${Boost_SIGNALS_LIBRARY})
-link_libraries(${FFTW3_LIB})
-link_libraries(${CASACORE_LIBRARIES} ${CASA_MEASURES_LIB})
-link_libraries(${LAPACK_lapack_LIBRARY})
-link_libraries(${CFITSIO_LIBRARY})
-link_libraries(${PTHREAD_LIB})
-
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -DNDEBUG -funroll-loops -O3")
 
 include(CheckCXXCompilerFlag)
@@ -76,7 +68,6 @@ set(GUI_PLOT_FILES
   gui/plot/horizontalplotscale.cpp
   gui/plot/plot2d.cpp
   gui/plot/plotpropertieswindow.cpp
-  gui/plot/plotwidget.cpp
   gui/plot/title.cpp
   gui/plot/verticalplotscale.cpp)
 
