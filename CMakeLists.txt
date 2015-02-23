@@ -6,6 +6,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/CMake)
 
 find_package(PkgConfig)
 pkg_check_modules(GTKMM gtkmm-3.0>=3.0.0)
+pkg_check_modules(GLIBMM glibmm-2.4)
 pkg_check_modules(SIGCXX sigc++-2.0)
 
 SET(CASACORE_MAKE_REQUIRED_EXTERNALS_OPTIONAL TRUE)

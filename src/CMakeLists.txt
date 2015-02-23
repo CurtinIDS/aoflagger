@@ -239,12 +239,12 @@ set(ALL_LIBRARIES
 	${PNG_LIBRARIES} ${LIBXML2_LIBRARIES}
 	${CMAKE_THREAD_LIBS_INIT})
 
-if(GTKMM_FOUND)
+if(GTKMM_FOUND AND GLIBMM_FOUND)
   message(STATUS "GTKMM found.") 
-  include_directories(${GTKMM_INCLUDE_DIRS})
-  link_directories(${GTKMM_LIBDIR})
-  set(ALL_LIBRARIES ${ALL_LIBRARIES} ${GTKMM_LIBRARIES})
-endif(GTKMM_FOUND)
+  include_directories(${GTKMM_INCLUDE_DIRS} ${GLIBMM_INCLUDE_DIRS})
+  link_directories(${GTKMM_LIBDIR} ${GLIBMM_LIBDIR})
+  set(ALL_LIBRARIES ${ALL_LIBRARIES} ${GTKMM_LIBRARIES} ${GLIBMM_LIBRARIES})
+endif(GTKMM_FOUND AND GLIBMM_FOUND)
 
 if(SIGCXX_FOUND)
   message(STATUS "SIGCXX found.") 
@@ -253,15 +253,20 @@ if(SIGCXX_FOUND)
   set(ALL_LIBRARIES ${ALL_LIBRARIES} ${SIGCXX_LIBRARIES})
 endif(SIGCXX_FOUND)
 
-link_libraries(${ALL_LIBRARIES})
-
-add_executable(rfihistory rfihistory.cpp)
-
 add_library(aoflagger ${IMAGING_FILES} ${INTERFACE_FILES} ${MSIO_FILES} ${QUALITY_FILES} ${STRATEGY_FILES} ${UTIL_FILES})
 target_link_libraries(aoflagger ${ALL_LIBRARIES})
+
 link_libraries(aoflagger)
 
 add_library(aoflaggerremote ${REMOTE_FILES})
+
+if(GTKMM_FOUND)
+	add_library(aoflaggergui ${GUI_FILES})
+endif(GTKMM_FOUND)
+
+link_libraries(${ALL_LIBRARIES})
+
+add_executable(rfihistory rfihistory.cpp)
 
 if(BOOST_ASIO_H_FOUND AND SIGCXX_FOUND)
   add_executable(aoquality aoquality.cpp)
@@ -269,8 +274,6 @@ if(BOOST_ASIO_H_FOUND AND SIGCXX_FOUND)
 endif(BOOST_ASIO_H_FOUND AND SIGCXX_FOUND)
 
 if(GTKMM_FOUND)
-	add_library(aoflaggergui ${GUI_FILES})
-
   add_executable(rfigui rfigui.cpp)
   target_link_libraries(rfigui aoflaggergui)
   
