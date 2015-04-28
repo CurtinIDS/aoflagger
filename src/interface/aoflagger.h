@@ -584,8 +584,10 @@ namespace aoflagger {
 			
 			/** @brief Run the flagging strategy on the given data.
 			 * 
-			 * Ok to call from multiple threads as long as they call Run
-			 * with different @a input parameters.
+			 * It is okay to call this function from from multiple threads
+			 * as long as they call Run with a different instance for the
+			 * @a input parameter. The @param strategy parameter can be the
+			 * same for different threads.
 			 * @param strategy The flagging strategy that will be used.
 			 * @param input The data to run the flagger on.
 			 * @return The flags identifying bad (RFI contaminated) data.
