@@ -7,6 +7,9 @@
 
 #include "../strategy/actions/strategy.h"
 
+#include "../strategy/algorithms/baselineselector.h"
+#include "../strategy/algorithms/polarizationstatistics.h"
+
 #include "../strategy/control/artifactset.h"
 #include "../strategy/control/defaultstrategy.h"
 #include "../strategy/control/strategyreader.h"
@@ -409,8 +412,13 @@ namespace aoflagger {
 		artifacts.SetOriginalData(inputData);
 		artifacts.SetContaminatedData(inputData);
 		artifacts.SetRevisedData(revisedData);
+		artifacts.SetPolarizationStatistics(new PolarizationStatistics());
+		artifacts.SetBaselineSelectionInfo(new rfiStrategy::BaselineSelector());
 		
 		strategy._data->strategyPtr->Perform(artifacts, listener);
+		
+		delete artifacts.BaselineSelectionInfo();
+		delete artifacts.PolarizationStatistics();
 		
 		FlagMask flagMask;
 		flagMask._data = new FlagMaskData(Mask2D::CreateCopy(artifacts.ContaminatedData().GetSingleMask()));

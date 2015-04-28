@@ -41,12 +41,12 @@ namespace rfiStrategy {
 			throw BadUsageException("ArtifactSet does not have baseline selection info");
 		if(artifacts.MetaData() == 0)
 		{
-			AOLogger::Warn << "BaselineSelectionAction is used, but ArtifactSet does not have meta data\n";
+			//AOLogger::Warn << "BaselineSelectionAction is used, but ArtifactSet does not have meta data\n";
 			return;
 		}
 		if(!artifacts.MetaData()->HasBaseline())
 		{
-			AOLogger::Warn << "BaselineSelectionAction is used, but ArtifactSet does not have baseline meta data\n";
+			//AOLogger::Warn << "BaselineSelectionAction is used, but ArtifactSet does not have baseline meta data\n";
 			return;
 		}
 
