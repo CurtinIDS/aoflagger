@@ -124,9 +124,6 @@ set(QUALITY_FILES
 	quality/rayleighfitter.cpp
 	quality/statisticscollection.cpp)
 
-set(REMOTEAO_FILES
-  remote/server.cpp)
-
 set(STRATEGY_ACTION_FILES
   strategy/actions/baselineselectionaction.cpp
   strategy/actions/calibratepassbandaction.cpp
@@ -224,7 +221,8 @@ if(BOOST_ASIO_H_FOUND AND SIGCXX_FOUND)
 		remote/vdsfile.cpp)
 else()
 	set(REMOTE_FILES
-		remote/clusteredobservation.cpp)
+		remote/clusteredobservation.cpp
+		remote/vdsfile.cpp)
 endif(BOOST_ASIO_H_FOUND AND SIGCXX_FOUND)
 
 set(ALL_LIBRARIES
