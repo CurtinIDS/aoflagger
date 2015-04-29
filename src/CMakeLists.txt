@@ -259,7 +259,7 @@ link_libraries(aoflagger)
 add_library(aoflaggerremote ${REMOTE_FILES})
 
 if(GTKMM_FOUND)
-	add_library(aoflaggergui ${GUI_FILES})
+	add_library(aoflaggergui ${GUI_FILES} ${REMOTE_FILES})
 endif(GTKMM_FOUND)
 
 link_libraries(${ALL_LIBRARIES})
