@@ -664,11 +664,11 @@ namespace aoflagger {
 		private:
 			/** @brief It is not allowed to copy this class
 			 */
-			AOFlagger(const AOFlagger &source) { }
+			AOFlagger(const AOFlagger&) { }
 			
 			/** @brief It is not allowed to assign to this class
 			 */
-			void operator=(const AOFlagger &source) { }
+			void operator=(const AOFlagger&) { }
 	};
 
 }
