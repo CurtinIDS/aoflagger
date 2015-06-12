@@ -25,6 +25,7 @@
 #include <gtkmm/stock.h>
 #include <gtkmm/toolbar.h>
 #include <gtkmm/uimanager.h>
+#include <gtkmm/icontheme.h>
 
 #include "../msio/baselinematrixloader.h"
 #include "../msio/image2d.h"
@@ -507,6 +508,8 @@ void RFIGuiWindow::openTestSet(unsigned index)
 
 void RFIGuiWindow::createToolbar()
 {
+	Glib::RefPtr<Gtk::Action> action;
+	
 	_actionGroup = Gtk::ActionGroup::create();
 	_actionGroup->add( Gtk::Action::create("MenuFile", "_File") );
 	_actionGroup->add( Gtk::Action::create("MenuBrowse", "_Browse") );
@@ -521,10 +524,11 @@ void RFIGuiWindow::createToolbar()
 	_actionGroup->add( Gtk::Action::create("OpenFile", Gtk::Stock::OPEN, "Open _file"),
 		Gtk::AccelKey("<control>O"),
 		sigc::mem_fun(*this, &RFIGuiWindow::onActionFileOpen) );
-	Glib::RefPtr <Gtk::Action> openDirAction = Gtk::Action::create("OpenDirectory", "Open _directory");
-	_actionGroup->add(openDirAction, Gtk::AccelKey("<control>D"),
+	action = Gtk::Action::create("OpenDirectory", "Open _directory");
+	action->set_icon_name("folder");
+	action->set_tooltip("Open a directory. This action should be used to open a measurement set. For opening files (e.g. sdfits files), select 'Open file' instead.");
+	_actionGroup->add(action, Gtk::AccelKey("<control>D"),
 		sigc::mem_fun(*this, &RFIGuiWindow::onActionDirectoryOpen) );
-	openDirAction->set_icon_name("folder");
 	_actionGroup->add( Gtk::Action::create("OpenDirectorySpatial", "Open _directory as spatial"),
   sigc::mem_fun(*this, &RFIGuiWindow::onActionDirectoryOpenForSpatial) );
 	_actionGroup->add( Gtk::Action::create("OpenDirectoryST", "Open _directory as spatial/time"),
@@ -703,24 +707,27 @@ void RFIGuiWindow::createToolbar()
 	_actionGroup->add( Gtk::Action::create("EditStrategy", "_Edit strategy"),
 		Gtk::AccelKey("F8"),
   sigc::mem_fun(*this, &RFIGuiWindow::onEditStrategyPressed) );
-	Glib::RefPtr <Gtk::Action> executeAction =
-		Gtk::Action::create("ExecuteStrategy", "E_xecute strategy");
-	executeAction->set_icon_name("system-run");
-	_actionGroup->add(executeAction, Gtk::AccelKey("F9"),
+	action = Gtk::Action::create("ExecuteStrategy", "E_xecute strategy");
+	action->set_tooltip("Run the currently loaded strategy. Normally this will not write back the results to the opened set. The flagging results are displayed in the plot as yellow ('alternative') flag mask.");
+	action->set_icon_name("system-run");
+	_actionGroup->add(action, Gtk::AccelKey("F9"),
 			sigc::mem_fun(*this, &RFIGuiWindow::onExecuteStrategyPressed));
-	_actionGroup->add( Gtk::Action::create("ShowStats", "Show _stats"),
+	_actionGroup->add(Gtk::Action::create("ShowStats", "Show _stats"),
 		Gtk::AccelKey("F2"),
 		sigc::mem_fun(*this, &RFIGuiWindow::onShowStats) );
 	_previousButton = Gtk::Action::create("Previous", Gtk::Stock::GO_BACK, "Previous");
+	_previousButton->set_tooltip("Load and display the previous baseline. Normally, this steps from the baseline between antennas (i) and (j) to (i) and (j-1).");
 	_actionGroup->add(_previousButton,
 		Gtk::AccelKey("F6"),
 		sigc::mem_fun(*this, &RFIGuiWindow::onLoadPrevious) );
 	_nextButton = Gtk::Action::create("Next", Gtk::Stock::GO_FORWARD, "Next");
+	_nextButton->set_tooltip("Load and display the next baseline. Normally, this steps from the baseline between antennas (i) and (j) to (i) and (j+1).");
 	_actionGroup->add(_nextButton,
 		Gtk::AccelKey("F7"),
 		sigc::mem_fun(*this, &RFIGuiWindow::onLoadNext) );
-	_actionGroup->add( Gtk::Action::create("Reload", Gtk::Stock::REFRESH, "_Reload"),
-		Gtk::AccelKey("F5"),
+	action = Gtk::Action::create("Reload", Gtk::Stock::REFRESH, "_Reload");
+	action->set_tooltip("Reload the currently displayed baseline. This will reset the purple flags to the measurement set flags, and clear the yellow flags.");
+	_actionGroup->add(action, Gtk::AccelKey("F5"),
   sigc::mem_fun(*this, &RFIGuiWindow::onReloadPressed) );
 	_actionGroup->add( Gtk::Action::create("GoTo", "_Go to..."),
 		Gtk::AccelKey("<control>G"),
@@ -733,12 +740,14 @@ void RFIGuiWindow::createToolbar()
   _originalFlagsButton = Gtk::ToggleAction::create("OriginalFlags", "Or flags");
 	_originalFlagsButton->set_active(true);
 	_originalFlagsButton->set_icon_name("showoriginalflags");
+	_originalFlagsButton->set_tooltip("Display the first flag mask on top of the visibilities. These flags are displayed in purple and indicate the flags as they originally were stored in the measurement set.");
 	_actionGroup->add(_originalFlagsButton,
 			Gtk::AccelKey("F3"),
 			sigc::mem_fun(*this, &RFIGuiWindow::onToggleFlags));
   _altFlagsButton = Gtk::ToggleAction::create("AlternativeFlags", "Alt flags");
 	_altFlagsButton->set_active(true); 
 	_altFlagsButton->set_icon_name("showalternativeflags");
+	_altFlagsButton->set_tooltip("Display the second flag mask on top of the visibilities. These flags are displayed in yellow and indicate flags found by running the strategy.");
 	_actionGroup->add(_altFlagsButton,
 			Gtk::AccelKey("F4"),
 			sigc::mem_fun(*this, &RFIGuiWindow::onToggleFlags));
@@ -748,8 +757,14 @@ void RFIGuiWindow::createToolbar()
 	Gtk::RadioButtonGroup imageGroup;
 	_originalImageButton = Gtk::RadioAction::create(imageGroup, "ImageOriginal", "Original");
 	_originalImageButton->set_active(true);
+	_originalImageButton->set_icon_name("showoriginalvisibilities");
+	_originalImageButton->set_tooltip("Display the original visibilities (before any processing)");
 	_backgroundImageButton = Gtk::RadioAction::create(imageGroup, "ImageBackground", "Background");
+	_backgroundImageButton->set_icon_name("showsmoothedvisibilities");
+	_backgroundImageButton->set_tooltip("Display the smoothed visibilities (only available if strategy has run and has created smoothed visibilities)");
 	_diffImageButton = Gtk::RadioAction::create(imageGroup, "ImageDiff", "Difference");
+	_diffImageButton->set_icon_name("showresidualvisibilities");
+	_diffImageButton->set_tooltip("Display the residual visibilities (only available if strategy has run and has created residual visibilities)");
 	_actionGroup->add(_originalImageButton,
 		Gtk::AccelKey("<control>1"),
 		sigc::mem_fun(*this, &RFIGuiWindow::onToggleImage) );
@@ -835,8 +850,9 @@ void RFIGuiWindow::createToolbar()
 	_actionGroup->add( Gtk::Action::create("ReapplyVertProfile", "Reapply vert profile"),
   sigc::mem_fun(*this, &RFIGuiWindow::onReapplyVertProfile) );
 
-	_actionGroup->add( Gtk::Action::create("About", "_About"),
-  sigc::mem_fun(*this, &RFIGuiWindow::onHelpAbout) );
+	action = Gtk::Action::create("About", "_About");
+	action->set_icon_name("aoflagger");
+	_actionGroup->add(action, sigc::mem_fun(*this, &RFIGuiWindow::onHelpAbout));
 
 	Glib::RefPtr<Gtk::UIManager> uiManager =
 		Gtk::UIManager::create();
@@ -1023,8 +1039,15 @@ void RFIGuiWindow::createToolbar()
 	Gtk::Widget* pMenubar = uiManager->get_widget("/MenuBar");
 	_mainVBox.pack_start(*pMenubar, Gtk::PACK_SHRINK);
 	Gtk::Toolbar* pToolbar = static_cast<Gtk::Toolbar *>(uiManager->get_widget("/ToolBar"));
-	pToolbar->set_toolbar_style(Gtk::TOOLBAR_BOTH);
-	pToolbar->set_icon_size(Gtk::ICON_SIZE_SMALL_TOOLBAR);
+	if(Gtk::IconTheme::get_default()->has_icon("aoflagger"))
+	{
+		pToolbar->set_toolbar_style(Gtk::TOOLBAR_ICONS);
+		pToolbar->set_icon_size(Gtk::ICON_SIZE_LARGE_TOOLBAR);
+	}
+	else {
+		pToolbar->set_toolbar_style(Gtk::TOOLBAR_TEXT);
+		pToolbar->set_icon_size(Gtk::ICON_SIZE_SMALL_TOOLBAR);
+	}
 	_mainVBox.pack_start(*pToolbar, Gtk::PACK_SHRINK);
 	pMenubar->show();
 }
@@ -1901,9 +1924,9 @@ void RFIGuiWindow::onHelpAbout()
 	authors.push_back("André Offringa <offringa@gmail.com>");
 	aboutDialog.set_authors(authors);
 	
-	aboutDialog.set_copyright("Copyright 2008 - 2014 A. R. Offringa");
+	aboutDialog.set_copyright("Copyright 2008 - 2015 A. R. Offringa");
 	aboutDialog.set_license_type(Gtk::LICENSE_GPL_3_0);
-	aboutDialog.set_logo_default();
+	aboutDialog.set_logo_icon_name("aoflagger");
 	aboutDialog.set_program_name("AOFlagger's RFI Gui");
 	aboutDialog.set_version("AOFlagger " AOFLAGGER_VERSION_STR " (" AOFLAGGER_VERSION_DATE_STR ") ");
 	aboutDialog.set_website("http://aoflagger.sourceforge.net/");
