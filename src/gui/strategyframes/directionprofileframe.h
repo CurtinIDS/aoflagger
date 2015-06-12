@@ -43,7 +43,7 @@ class DirectionProfileFrame : public Gtk::Frame {
 		_storeModeButton("Store"),
 		_applyModeButton("Apply"),
 		_unapplyModeButton("Unapply"),
-		_applyButton(Gtk::Stock::APPLY)
+		_applyButton("Apply")
 		{
 			_box.pack_start(_directionLabel);
 			

@@ -57,7 +57,7 @@ class TimeConvolutionFrame : public Gtk::Frame {
 		_autoAngleButton("Auto angle"),
 		_alwaysRemoveButton("Always remove"),
 		_hammingButton("Use hamming window"),
-		_applyButton(Gtk::Stock::APPLY)
+		_applyButton("Apply")
 		{
 			Gtk::RadioButton::Group group;
 

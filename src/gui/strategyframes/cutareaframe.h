@@ -44,7 +44,7 @@ class CutAreaFrame : public Gtk::Frame {
 		_topChannelsScale(0, 64, 1),
 		_bottomChannelsLabel("Bottom channels to cut:"),
 		_bottomChannelsScale(0, 64, 1),
-		_applyButton(Gtk::Stock::APPLY)
+		_applyButton("Apply")
 		{
 			_box.pack_start(_startTimeLabel);
 			_startTimeLabel.show();

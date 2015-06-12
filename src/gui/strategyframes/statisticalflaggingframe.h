@@ -44,7 +44,7 @@ class StatisticalFlaggingFrame : public Gtk::Frame {
 		_minTimeRatioScale(0, 100, 1),
 		_minFreqRatioLabel("Minimum frequency ratio:"),
 		_minFreqRatioScale(0, 100, 1),
-		_applyButton(Gtk::Stock::APPLY)
+		_applyButton("Apply")
 		{
 			_box.pack_start(_dilluteTimeSizeLabel);
 

@@ -40,7 +40,7 @@ class SumThresholdFrame : public Gtk::Frame {
 		_sensitivityScale(0, 10, 0.1),
 		_timeDirectionButton("In time direction"),
 		_frequencyDirectionButton("In frequency direction"),
-		_applyButton(Gtk::Stock::APPLY)
+		_applyButton("Apply")
 		{
 			_box.pack_start(_sensitivityLabel);
 			_sensitivityLabel.show();

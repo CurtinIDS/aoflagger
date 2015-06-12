@@ -44,7 +44,7 @@ class ForEachPolarisationFrame : public Gtk::Frame {
 		_onStokesQButton("Stokes Q"),
 		_onStokesUButton("Stokes U"),
 		_onStokesVButton("Stokes V"),
-		_applyButton(Gtk::Stock::APPLY)
+		_applyButton("Apply")
 		{
 			_box.pack_start(_onXXButton);
 			_onXXButton.set_active(_action.OnXX());

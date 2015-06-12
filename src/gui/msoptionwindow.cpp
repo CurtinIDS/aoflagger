@@ -21,7 +21,6 @@
 #include <iostream>
 
 #include <gtkmm/messagedialog.h>
-#include <gtkmm/stock.h>
 
 #include "msoptionwindow.h"
 
@@ -38,7 +37,7 @@ MSOptionWindow::MSOptionWindow(RFIGuiWindow &rfiGUiWindow, StrategyController &s
 	_rfiGuiWindow(rfiGUiWindow),
 	_strategyController(strategyController),
 	_filename(filename),
-	_openButton(Gtk::Stock::OPEN),
+	_openButton("_Open", true),
 	_dataKindFrame("Columns to read"),
 	_polarisationFrame("Polarisation to read"),
 	_observedDataButton("Observed"), _correctedDataButton("Corrected"), _modelDataButton("Model"), _residualDataButton("Residual"),
@@ -57,6 +56,7 @@ MSOptionWindow::MSOptionWindow(RFIGuiWindow &rfiGUiWindow, StrategyController &s
 	initDataTypeButtons();
 	initPolarisationButtons();
 
+	_openButton.set_image_from_icon_name("document-open");
 	_openButton.signal_clicked().connect(sigc::mem_fun(*this, &MSOptionWindow::onOpen));
 	_bottomButtonBox.pack_start(_openButton);
 

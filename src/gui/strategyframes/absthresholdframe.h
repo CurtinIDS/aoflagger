@@ -37,7 +37,7 @@ class AbsThresholdFrame : public Gtk::Frame {
 		: Gtk::Frame("Absolute threshold"),
 		_editStrategyWindow(editStrategyWindow), _action(action),
 		_thresholdLabel("Threshold:"),
-		_applyButton(Gtk::Stock::APPLY)
+		_applyButton("Apply")
 		{
 			_box.pack_start(_thresholdLabel);
 

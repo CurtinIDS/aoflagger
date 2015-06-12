@@ -45,7 +45,7 @@ class SetImageFrame : public Gtk::Frame {
 		_setFlaggedValuesToZeroButton("Set flagged values to zero"),
 		_interpolateNansButton("Interpolate NaNs"),
 		_addButton("Add instead of set"),
-		_applyButton(Gtk::Stock::APPLY)
+		_applyButton("Apply")
 		{
 			Gtk::RadioButton::Group group;
 

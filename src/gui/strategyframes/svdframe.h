@@ -38,7 +38,7 @@ class SVDFrame : public Gtk::Frame {
 		_editStrategyWindow(editStrategyWindow), _svdAction(svdAction),
 		_singularValueCountLabel("Singular value count:"),
 		_singularValueCountScale(0, 100, 1),
-		_applyButton(Gtk::Stock::APPLY)
+		_applyButton("Apply")
 		{
 			_box.pack_start(_singularValueCountLabel);
 			_singularValueCountLabel.show();

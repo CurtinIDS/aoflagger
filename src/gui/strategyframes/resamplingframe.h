@@ -42,7 +42,7 @@ class ResamplingFrame : public Gtk::Frame {
 		_sizeYLabel("Size y"),
 		_sizeXScale(1, 1024, 1),
 		_sizeYScale(1, 1024, 1),
-		_applyButton(Gtk::Stock::APPLY)
+		_applyButton("Apply")
 		{
 			Gtk::RadioButton::Group group;
 			_averagingButton.set_group(group);

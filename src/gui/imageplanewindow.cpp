@@ -20,7 +20,6 @@
 #include "imageplanewindow.h"
 
 #include <gtkmm/filechooserdialog.h>
-#include <gtkmm/stock.h>
 
 #include "../msio/fitsfile.h"
 
@@ -460,8 +459,8 @@ void ImagePlaneWindow::onSaveFitsButton()
 	dialog.set_transient_for(*this);
 
 	//Add response buttons the the dialog:
-	dialog.add_button(Gtk::Stock::CANCEL, Gtk::RESPONSE_CANCEL);
-	dialog.add_button("Save", Gtk::RESPONSE_OK);
+	dialog.add_button("_Cancel", Gtk::RESPONSE_CANCEL);
+	dialog.add_button("_Save", Gtk::RESPONSE_OK);
 
 	Glib::RefPtr<Gtk::FileFilter> fitsFilter = Gtk::FileFilter::create();
 	fitsFilter->set_name("Flexible Image Transport System (*.fits)");

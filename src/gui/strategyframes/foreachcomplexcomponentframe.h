@@ -41,7 +41,7 @@ class ForEachComplexComponentFrame : public Gtk::Frame {
 		_onRealButton("On real"),
 		_onImaginaryButton("On imaginary"),
 		_restoreFromAmplitudeButton("Restore from amplitude"),
-		_applyButton(Gtk::Stock::APPLY)
+		_applyButton("Apply")
 		{
 			_box.pack_start(_onAmplitudeButton);
 			_onAmplitudeButton.set_active(_action.OnAmplitude());

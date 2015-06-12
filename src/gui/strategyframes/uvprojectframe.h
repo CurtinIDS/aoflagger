@@ -43,7 +43,7 @@ class UVProjectFrame : public Gtk::Frame {
 		_etaLabel("Eta: (ratio)"),
 		_etaScale(0.0, 1.0, 0.01),
 		_reverseButton("Reverse"),
-		_applyButton(Gtk::Stock::APPLY)
+		_applyButton("Apply")
 		{
 			_box.pack_start(_onRevisedButton);
 			_onRevisedButton.set_active(action.OnRevised());

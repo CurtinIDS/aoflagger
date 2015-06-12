@@ -21,7 +21,6 @@
 #include <iostream>
 #include <sstream>
 
-#include <gtkmm/stock.h>
 #include <gtkmm/filechooserdialog.h>
 
 #include "imagepropertieswindow.h"
@@ -30,10 +29,9 @@
 ImagePropertiesWindow::ImagePropertiesWindow(ImageWidget &imageWidget, const std::string &title) :
 	Gtk::Window(),
 	_imageWidget(imageWidget),
-	_applyButton(Gtk::Stock::APPLY),
-	_exportButton("Export"),
-	_closeButton(Gtk::Stock::CLOSE),
-	_saveImage(Gtk::Stock::SAVE, Gtk::ICON_SIZE_BUTTON),
+	_applyButton("_Apply", true),
+	_exportButton("_Export", true),
+	_closeButton("_Close", true),
 	
 	_colorMapFrame("Color map"),
 	_grayScaleButton("Grayscale"),
@@ -89,13 +87,15 @@ ImagePropertiesWindow::ImagePropertiesWindow(ImageWidget &imageWidget, const std
 	initZoomWidgets();
 	initAxisWidgets();
 	
+	_applyButton.set_image_from_icon_name("gtk-apply");
 	_applyButton.signal_clicked().connect(sigc::mem_fun(*this, &ImagePropertiesWindow::onApplyClicked));
 	_bottomButtonBox.pack_start(_applyButton);
 
+	_exportButton.set_image_from_icon_name("document-save-as");
 	_exportButton.signal_clicked().connect(sigc::mem_fun(*this, &ImagePropertiesWindow::onExportClicked));
-	_exportButton.set_image(_saveImage);
 	_bottomButtonBox.pack_start(_exportButton);
 
+	_closeButton.set_image_from_icon_name("window-close");
 	_closeButton.signal_clicked().connect(sigc::mem_fun(*this, &ImagePropertiesWindow::onCloseClicked));
 	_bottomButtonBox.pack_start(_closeButton);
 
@@ -417,8 +417,8 @@ void ImagePropertiesWindow::onExportClicked()
 		dialog.set_transient_for(*this);
 
 		//Add response buttons the the dialog:
-		dialog.add_button(Gtk::Stock::CANCEL, Gtk::RESPONSE_CANCEL);
-		dialog.add_button("Save", Gtk::RESPONSE_OK);
+		dialog.add_button("_Cancel", Gtk::RESPONSE_CANCEL);
+		dialog.add_button("_Save", Gtk::RESPONSE_OK);
 
 		Glib::RefPtr<Gtk::FileFilter> pdfFilter = Gtk::FileFilter::create();
 		std::string pdfName = "Portable Document Format (*.pdf)";

@@ -49,7 +49,7 @@ class SlidingWindowFitFrame : public Gtk::Frame {
 		_fitWeightedAverageButton("W.Average"),
 		_fitMedianButton("Median"),
 		_fitMinimumButton("Minimum"),
-		_applyButton(Gtk::Stock::APPLY)
+		_applyButton("Apply")
 		{
 			initParameterWidgets();
 		

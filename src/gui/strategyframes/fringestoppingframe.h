@@ -49,7 +49,7 @@ class FringeStoppingFrame : public Gtk::Frame {
 		_onlyFringeStopButton("No fit, only fringe stop"),
 		_raLabel("Right ascension:"),
 		_decLabel("Declination:"),
-		_applyButton(Gtk::Stock::APPLY)
+		_applyButton("Apply")
 		{
 			_box.pack_start(_fringesToConsiderLabel);
 

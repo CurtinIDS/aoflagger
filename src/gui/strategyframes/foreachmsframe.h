@@ -100,8 +100,8 @@ class ForEachMSFrame : public Gtk::Frame {
 			dialog.set_transient_for(_editStrategyWindow);
 		
 			//Add response buttons the the dialog:
-			dialog.add_button(Gtk::Stock::CANCEL, Gtk::RESPONSE_CANCEL);
-			dialog.add_button("Open", Gtk::RESPONSE_OK);
+			dialog.add_button("_Cancel", Gtk::RESPONSE_CANCEL);
+			dialog.add_button("_Open", Gtk::RESPONSE_OK);
 		
 			int result = dialog.run();
 		
@@ -119,8 +119,8 @@ class ForEachMSFrame : public Gtk::Frame {
 			dialog.set_transient_for(_editStrategyWindow);
 		
 			//Add response buttons the the dialog:
-			dialog.add_button(Gtk::Stock::CANCEL, Gtk::RESPONSE_CANCEL);
-			dialog.add_button("Open", Gtk::RESPONSE_OK);
+			dialog.add_button("_Cancel", Gtk::RESPONSE_CANCEL);
+			dialog.add_button("_Open", Gtk::RESPONSE_OK);
 		
 			int result = dialog.run();
 		

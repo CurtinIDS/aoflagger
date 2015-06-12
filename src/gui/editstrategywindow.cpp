@@ -19,7 +19,6 @@
  ***************************************************************************/
 #include <iostream>
 
-#include <gtkmm/stock.h>
 #include <gtkmm/messagedialog.h>
 
 #include "../strategy/actions/iterationaction.h"
@@ -65,16 +64,29 @@ using namespace rfiStrategy;
 
 EditStrategyWindow::EditStrategyWindow(StrategyController &strategyController)
  : Gtk::Window(), _strategyController(strategyController),
-	_addActionButton(Gtk::Stock::ADD), _removeActionButton(Gtk::Stock::REMOVE),
-	_moveUpButton(Gtk::Stock::GO_UP), _moveDownButton(Gtk::Stock::GO_DOWN),
-	_addFOBButton("FOB"), _addFOMSButton("FOMS"),
-	_loadEmptyButton(Gtk::Stock::NEW), _loadDefaultButton("Default"),
-	_wizardButton("Wizard..."),
+	_addActionButton("Add"),
+	_removeActionButton("_Remove", true),
+	_moveUpButton("_Up", true),
+	_moveDownButton("_Down", true),
+	_addFOBButton("FOB"),
+	_addFOMSButton("FOMS"),
+	_loadEmptyButton("_New", true),
+	_loadDefaultButton("Default"),
+	_wizardButton("_Wizard...", true),
 	_loadFullButton("Full"),
-	_saveButton(Gtk::Stock::SAVE), _openButton(Gtk::Stock::OPEN),
+	_saveButton("_Save As...", true),
+	_openButton("_Open", true),
 	_disableUpdates(false),
 	_rightFrame(0), _wizardWindow(0)
 {
+	_addActionButton.set_icon_name("list-add");
+	_removeActionButton.set_image_from_icon_name("edit-delete");
+	_moveUpButton.set_image_from_icon_name("go-up");
+	_moveDownButton.set_image_from_icon_name("go-down");
+	_loadEmptyButton.set_image_from_icon_name("document-new");
+	_saveButton.set_image_from_icon_name("document-save-as");
+	_openButton.set_image_from_icon_name("document-open");
+	
 	_strategyController.SignalOnStrategyChanged().connect(sigc::mem_fun(*this, &EditStrategyWindow::onStrategyChanged));
 	
 	_store = Gtk::TreeStore::create(_columns);
@@ -480,8 +492,8 @@ void EditStrategyWindow::onSaveClicked()
 {
   Gtk::FileChooserDialog dialog(*this, "Save strategy", Gtk::FILE_CHOOSER_ACTION_SAVE);
 
-  dialog.add_button(Gtk::Stock::CANCEL, Gtk::RESPONSE_CANCEL);
-  dialog.add_button("Save", Gtk::RESPONSE_OK);
+  dialog.add_button("_Cancel", Gtk::RESPONSE_CANCEL);
+  dialog.add_button("_Save", Gtk::RESPONSE_OK);
 
   Glib::RefPtr<Gtk::FileFilter> filter = Gtk::FileFilter::create();
   filter->set_name("RFI strategies");
@@ -505,8 +517,8 @@ void EditStrategyWindow::onOpenClicked()
 {
   Gtk::FileChooserDialog dialog(*this, "OPEN strategy", Gtk::FILE_CHOOSER_ACTION_OPEN);
 
-  dialog.add_button(Gtk::Stock::CANCEL, Gtk::RESPONSE_CANCEL);
-  dialog.add_button("Open", Gtk::RESPONSE_OK);
+  dialog.add_button("_Cancel", Gtk::RESPONSE_CANCEL);
+  dialog.add_button("_Open", Gtk::RESPONSE_OK);
 
   Glib::RefPtr<Gtk::FileFilter> filter = Gtk::FileFilter::create();
   filter->set_name("RFI strategies");

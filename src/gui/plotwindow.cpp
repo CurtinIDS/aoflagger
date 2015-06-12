@@ -3,12 +3,10 @@
 #include "plot/plotmanager.h"
 #include "plot/plotpropertieswindow.h"
 
-#include <gtkmm/stock.h>
-
 PlotWindow::PlotWindow(PlotManager &plotManager) :
 	_plotManager(plotManager),
-	_clearButton(Gtk::Stock::CLEAR),
-	_editButton(Gtk::Stock::EDIT),
+	_clearButton("_Clear"),
+	_editButton("_Edit"),
 	_plotPropertiesWindow(0)
 {
 	Gtk::ToolButton();
@@ -22,11 +20,13 @@ PlotWindow::PlotWindow(PlotManager &plotManager) :
 	_plotListView.get_selection()->signal_changed().connect(
 		sigc::mem_fun(*this, &PlotWindow::onSelectedPlotChange));
 	
-	_clearButton.set_tooltip_text("Clear plots");
+	_clearButton.set_tooltip_text("Clear the list of plots");
+	_clearButton.set_icon_name("edit-clear");
 	_clearButton.signal_clicked().connect(
 		sigc::mem_fun(*this, &PlotWindow::onClearPlotsPressed));
 	_toolbar.append(_clearButton);
-	_editButton.set_tooltip_text("Edit plotting properties");
+	_editButton.set_tooltip_text("Edit the properties of the selected plot");
+	_editButton.set_icon_name("document-properties");
 	_editButton.signal_clicked().connect(
 		sigc::mem_fun(*this, &PlotWindow::onEditPlottingPropertiesPressed));
 	_toolbar.append(_editButton);

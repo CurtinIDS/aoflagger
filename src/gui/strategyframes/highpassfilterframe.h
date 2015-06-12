@@ -44,7 +44,7 @@ class HighPassFilterFrame : public Gtk::Frame {
 		_vKernelSigmaLabel("Vertical kernel sigma:", Gtk::ALIGN_START),
 		_modeContaminatedButton("Store result (i.e. high-pass filtered) in contaminated"),
 		_modeRevisedButton("Store residual (i.e. low-pass filtered) in revised"),
-		_applyButton(Gtk::Stock::APPLY)
+		_applyButton("Apply")
 		{
 			initScales();
 			

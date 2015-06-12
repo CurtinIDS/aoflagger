@@ -44,7 +44,7 @@ class ChangeResolutionFrame : public Gtk::Frame {
 		_setContaminatedToChangedImage("Set contaminated images to changed image"),
 		_setMasksToChangedMasks("Set masks to changed masks"),
 		_useMaskForAveraging("Use mask for averaging"),
-		_applyButton(Gtk::Stock::APPLY)
+		_applyButton("Apply")
 		{
 			_box.pack_start(_timeDecreaseFactorLabel);
 

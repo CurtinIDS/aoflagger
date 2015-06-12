@@ -67,7 +67,6 @@ class ImagePropertiesWindow : public Gtk::Window {
 		Gtk::HBox _framesHBox;
 		
 		Gtk::Button _applyButton, _exportButton, _closeButton;
-		Gtk::Image _saveImage;
 		Gtk::Frame _colorMapFrame;
 		Gtk::VBox _colorMapBox;
 		Gtk::RadioButton _grayScaleButton, _invGrayScaleButton, _hotColdScaleButton, _redBlueScaleButton, _blackRedScaleButton, _redBlueYellowScaleButton, _fireScaleButton;

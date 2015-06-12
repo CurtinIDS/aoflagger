@@ -48,7 +48,7 @@ class StrategyPlotFrame : public Gtk::Frame {
 		_baselineRMSButton("Baseline RMS"),
 		_iterationsButton("Iterations"),
 		_logYScaleButton("Logarithmic y-axis"),
-		_applyButton(Gtk::Stock::APPLY)
+		_applyButton("Apply")
 		{
 			_box.pack_start(_plotKindLabel);
 			_plotKindLabel.show();

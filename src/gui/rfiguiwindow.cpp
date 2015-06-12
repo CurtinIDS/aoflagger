@@ -22,7 +22,6 @@
 #include <gtkmm/aboutdialog.h>
 #include <gtkmm/filechooserdialog.h>
 #include <gtkmm/messagedialog.h>
-#include <gtkmm/stock.h>
 #include <gtkmm/toolbar.h>
 #include <gtkmm/uimanager.h>
 #include <gtkmm/icontheme.h>
@@ -166,8 +165,8 @@ void RFIGuiWindow::onActionDirectoryOpen()
   dialog.set_transient_for(*this);
 
   //Add response buttons the the dialog:
-  dialog.add_button(Gtk::Stock::CANCEL, Gtk::RESPONSE_CANCEL);
-  dialog.add_button("Open", Gtk::RESPONSE_OK);
+	dialog.add_button("_Cancel", Gtk::RESPONSE_CANCEL);
+  dialog.add_button("_Open", Gtk::RESPONSE_OK);
 
   int result = dialog.run();
 
@@ -184,8 +183,8 @@ void RFIGuiWindow::onActionDirectoryOpenForSpatial()
   dialog.set_transient_for(*this);
 
   //Add response buttons the the dialog:
-  dialog.add_button(Gtk::Stock::CANCEL, Gtk::RESPONSE_CANCEL);
-  dialog.add_button("Open", Gtk::RESPONSE_OK);
+  dialog.add_button("_Cancel", Gtk::RESPONSE_CANCEL);
+  dialog.add_button("_Open", Gtk::RESPONSE_OK);
 
   int result = dialog.run();
 
@@ -206,8 +205,8 @@ void RFIGuiWindow::onActionDirectoryOpenForST()
   dialog.set_transient_for(*this);
 
   //Add response buttons the the dialog:
-  dialog.add_button(Gtk::Stock::CANCEL, Gtk::RESPONSE_CANCEL);
-  dialog.add_button("Open", Gtk::RESPONSE_OK);
+  dialog.add_button("_Cancel", Gtk::RESPONSE_CANCEL);
+  dialog.add_button("_Open", Gtk::RESPONSE_OK);
 
   int result = dialog.run();
 
@@ -227,8 +226,8 @@ void RFIGuiWindow::onActionFileOpen()
   dialog.set_transient_for(*this);
 
   //Add response buttons the the dialog:
-  dialog.add_button(Gtk::Stock::CANCEL, Gtk::RESPONSE_CANCEL);
-  dialog.add_button("Open", Gtk::RESPONSE_OK);
+  dialog.add_button("_Cancel", Gtk::RESPONSE_CANCEL);
+  dialog.add_button("_Open", Gtk::RESPONSE_OK);
 
   int result = dialog.run();
 
@@ -521,8 +520,9 @@ void RFIGuiWindow::createToolbar()
 	_actionGroup->add( Gtk::Action::create("MenuData", "_Data") );
 	_actionGroup->add( Gtk::Action::create("MenuHelp", "_Help") );
 	
-	_actionGroup->add( Gtk::Action::create("OpenFile", Gtk::Stock::OPEN, "Open _file"),
-		Gtk::AccelKey("<control>O"),
+	action = Gtk::Action::create("OpenFile", "Open _file");
+	action->set_icon_name("document-open");
+	_actionGroup->add(action, Gtk::AccelKey("<control>O"),
 		sigc::mem_fun(*this, &RFIGuiWindow::onActionFileOpen) );
 	action = Gtk::Action::create("OpenDirectory", "Open _directory");
 	action->set_icon_name("folder");
@@ -603,8 +603,9 @@ void RFIGuiWindow::createToolbar()
 	sigc::mem_fun(*this, &RFIGuiWindow::onSetToOnePlusI) );
 	_actionGroup->add( Gtk::Action::create("MultiplyData", "Multiply data..."),
 	sigc::mem_fun(*this, &RFIGuiWindow::onMultiplyData) );
-	_actionGroup->add( Gtk::Action::create("Quit", Gtk::Stock::QUIT),
-		Gtk::AccelKey("<control>Q"),
+	action = Gtk::Action::create("Quit", "_Quit");
+	action->set_icon_name("application-exit");
+	_actionGroup->add(action, Gtk::AccelKey("<control>Q"),
 		sigc::mem_fun(*this, &RFIGuiWindow::onQuit) );
 
 	_actionGroup->add( Gtk::Action::create("ImageProperties", "Plot properties..."),
@@ -649,14 +650,17 @@ void RFIGuiWindow::createToolbar()
   sigc::mem_fun(*this, &RFIGuiWindow::onPlotTimeScatterComparisonPressed) );
 	_actionGroup->add( Gtk::Action::create("PlotSingularValues", "Plot _singular values"),
   sigc::mem_fun(*this, &RFIGuiWindow::onPlotSingularValuesPressed) );
-	_actionGroup->add( Gtk::Action::create("ZoomFit", Gtk::Stock::ZOOM_FIT, "Zoom _fit"),
-		Gtk::AccelKey("<control>0"),
+	action = Gtk::Action::create("ZoomFit", "Zoom _fit");
+	action->set_icon_name("zoom-fit-best");
+	_actionGroup->add(action, Gtk::AccelKey("<control>0"),
 		sigc::mem_fun(*this, &RFIGuiWindow::onZoomFit) );
-	_actionGroup->add( Gtk::Action::create("ZoomIn", Gtk::Stock::ZOOM_IN, "Zoom in"),
-		Gtk::AccelKey("<control>equal"),
+	action = Gtk::Action::create("ZoomIn", "Zoom in");
+	action->set_icon_name("zoom-in");
+	_actionGroup->add(action, Gtk::AccelKey("<control>equal"),
 		sigc::mem_fun(*this, &RFIGuiWindow::onZoomIn) );
-	_actionGroup->add( Gtk::Action::create("ZoomOut", Gtk::Stock::ZOOM_OUT, "Zoom out"),
-		Gtk::AccelKey("<control>minus"),
+	action = Gtk::Action::create("ZoomOut", "Zoom out");
+	action->set_icon_name("zoom-out");
+	_actionGroup->add(action, Gtk::AccelKey("<control>minus"),
 	sigc::mem_fun(*this, &RFIGuiWindow::onZoomOut) );
 	_actionGroup->add( Gtk::Action::create("ShowImagePlane", "_Show image plane"),
 		Gtk::AccelKey("<control>I"),
@@ -715,17 +719,20 @@ void RFIGuiWindow::createToolbar()
 	_actionGroup->add(Gtk::Action::create("ShowStats", "Show _stats"),
 		Gtk::AccelKey("F2"),
 		sigc::mem_fun(*this, &RFIGuiWindow::onShowStats) );
-	_previousButton = Gtk::Action::create("Previous", Gtk::Stock::GO_BACK, "Previous");
+	_previousButton = Gtk::Action::create("Previous", "Previous");
+	_previousButton->set_icon_name("go-previous");
 	_previousButton->set_tooltip("Load and display the previous baseline. Normally, this steps from the baseline between antennas (i) and (j) to (i) and (j-1).");
 	_actionGroup->add(_previousButton,
 		Gtk::AccelKey("F6"),
 		sigc::mem_fun(*this, &RFIGuiWindow::onLoadPrevious) );
-	_nextButton = Gtk::Action::create("Next", Gtk::Stock::GO_FORWARD, "Next");
+	_nextButton = Gtk::Action::create("Next", "Next");
+	_nextButton->set_icon_name("go-next");
 	_nextButton->set_tooltip("Load and display the next baseline. Normally, this steps from the baseline between antennas (i) and (j) to (i) and (j+1).");
 	_actionGroup->add(_nextButton,
 		Gtk::AccelKey("F7"),
 		sigc::mem_fun(*this, &RFIGuiWindow::onLoadNext) );
-	action = Gtk::Action::create("Reload", Gtk::Stock::REFRESH, "_Reload");
+	action = Gtk::Action::create("Reload", "_Reload");
+	action->set_icon_name("view-refresh");
 	action->set_tooltip("Reload the currently displayed baseline. This will reset the purple flags to the measurement set flags, and clear the yellow flags.");
 	_actionGroup->add(action, Gtk::AccelKey("F5"),
   sigc::mem_fun(*this, &RFIGuiWindow::onReloadPressed) );

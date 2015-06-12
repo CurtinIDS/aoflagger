@@ -1,17 +1,15 @@
 #include "strategywizardwindow.h"
 #include "interfaces.h"
 
-#include <gtkmm/stock.h>
-
 #include "../strategy/control/defaultstrategy.h"
 
 StrategyWizardWindow::StrategyWizardWindow(class StrategyController &controller) : Window(),
 	_strategyController(controller),
 	_telescopeLabel("Telescope:"),
 	_telescopeCombo(),
-	_finishButton(Gtk::Stock::OK),
-	_nextButton(Gtk::Stock::MEDIA_NEXT),
-	_previousButton(Gtk::Stock::MEDIA_PREVIOUS),
+	_finishButton("_Finish", true),
+	_nextButton("_Next", true),
+	_previousButton("_Previous", true),
 	_transientsButton("Transients"), _highTimeResolutionButton("High time resolution"),
 	_lowFreqRadioButton("Low frequency"), _normFreqRadioButton("Normal frequency"), _highFreqRadioButton("High frequency"),
 	_smallBandwidthButton("Small bandwidth"), _normBandwidthButton("Normal bandwidth"), _largeBandwidthButton("Large bandwidth"),
@@ -43,12 +41,15 @@ StrategyWizardWindow::StrategyWizardWindow(class StrategyController &controller)
 	
 	_mainBox.pack_start(_notebook, true, true);
 	
+	_previousButton.set_image_from_icon_name("go-previous");
 	_previousButton.signal_clicked().connect(
 		sigc::mem_fun(*this, &StrategyWizardWindow::onPreviousClicked));
 	_buttonBox.pack_start(_previousButton, true, false);
+	_nextButton.set_image_from_icon_name("go-next");
 	_nextButton.signal_clicked().connect(
 		sigc::mem_fun(*this, &StrategyWizardWindow::onNextClicked));
 	_buttonBox.pack_start(_nextButton, true, false);
+	_finishButton.set_image_from_icon_name("gtk-ok");
 	_finishButton.signal_clicked().connect(
 		sigc::mem_fun(*this, &StrategyWizardWindow::onFinishClicked));
 	_buttonBox.pack_end(_finishButton, true, false);

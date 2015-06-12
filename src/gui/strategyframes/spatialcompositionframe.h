@@ -40,7 +40,7 @@ class SpatialCompositionFrame : public Gtk::Frame {
 		_sumAutoButton("Sum auto correlations"),
 		_eigenvalueButton("First eigenvalues of complete matrix"),
 		_removeEigenvalueButton("Remove first eigenvalues"),
-		_applyButton(Gtk::Stock::APPLY)
+		_applyButton("Apply")
 		{
 			Gtk::RadioButton::Group group;
 

@@ -44,7 +44,7 @@ class SetFlaggingFrame : public Gtk::Frame {
 		_setPolarisationsEqualButton("Equal polarisations"),
 		_flagZerosButton("Flag zeros"),
 		_orOriginalButton("Or with original"),
-		_applyButton(Gtk::Stock::APPLY)
+		_applyButton("Apply")
 		{
 			Gtk::RadioButton::Group group;
 

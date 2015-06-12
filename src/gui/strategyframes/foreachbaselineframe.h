@@ -46,7 +46,7 @@ class ForEachBaselineFrame : public Gtk::Frame {
 		_currentBaselineButton("Current"),
 		_threadCountLabel("Thread count:"),
 		_threadCountScale(1, 10, 1),
-		_applyButton(Gtk::Stock::APPLY)
+		_applyButton("A_pply")
 		{
 			_box.pack_start(_baselinesLabel);
 			_baselinesLabel.show();

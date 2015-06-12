@@ -39,7 +39,7 @@ class FrequencySelectionFrame : public Gtk::Frame {
 		_thresholdLabel("Threshold:"),
 		_thresholdScale(0, 10, 0.1),
 		_clipDownButton("Clip values below rms as well as above"),
-		_applyButton(Gtk::Stock::APPLY)
+		_applyButton("Apply")
 		{
 			_box.pack_start(_thresholdLabel);
 

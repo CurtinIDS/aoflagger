@@ -39,7 +39,7 @@ class BaselineSelectionFrame : public Gtk::Frame {
 		_preparationStepButton("This is the preparation step"),
 		_flagBadBaselinesButton("Flag bad baselines"),
 		_makePlotButton("Make a length-rfi plot"),
-		_applyButton(Gtk::Stock::APPLY)
+		_applyButton("Apply")
 		{
 			_box.pack_start(_preparationStepButton);
 			_preparationStepButton.set_active(_action.PreparationStep());

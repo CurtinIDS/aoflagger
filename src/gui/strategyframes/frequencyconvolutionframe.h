@@ -42,7 +42,7 @@ class FrequencyConvolutionFrame : public Gtk::Frame {
 		_convolutionSizeLabel("Convolution size:"),
 		_convolutionSizeScale(1, 1024, 1),
 		_inSamplesButton("Size in samples"),
-		_applyButton(Gtk::Stock::APPLY)
+		_applyButton("Apply")
 		{
 			Gtk::RadioButton::Group kernelGroup;
 		
