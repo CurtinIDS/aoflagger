@@ -43,11 +43,11 @@ class NumInputDialog : public Gtk::Dialog
 			_entry.set_activates_default(true);
 			_hBox.pack_end(_entry);
 			
-			get_vbox()->pack_start(_hBox);
+			get_content_area()->pack_start(_hBox);
 			_hBox.show_all();
 			
-			add_button(Gtk::Stock::OK, Gtk::RESPONSE_OK);
-			add_button(Gtk::Stock::CANCEL, Gtk::RESPONSE_CANCEL);
+			add_button("_Ok", Gtk::RESPONSE_OK);
+			add_button("_Cancel", Gtk::RESPONSE_CANCEL);
 			set_default_response(Gtk::RESPONSE_OK);
 		}
 		

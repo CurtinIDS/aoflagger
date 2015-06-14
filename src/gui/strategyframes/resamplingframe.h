@@ -40,8 +40,8 @@ class ResamplingFrame : public Gtk::Frame {
 		_nnButton("Nearest neighbour"),
 		_sizeXLabel("Size x:"),
 		_sizeYLabel("Size y"),
-		_sizeXScale(1, 1024, 1),
-		_sizeYScale(1, 1024, 1),
+		_sizeXScale(),
+		_sizeYScale(),
 		_applyButton("Apply")
 		{
 			Gtk::RadioButton::Group group;
@@ -58,11 +58,13 @@ class ResamplingFrame : public Gtk::Frame {
 			_box.pack_start(_sizeXLabel);
 
 			_box.pack_start(_sizeXScale);
+			_sizeXScale.set_range(1, 1024);
 			_sizeXScale.set_value(_action.SizeX());
 
 			_box.pack_start(_sizeYLabel);
 
 			_box.pack_start(_sizeYScale);
+			_sizeYScale.set_range(1, 1024);
 			_sizeYScale.set_value(_action.SizeY());
 
 			_buttonBox.pack_start(_applyButton);
@@ -78,10 +80,10 @@ class ResamplingFrame : public Gtk::Frame {
 		rfiStrategy::ResamplingAction &_action;
 
 		Gtk::VBox _box;
-		Gtk::HButtonBox _buttonBox;
+		Gtk::ButtonBox _buttonBox;
 		Gtk::RadioButton _averagingButton, _nnButton;
 		Gtk::Label _sizeXLabel, _sizeYLabel;
-		Gtk::HScale _sizeXScale, _sizeYScale;
+		Gtk::Scale _sizeXScale, _sizeYScale;
 		Gtk::Button _applyButton;
 
 		void onApplyClicked()

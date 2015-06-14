@@ -40,7 +40,7 @@ class FrequencyConvolutionFrame : public Gtk::Frame {
 		_sincKernelButton("Sinc kernel"),
 		_totalKernelButton("Total kernel"),
 		_convolutionSizeLabel("Convolution size:"),
-		_convolutionSizeScale(1, 1024, 1),
+		_convolutionSizeScale(),
 		_inSamplesButton("Size in samples"),
 		_applyButton("Apply")
 		{
@@ -63,6 +63,7 @@ class FrequencyConvolutionFrame : public Gtk::Frame {
 			_box.pack_start(_convolutionSizeLabel);
 			
 			_box.pack_start(_convolutionSizeScale);
+			_convolutionSizeScale.set_range(1, 1024);
 			_convolutionSizeScale.set_value(_action.ConvolutionSize());
 
 			_box.pack_start(_inSamplesButton);
@@ -81,10 +82,10 @@ class FrequencyConvolutionFrame : public Gtk::Frame {
 		rfiStrategy::FrequencyConvolutionAction &_action;
 
 		Gtk::VBox _box;
-		Gtk::HButtonBox _buttonBox;
+		Gtk::ButtonBox _buttonBox;
 		Gtk::RadioButton _rectangularKernelButton, _sincKernelButton, _totalKernelButton;
 		Gtk::Label _convolutionSizeLabel;
-		Gtk::HScale _convolutionSizeScale;
+		Gtk::Scale _convolutionSizeScale;
 		Gtk::CheckButton _inSamplesButton;
 		Gtk::Button _applyButton;
 

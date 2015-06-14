@@ -20,8 +20,8 @@
 #ifndef AOQPLOT_WINDOW_H
 #define AOQPLOT_WINDOW_H
 
+#include <gtkmm/application.h>
 #include <gtkmm/box.h>
-#include <gtkmm/main.h>
 #include <gtkmm/notebook.h>
 #include <gtkmm/statusbar.h>
 #include <gtkmm/window.h>
@@ -74,7 +74,7 @@ class AOQPlotWindow : public Gtk::Window {
 		
 		void onHide()
 		{
-			Gtk::Main::quit();
+			//Gtk::Application::quit();
 		}
 		void onStatusChange(const std::string &newStatus);
 		void onSwitchPage(Gtk::Widget *page, guint pageNr)

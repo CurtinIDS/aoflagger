@@ -44,15 +44,15 @@ class TimeConvolutionFrame : public Gtk::Frame {
 		_iterativeExtrapolatedSincOperationButton("Iterative extr. sinc"),
 		_fftSincOperationButton("FFT sinc"),
 		_sincSizeLabel("Sinc size: (relative to uv track diameter)"),
-		_sincSizeScale(0, 10000, 1),
+		_sincSizeScale(),
 		_angleLabel("Angle: (degrees)"),
-		_angleScale(-180, 180, 1),
+		_angleScale(),
 		_etaLabel("Eta"),
-		_etaScale(0, 1, 0.01),
+		_etaScale(),
 		_iterationsLabel("Iterations"),
-		_iterationsScale(0, 100, 1),
+		_iterationsScale(),
 		_channelAveragingSizeLabel("Channel averaging size"),
-		_channelAveragingSizeScale(0, 512, 1),
+		_channelAveragingSizeScale(),
 		_sincScaleInSamplesButton("Sinc scale is in time steps"),
 		_autoAngleButton("Auto angle"),
 		_alwaysRemoveButton("Always remove"),
@@ -117,26 +117,32 @@ class TimeConvolutionFrame : public Gtk::Frame {
 			_box.pack_start(_sincSizeLabel);
 
 			_box.pack_start(_sincSizeScale);
+			_sincSizeScale.set_range(0, 10000);
 			_sincSizeScale.set_value(action.SincScale());
 			
 			_box.pack_start(_angleLabel);
 
 			_box.pack_start(_angleScale);
+			_angleScale.set_range(-180, 180);
 			_angleScale.set_value(action.DirectionRad()*180.0/M_PI);
 			
 			_box.pack_start(_etaLabel);
 
 			_box.pack_start(_etaScale);
+			_etaScale.set_range(0, 1);
+			_etaScale.set_increments(0.01, 0.1);
 			_etaScale.set_value(action.EtaParameter());
 			
 			_box.pack_start(_iterationsLabel);
 
 			_box.pack_start(_iterationsScale);
+			_iterationsScale.set_range(0, 100);
 			_iterationsScale.set_value(action.Iterations());
 			
 			_box.pack_start(_channelAveragingSizeLabel);
 
 			_box.pack_start(_channelAveragingSizeScale);
+			_channelAveragingSizeScale.set_range(0, 512);
 			_channelAveragingSizeScale.set_value(action.ChannelAveragingSize());
 			
 			_box.pack_start(_sincScaleInSamplesButton);
@@ -164,18 +170,18 @@ class TimeConvolutionFrame : public Gtk::Frame {
 		rfiStrategy::TimeConvolutionAction &_action;
 
 		Gtk::VBox _box;
-		Gtk::HButtonBox _buttonBox;
+		Gtk::ButtonBox _buttonBox;
 		Gtk::RadioButton _singleSincOperationButton, _sincOperationButton, _projectedSincOperationButton, _projectedFourierOperationButton, _extrapolatedSincOperationButton, _iterativeExtrapolatedSincOperationButton, _fftSincOperationButton;
 		Gtk::Label _sincSizeLabel;
-		Gtk::HScale _sincSizeScale;
+		Gtk::Scale _sincSizeScale;
 		Gtk::Label _angleLabel;
-		Gtk::HScale _angleScale;
+		Gtk::Scale _angleScale;
 		Gtk::Label _etaLabel;
-		Gtk::HScale _etaScale;
+		Gtk::Scale _etaScale;
 		Gtk::Label _iterationsLabel;
-		Gtk::HScale _iterationsScale;
+		Gtk::Scale _iterationsScale;
 		Gtk::Label _channelAveragingSizeLabel;
-		Gtk::HScale _channelAveragingSizeScale;
+		Gtk::Scale _channelAveragingSizeScale;
 		Gtk::CheckButton _sincScaleInSamplesButton, _autoAngleButton, _alwaysRemoveButton, _hammingButton;
 		Gtk::Button _applyButton;
 

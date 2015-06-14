@@ -25,7 +25,7 @@
 
 int main(int argc, char *argv[])
 {
-	Gtk::Main kit(argc, argv);
+	Glib::RefPtr<Gtk::Application> app = Gtk::Application::create();
 	AOQPlotWindow window;
 	bool wantHelp = false;
 	for(int i=1;i<argc;++i)
@@ -52,8 +52,8 @@ int main(int argc, char *argv[])
 		} else {
 			Gtk::FileChooserDialog fileDialog(window, "Open observation set");
 			
-			fileDialog.add_button(Gtk::Stock::CANCEL, Gtk::RESPONSE_CANCEL);
-			fileDialog.add_button("Open", Gtk::RESPONSE_OK);
+			fileDialog.add_button("_Cancel", Gtk::RESPONSE_CANCEL);
+			fileDialog.add_button("_Open", Gtk::RESPONSE_OK);
 			
 			Glib::RefPtr<Gtk::FileFilter> filter = Gtk::FileFilter::create();
 			filter->set_name("Observation sets (*.{vds,gds,ref,MS})");
@@ -70,7 +70,7 @@ int main(int argc, char *argv[])
 			}
 			else return 0;
 		}
-		kit.run();
+		app->run(window, argc, argv);
 	}
 	return 0;
 }

@@ -37,9 +37,9 @@ class ChangeResolutionFrame : public Gtk::Frame {
 		: Gtk::Frame("Change resolution"),
 		_editStrategyWindow(editStrategyWindow), _action(action),
 		_timeDecreaseFactorLabel("Time decrease factor:"),
-		_timeDecreaseFactorScale(1, 128, 1),
+		_timeDecreaseFactorScale(),
 		_frequencyDecreaseFactorLabel("Frequency decrease factor:"),
-		_frequencyDecreaseFactorScale(1, 256, 1),
+		_frequencyDecreaseFactorScale(),
 		_setRevisedToChangedImage("Set revised images to changed image"),
 		_setContaminatedToChangedImage("Set contaminated images to changed image"),
 		_setMasksToChangedMasks("Set masks to changed masks"),
@@ -48,11 +48,13 @@ class ChangeResolutionFrame : public Gtk::Frame {
 		{
 			_box.pack_start(_timeDecreaseFactorLabel);
 
+			_timeDecreaseFactorScale.set_range(1, 128);
 			_box.pack_start(_timeDecreaseFactorScale);
 			_timeDecreaseFactorScale.set_value(_action.TimeDecreaseFactor());
 
 			_box.pack_start(_frequencyDecreaseFactorLabel);
 
+			_frequencyDecreaseFactorScale.set_range(1, 256);
 			_box.pack_start(_frequencyDecreaseFactorScale);
 			_frequencyDecreaseFactorScale.set_value(_action.FrequencyDecreaseFactor());
 
@@ -81,11 +83,11 @@ class ChangeResolutionFrame : public Gtk::Frame {
 		rfiStrategy::ChangeResolutionAction &_action;
 
 		Gtk::VBox _box;
-		Gtk::HButtonBox _buttonBox;
+		Gtk::ButtonBox _buttonBox;
 		Gtk::Label _timeDecreaseFactorLabel;
-		Gtk::HScale _timeDecreaseFactorScale;
+		Gtk::Scale _timeDecreaseFactorScale;
 		Gtk::Label _frequencyDecreaseFactorLabel;
-		Gtk::HScale _frequencyDecreaseFactorScale;
+		Gtk::Scale _frequencyDecreaseFactorScale;
 		Gtk::CheckButton _setRevisedToChangedImage;
 		Gtk::CheckButton _setContaminatedToChangedImage;
 		Gtk::CheckButton _setMasksToChangedMasks;

@@ -134,7 +134,7 @@ class StrategyPlotFrame : public Gtk::Frame {
 		rfiStrategy::PlotAction &_action;
 
 		Gtk::VBox _box;
-		Gtk::HButtonBox _buttonBox;
+		Gtk::ButtonBox _buttonBox;
 		Gtk::Label _plotKindLabel;
 		Gtk::RadioButton
 			_antennaVsFlagsButton, _frequencyVsFlagsButton, _frequencyVsPowerButton, _timeVsFlagsButton,

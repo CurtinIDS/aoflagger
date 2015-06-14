@@ -124,7 +124,7 @@ class SetFlaggingFrame : public Gtk::Frame {
 		rfiStrategy::SetFlaggingAction &_action;
 
 		Gtk::VBox _box;
-		Gtk::HButtonBox _buttonBox;
+		Gtk::ButtonBox _buttonBox;
 		Gtk::Label _baselinesLabel;
 		Gtk::RadioButton
 			_setNoneButton, _setAllButton, _setFromOriginalButton, _setToOriginalButton, _setInvertButton, _setPolarisationsEqualButton, _flagZerosButton, _orOriginalButton;

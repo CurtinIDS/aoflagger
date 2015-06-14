@@ -27,12 +27,14 @@
 
 HighlightWindow::HighlightWindow(RFIGuiWindow &rfiGuiWindow) :
 	_rfiGuiWindow(rfiGuiWindow),
-	_highlightThresholdHighScale(0.0, 1.0, 0.001),
-	_highlightThresholdLowScale(-0.005, 0.005, 0.00001),
-	_connectedCountScale(1.0, 64.0, 1.0),
+	_highlightThresholdHighScale(Gtk::ORIENTATION_VERTICAL),
+	_highlightThresholdLowScale(Gtk::ORIENTATION_VERTICAL),
+	_connectedCountScale(Gtk::ORIENTATION_HORIZONTAL),
 	_highlightButton("Highlighting")
 {
 	_highlightThresholdHighScale.set_inverted(true);
+	_highlightThresholdHighScale.set_range(0.0, 1.0);
+	_highlightThresholdHighScale.set_increments(0.001, 0.01);
 	_highlightThresholdHighScale.set_value(1.0);
 	_highlightThresholdHighScale.set_size_request(-1, 200);
 	_highlightThresholdHighScale.signal_value_changed().
@@ -41,6 +43,8 @@ HighlightWindow::HighlightWindow(RFIGuiWindow &rfiGuiWindow) :
 	_highlightThresholdHighScale.show();
 
 	_highlightThresholdLowScale.set_inverted(true);
+	_highlightThresholdLowScale.set_range(-0.005, 0.005);
+	_highlightThresholdLowScale.set_increments(0.00001, 0.0001);
 	_highlightThresholdLowScale.set_value(0.0);
 	_highlightThresholdLowScale.set_size_request(-1, 200);
 	_highlightThresholdLowScale.signal_value_changed().
@@ -52,6 +56,7 @@ HighlightWindow::HighlightWindow(RFIGuiWindow &rfiGuiWindow) :
 	_highlightThresholdBox.show();
 
 	_connectedCountScale.set_value(1.0);
+	_connectedCountScale.set_range(1.0, 64.0);
 	_connectedCountScale.signal_value_changed().
 		connect(sigc::mem_fun(*this, &HighlightWindow::onValueChange));
 	_mainBox.pack_start(_connectedCountScale);

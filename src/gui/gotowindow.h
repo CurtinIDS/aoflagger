@@ -43,7 +43,7 @@ class GoToWindow : public Gtk::Window {
 	private:
 		void onLoadClicked();
 
-		Gtk::HButtonBox _buttonBox;
+		Gtk::ButtonBox _buttonBox;
 		Gtk::VBox _vBox;
 		Gtk::HBox _hBox;
 		Gtk::VBox _bandFrameBox;

@@ -37,13 +37,15 @@ class FrequencySelectionFrame : public Gtk::Frame {
 		: Gtk::Frame("Frequency selection"),
 		_editStrategyWindow(editStrategyWindow), _action(action),
 		_thresholdLabel("Threshold:"),
-		_thresholdScale(0, 10, 0.1),
+		_thresholdScale(),
 		_clipDownButton("Clip values below rms as well as above"),
 		_applyButton("Apply")
 		{
 			_box.pack_start(_thresholdLabel);
 
 			_box.pack_start(_thresholdScale);
+			_thresholdScale.set_range(0, 10);
+			_thresholdScale.set_increments(0.1, 1.0);
 			_thresholdScale.set_value(_action.Threshold());
 
 			_box.pack_start(_clipDownButton);
@@ -63,9 +65,9 @@ class FrequencySelectionFrame : public Gtk::Frame {
 		rfiStrategy::FrequencySelectionAction &_action;
 
 		Gtk::VBox _box;
-		Gtk::HButtonBox _buttonBox;
+		Gtk::ButtonBox _buttonBox;
 		Gtk::Label _thresholdLabel;
-		Gtk::HScale _thresholdScale;
+		Gtk::Scale _thresholdScale;
 		Gtk::CheckButton _clipDownButton;
 		Gtk::Button _applyButton;
 

@@ -40,11 +40,11 @@ class FringeStoppingFrame : public Gtk::Frame {
 		: Gtk::Frame("Fringe stopping recovery"),
 		_editStrategyWindow(editStrategyWindow), _action(action),
 		_fringesToConsiderLabel("Considered fringes:"),
-		_fringesToConsiderScale(0, 25.0L, 0.25L),
+		_fringesToConsiderScale(),
 		_minWindowSizeLabel("Min window size:"),
-		_minWindowSizeScale(0, 2048, 16),
+		_minWindowSizeScale(),
 		_maxWindowSizeLabel("Max window size:"),
-		_maxWindowSizeScale(0, 2048, 16),
+		_maxWindowSizeScale(),
 		_fitChannelsIndividuallyButton("Fit channels individually"),
 		_onlyFringeStopButton("No fit, only fringe stop"),
 		_raLabel("Right ascension:"),
@@ -54,16 +54,19 @@ class FringeStoppingFrame : public Gtk::Frame {
 			_box.pack_start(_fringesToConsiderLabel);
 
 			_box.pack_start(_fringesToConsiderScale);
+			_fringesToConsiderScale.set_range(0, 25.0L);
 			_fringesToConsiderScale.set_value(_action.FringesToConsider());
 
 			_box.pack_start(_minWindowSizeLabel);
 
 			_box.pack_start(_minWindowSizeScale);
+			_minWindowSizeScale.set_range(0, 2048);
 			_minWindowSizeScale.set_value(_action.MinWindowSize());
 
 			_box.pack_start(_maxWindowSizeLabel);
 
 			_box.pack_start(_maxWindowSizeScale);
+			_maxWindowSizeScale.set_range(0, 2048);
 			_maxWindowSizeScale.set_value(_action.MaxWindowSize());
 
 			_box.pack_start(_fitChannelsIndividuallyButton);
@@ -99,13 +102,13 @@ class FringeStoppingFrame : public Gtk::Frame {
 		rfiStrategy::FringeStopAction &_action;
 
 		Gtk::VBox _box;
-		Gtk::HButtonBox _buttonBox;
+		Gtk::ButtonBox _buttonBox;
 		Gtk::Label _fringesToConsiderLabel;
-		Gtk::HScale _fringesToConsiderScale;
+		Gtk::Scale _fringesToConsiderScale;
 		Gtk::Label _minWindowSizeLabel;
-		Gtk::HScale _minWindowSizeScale;
+		Gtk::Scale _minWindowSizeScale;
 		Gtk::Label _maxWindowSizeLabel;
-		Gtk::HScale _maxWindowSizeScale;
+		Gtk::Scale _maxWindowSizeScale;
 		Gtk::CheckButton _fitChannelsIndividuallyButton;
 		Gtk::CheckButton _onlyFringeStopButton;
 		Gtk::Label _raLabel;

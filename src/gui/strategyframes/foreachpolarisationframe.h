@@ -93,7 +93,7 @@ class ForEachPolarisationFrame : public Gtk::Frame {
 		rfiStrategy::ForEachPolarisationBlock &_action;
 
 		Gtk::VBox _box;
-		Gtk::HButtonBox _buttonBox;
+		Gtk::ButtonBox _buttonBox;
 		Gtk::CheckButton _onXXButton;
 		Gtk::CheckButton _onXYButton;
 		Gtk::CheckButton _onYXButton;

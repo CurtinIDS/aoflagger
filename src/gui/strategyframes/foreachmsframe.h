@@ -71,7 +71,7 @@ class ForEachMSFrame : public Gtk::Frame {
 		EditStrategyWindow &_editStrategyWindow;
 		rfiStrategy::ForEachMSAction &_action;
 		Gtk::VBox _box;
-		Gtk::HButtonBox _buttonBox;
+		Gtk::ButtonBox _buttonBox;
 		Gtk::Button _clearButton, _addOneButton, _addAllInDirButton;
 		Gtk::TreeView _fileListView;
 		Glib::RefPtr<Gtk::ListStore> _fileListModel;

@@ -19,7 +19,7 @@
  ***************************************************************************/
 #include "application.h"
 
-#include <gtkmm.h>
+#include <gtkmm/application.h>
 
 #include "rfiguiwindow.h"
 
@@ -33,13 +33,13 @@ Application::~Application()
 
 void Application::Run(int argc, char *argv[])
 {
-	Gtk::Main kit(argc, argv);
+	Glib::RefPtr<Gtk::Application> app = Gtk::Application::create();
 	RFIGuiWindow window;
 	window.present();
 	if(argc > 1)
 	{
 		window.OpenPath(argv[1]);
 	}
-	kit.run(window);
+	app->run(window, argc, argv);
 }
 

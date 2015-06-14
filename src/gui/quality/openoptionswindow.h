@@ -24,7 +24,6 @@
 #include <gtkmm/buttonbox.h>
 #include <gtkmm/checkbutton.h>
 #include <gtkmm/entry.h>
-#include <gtkmm/stock.h>
 #include <gtkmm/window.h>
 
 /**
@@ -36,8 +35,8 @@ class OpenOptionsWindow : public Gtk::Window {
 			_downsampleTimeButton("Lower time resolution (faster plots)"),
 			_downsampleFreqButton("Lower frequency resolution (faster plots)"),
 			_correctHistograms("Correct histograms for frequence response"),
-			_cancelButton(Gtk::Stock::CANCEL),
-			_openButton(Gtk::Stock::OPEN)
+			_cancelButton("_Cancel", true),
+			_openButton("_Open", true)
 		{
 			_timeBox.pack_start(_downsampleTimeButton);
 			_downsampleTimeButton.set_active(true);
@@ -106,7 +105,7 @@ class OpenOptionsWindow : public Gtk::Window {
 		Gtk::CheckButton _downsampleFreqButton;
 		Gtk::Entry _freqDownsampleEntry;
 		Gtk::CheckButton _correctHistograms;
-		Gtk::HButtonBox _buttonBox;
+		Gtk::ButtonBox _buttonBox;
 		Gtk::Button _cancelButton, _openButton;
 		sigc::signal<void, const std::vector<std::string>&, bool, bool, size_t, size_t, bool> _signalOpen;
 		

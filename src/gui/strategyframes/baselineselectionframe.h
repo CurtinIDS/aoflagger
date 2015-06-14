@@ -68,7 +68,7 @@ class BaselineSelectionFrame : public Gtk::Frame {
 		rfiStrategy::BaselineSelectionAction &_action;
 
 		Gtk::VBox _box;
-		Gtk::HButtonBox _buttonBox;
+		Gtk::ButtonBox _buttonBox;
 		Gtk::CheckButton _preparationStepButton, _flagBadBaselinesButton, _makePlotButton;
 		Gtk::Button _applyButton;
 

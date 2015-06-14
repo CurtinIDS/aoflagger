@@ -72,13 +72,12 @@ class PlotPropertiesWindow : public Gtk::Window {
 
 		class Plot2D &_plot;
 
-		Gtk::HButtonBox _bottomButtonBox;
+		Gtk::ButtonBox _bottomButtonBox;
 		Gtk::VBox _topVBox;
 		Gtk::HBox _framesHBox;
 		Gtk::VBox _framesRightVBox;
 		
 		Gtk::Button _applyButton, _exportButton, _closeButton;
-		Gtk::Image _saveImage;
 		
 		Gtk::Frame _vRangeFrame;
 		Gtk::VBox _vRangeBox;

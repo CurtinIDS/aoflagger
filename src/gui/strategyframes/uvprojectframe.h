@@ -39,9 +39,9 @@ class UVProjectFrame : public Gtk::Frame {
 		_onRevisedButton("On revised"),
 		_onContaminatedButton("On contaminated"),
 		_angleLabel("Angle: (degrees)"),
-		_angleScale(-180, 180, 0.1),
+		_angleScale(),
 		_etaLabel("Eta: (ratio)"),
-		_etaScale(0.0, 1.0, 0.01),
+		_etaScale(),
 		_reverseButton("Reverse"),
 		_applyButton("Apply")
 		{
@@ -57,6 +57,8 @@ class UVProjectFrame : public Gtk::Frame {
 			_angleLabel.show();
 
 			_box.pack_start(_angleScale);
+			_angleScale.set_range(-180, 180);
+			_angleScale.set_increments(0.1, 1.0);
 			_angleScale.set_value(action.DirectionRad()*180.0/M_PI);
 			_angleScale.show();
 			
@@ -64,6 +66,8 @@ class UVProjectFrame : public Gtk::Frame {
 			_etaLabel.show();
 
 			_box.pack_start(_etaScale);
+			_etaScale.set_range(0.0, 1.0);
+			_etaScale.set_increments(0.01, 0.1);
 			_etaScale.set_value(action.EtaParameter());
 			_etaScale.show();
 			
@@ -86,12 +90,12 @@ class UVProjectFrame : public Gtk::Frame {
 		rfiStrategy::UVProjectAction &_action;
 
 		Gtk::VBox _box;
-		Gtk::HButtonBox _buttonBox;
+		Gtk::ButtonBox _buttonBox;
 		Gtk::CheckButton _onRevisedButton, _onContaminatedButton;
 		Gtk::Label _angleLabel;
-		Gtk::HScale _angleScale;
+		Gtk::Scale _angleScale;
 		Gtk::Label _etaLabel;
-		Gtk::HScale _etaScale;
+		Gtk::Scale _etaScale;
 		Gtk::CheckButton _reverseButton;
 		Gtk::Button _applyButton;
 

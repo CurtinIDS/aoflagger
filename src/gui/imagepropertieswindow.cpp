@@ -60,10 +60,10 @@ ImagePropertiesWindow::ImagePropertiesWindow(ImageWidget &imageWidget, const std
 	_bestFilterButton("Best"),
 	_nearestFilterButton("Nearest"),
 	
-	_hStartScale(0, 1.01, 0.01),
-	_hStopScale(0, 1.01, 0.01),
-	_vStartScale(0, 1.01, 0.01),
-	_vStopScale(0, 1.01, 0.01),
+	_hStartScale(Gtk::ORIENTATION_HORIZONTAL),
+	_hStopScale(Gtk::ORIENTATION_HORIZONTAL),
+	_vStartScale(Gtk::ORIENTATION_VERTICAL),
+	_vStopScale(Gtk::ORIENTATION_VERTICAL),
 	
 	_axesFrame("Title & axes"),
 	_showXYAxes("Show XY axes"),
@@ -239,17 +239,20 @@ void ImagePropertiesWindow::initZoomWidgets()
 {
 	_zoomHBox.pack_start(_vStartScale, false, false, 10);
 	_vStartScale.set_inverted(true);
+	_vStartScale.set_range(0, 1.01);
 
 	_vStopScale.set_inverted(true);
+	_vStopScale.set_range(0, 1.01);
+	_vStopScale.set_value(1.0);
 	_zoomHBox.pack_start(_vStopScale, false, false, 10);
 
+	_hStartScale.set_range(0, 1.01);
 	_zoomVSubBox.pack_start(_hStartScale, false, false, 3);
 
+	_hStopScale.set_range(0, 1.01);
+	_hStopScale.set_value(1.0);
 	_zoomVSubBox.pack_start(_hStopScale, false, false, 3);
 
-	_vStopScale.set_value(1.0);
-	_hStopScale.set_value(1.0);
-	
 	_zoomHBox.pack_start(_zoomVSubBox);
 
 	_zoomFrame.add(_zoomHBox);

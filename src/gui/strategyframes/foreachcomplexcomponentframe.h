@@ -78,7 +78,7 @@ class ForEachComplexComponentFrame : public Gtk::Frame {
 		rfiStrategy::ForEachComplexComponentAction &_action;
 
 		Gtk::VBox _box;
-		Gtk::HButtonBox _buttonBox;
+		Gtk::ButtonBox _buttonBox;
 		Gtk::CheckButton
 			_onAmplitudeButton, _onPhaseButton, _onRealButton, _onImaginaryButton,
 			_restoreFromAmplitudeButton;

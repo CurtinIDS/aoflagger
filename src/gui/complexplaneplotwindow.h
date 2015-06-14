@@ -81,14 +81,14 @@ class ComplexPlanePlotWindow : public Gtk::Window {
 			_detailsLabel,
 			_xPositionLabel, _yPositionLabel,
 			_lengthLabel, _ySumLengthLabel;
-		Gtk::HScale
+		Gtk::Scale
 			_xPositionScale, _yPositionScale, 
 			_lengthScale, _ySumLengthScale;
 		Gtk::RadioButton _realVersusImaginaryButton, _timeVersusRealButton;
 		Gtk::CheckButton _allValuesButton, _unmaskedValuesButton, _maskedValuesButton, _fittedValuesButton, _individualSampleFitButton, _fringeFitButton, _dynamicFringeFitButton;
 
 		Gtk::Button _plotButton;
-		Gtk::HButtonBox _buttonBox;
+		Gtk::ButtonBox _buttonBox;
 		std::vector<double> _observationTimes;
 		size_t _xMax, _yMax;
 };

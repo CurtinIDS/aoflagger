@@ -62,7 +62,7 @@ class ImagePropertiesWindow : public Gtk::Window {
 
 		class ImageWidget &_imageWidget;
 
-		Gtk::HButtonBox _bottomButtonBox;
+		Gtk::ButtonBox _bottomButtonBox;
 		Gtk::VBox _topVBox;
 		Gtk::HBox _framesHBox;
 		
@@ -90,8 +90,8 @@ class ImagePropertiesWindow : public Gtk::Window {
 		Gtk::Frame _zoomFrame;
 		Gtk::HBox _zoomHBox;
 		Gtk::VBox _zoomVSubBox;
-		Gtk::HScale _hStartScale, _hStopScale;
-		Gtk::VScale _vStartScale, _vStopScale;
+		Gtk::Scale _hStartScale, _hStopScale;
+		Gtk::Scale _vStartScale, _vStopScale;
 		
 		Gtk::Frame _axesFrame;
 		Gtk::HBox _axesHBox;

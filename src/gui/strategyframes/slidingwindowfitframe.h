@@ -36,10 +36,10 @@ class SlidingWindowFitFrame : public Gtk::Frame {
 	public:
 		SlidingWindowFitFrame(rfiStrategy::SlidingWindowFitAction &action, EditStrategyWindow &editStrategyWindow)
 		: Gtk::Frame("Sliding window fit"), _editStrategyWindow(editStrategyWindow), _action(action),
-		_hWindowSizeScale(0.0, 400.0, 1.0),
-		_vWindowSizeScale(0.0, 400.0, 1.0),
-		_hKernelSizeScale(0.1, 1000.0, 0.1),
-		_vKernelSizeScale(0.1, 1000.0, 0.1),
+		_hWindowSizeScale(),
+		_vWindowSizeScale(),
+		_hKernelSizeScale(),
+		_vKernelSizeScale(),
 		_hWindowSizeLabel("Horizontal sliding window size:", Gtk::ALIGN_START),
 		_vWindowSizeLabel("Vertical sliding window size:", Gtk::ALIGN_START),
 		_hKernelSizeLabel("Horizontal kernel size:", Gtk::ALIGN_START),
@@ -120,24 +120,30 @@ class SlidingWindowFitFrame : public Gtk::Frame {
 		{
 			_box.pack_start(_hWindowSizeLabel);
 			_hWindowSizeLabel.show();
+			_hWindowSizeScale.set_range(0.0, 400.0);
 			_hWindowSizeScale.set_value(_action.Parameters().timeDirectionWindowSize);
 			_box.pack_start(_hWindowSizeScale);
 			_hWindowSizeScale.show();
 		
 			_box.pack_start(_vWindowSizeLabel);
 			_vWindowSizeLabel.show();
+			_vWindowSizeScale.set_range(0.0, 400.0);
 			_vWindowSizeScale.set_value(_action.Parameters().frequencyDirectionWindowSize);
 			_box.pack_start(_vWindowSizeScale);
 			_vWindowSizeScale.show();
 		
 			_box.pack_start(_hKernelSizeLabel);
 			_hKernelSizeLabel.show();
+			_hKernelSizeScale.set_range(0.1, 1000.0);
+			_hKernelSizeScale.set_increments(0.1, 1.0);
 			_hKernelSizeScale.set_value(_action.Parameters().timeDirectionKernelSize);
 			_box.pack_start(_hKernelSizeScale);
 			_hKernelSizeScale.show();
 		
 			_box.pack_start(_vKernelSizeLabel);
 			_vKernelSizeLabel.show();
+			_vKernelSizeScale.set_range(0.1, 1000.0);
+			_vKernelSizeScale.set_increments(0.1, 1.0);
 			_vKernelSizeScale.set_value(_action.Parameters().frequencyDirectionKernelSize);
 			_box.pack_start(_vKernelSizeScale);
 			_vKernelSizeScale.show();
@@ -147,14 +153,14 @@ class SlidingWindowFitFrame : public Gtk::Frame {
 		rfiStrategy::SlidingWindowFitAction &_action;
 
 		Gtk::VBox _box;
-		Gtk::HButtonBox _buttonBox;
-		Gtk::HScale
+		Gtk::ButtonBox _buttonBox;
+		Gtk::Scale
 			_hWindowSizeScale, _vWindowSizeScale,
 			_hKernelSizeScale, _vKernelSizeScale;
 		Gtk::Label
 			_hWindowSizeLabel, _vWindowSizeLabel,
 			_hKernelSizeLabel, _vKernelSizeLabel;
-		Gtk::HScale _iterationCountScale;
+		Gtk::Scale _iterationCountScale;
 		Gtk::RadioButton
 			_fitNoneButton, _fitAverageButton, _fitWeightedAverageButton, _fitMedianButton, _fitMinimumButton;
 		Gtk::Button _applyButton;

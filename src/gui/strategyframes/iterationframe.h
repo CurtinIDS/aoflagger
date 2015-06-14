@@ -38,18 +38,20 @@ class IterationFrame : public Gtk::Frame {
 		_editStrategyWindow(editStrategyWindow), _iterationBlock(iterationBlock),
 		_iterationCountLabel("Iteration count:"),
 		_sensitivityStartLabel("Sensitivity start value (moves to 1):"),
-		_iterationCountScale(0, 1000, 1),
-		_sensitivityStartScale(0, 25.0, 0.25),
+		_iterationCountScale(),
+		_sensitivityStartScale(),
 		_applyButton("Apply")
 		{
 			_box.pack_start(_iterationCountLabel);
 
 			_box.pack_start(_iterationCountScale);
+			_iterationCountScale.set_range(0, 1000);
 			_iterationCountScale.set_value(_iterationBlock.IterationCount());
 
 			_box.pack_start(_sensitivityStartLabel);
 
 			_box.pack_start(_sensitivityStartScale);
+			_sensitivityStartScale.set_range(0, 25.0);
 			_sensitivityStartScale.set_value(_iterationBlock.SensitivityStart());
 
 			_buttonBox.pack_start(_applyButton);
@@ -65,9 +67,9 @@ class IterationFrame : public Gtk::Frame {
 		rfiStrategy::IterationBlock &_iterationBlock;
 
 		Gtk::VBox _box;
-		Gtk::HButtonBox _buttonBox;
+		Gtk::ButtonBox _buttonBox;
 		Gtk::Label _iterationCountLabel, _sensitivityStartLabel;
-		Gtk::HScale _iterationCountScale, _sensitivityStartScale;
+		Gtk::Scale _iterationCountScale, _sensitivityStartScale;
 		Gtk::Button _applyButton;
 
 		void onApplyClicked()

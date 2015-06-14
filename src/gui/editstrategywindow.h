@@ -96,10 +96,10 @@ class EditStrategyWindow : public Gtk::Window
 		
 		class StrategyController &_strategyController;
 
-		Gtk::HPaned _paned;
+		Gtk::Paned _paned;
 		Gtk::VBox _strategyBox;
 		rfiStrategy::Strategy *_strategy;
-		Gtk::HButtonBox _strategyEditButtonBox, _strategyFileButtonBox, _strategyLoadDefaultsButtonBox;
+		Gtk::ButtonBox _strategyEditButtonBox, _strategyFileButtonBox, _strategyLoadDefaultsButtonBox;
 		Gtk::MenuToolButton _addActionButton;
 		Gtk::Button _removeActionButton, _moveUpButton, _moveDownButton;
 		Gtk::Button _addFOBButton, _addFOMSButton;

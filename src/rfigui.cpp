@@ -31,7 +31,6 @@ int main(int argc, char *argv[])
 {
 	
 	AOLogger::Init(basename(argv[0]), false, true);
-
 	{
 		Application application;
 		application.Run(argc, argv);

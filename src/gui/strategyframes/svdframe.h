@@ -37,13 +37,14 @@ class SVDFrame : public Gtk::Frame {
 		: Gtk::Frame("Singular value decomposition"),
 		_editStrategyWindow(editStrategyWindow), _svdAction(svdAction),
 		_singularValueCountLabel("Singular value count:"),
-		_singularValueCountScale(0, 100, 1),
+		_singularValueCountScale(),
 		_applyButton("Apply")
 		{
 			_box.pack_start(_singularValueCountLabel);
 			_singularValueCountLabel.show();
 
 			_box.pack_start(_singularValueCountScale);
+			_singularValueCountScale.set_range(0, 100);
 			_singularValueCountScale.set_value(_svdAction.SingularValueCount());
 			_singularValueCountScale.show();
 
@@ -62,9 +63,9 @@ class SVDFrame : public Gtk::Frame {
 		rfiStrategy::SVDAction &_svdAction;
 
 		Gtk::VBox _box;
-		Gtk::HButtonBox _buttonBox;
+		Gtk::ButtonBox _buttonBox;
 		Gtk::Label _singularValueCountLabel;
-		Gtk::HScale _singularValueCountScale;
+		Gtk::Scale _singularValueCountScale;
 		Gtk::Button _applyButton;
 
 		void onApplyClicked()

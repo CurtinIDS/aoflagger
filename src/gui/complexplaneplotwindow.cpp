@@ -48,10 +48,10 @@ ComplexPlanePlotWindow::ComplexPlanePlotWindow(RFIGuiWindow &rfiGuiWindow, PlotM
 		_yPositionLabel("frequency start position:"),
 		_lengthLabel("time length:"),
 		_ySumLengthLabel("Frequency averaging size:"),
-		_xPositionScale(0.0, _rfiGuiWindow.GetOriginalData().ImageWidth(), 1.0),
-		_yPositionScale(0.0, _rfiGuiWindow.GetOriginalData().ImageHeight(), 1.0),
-		_lengthScale(1.0, _rfiGuiWindow.GetOriginalData().ImageWidth(), 1.0),
-		_ySumLengthScale(1.0, _rfiGuiWindow.GetOriginalData().ImageHeight(), 1.0),
+		_xPositionScale(),
+		_yPositionScale(),
+		_lengthScale(),
+		_ySumLengthScale(),
 		_realVersusImaginaryButton("Real versus imaginary"),
 		_timeVersusRealButton("Time versus real"),
 		_allValuesButton("All values"),
@@ -78,6 +78,7 @@ ComplexPlanePlotWindow::ComplexPlanePlotWindow(RFIGuiWindow &rfiGuiWindow, PlotM
 	
 	_mainBox.pack_start(_xPositionLabel);
 	_xPositionLabel.show();
+	_xPositionScale.set_range(0.0, _rfiGuiWindow.GetOriginalData().ImageWidth());
 	_xPositionScale.signal_value_changed().
 		connect(sigc::mem_fun(*this, &ComplexPlanePlotWindow::onTimeStartChanged));
 	_mainBox.pack_start(_xPositionScale);
@@ -85,6 +86,7 @@ ComplexPlanePlotWindow::ComplexPlanePlotWindow(RFIGuiWindow &rfiGuiWindow, PlotM
 
 	_mainBox.pack_start(_yPositionLabel);
 	_yPositionLabel.show();
+	_yPositionScale.set_range(0.0, _rfiGuiWindow.GetOriginalData().ImageHeight());
 	_yPositionScale.signal_value_changed().
 		connect(sigc::mem_fun(*this, &ComplexPlanePlotWindow::onFreqChanged));
 	_mainBox.pack_start(_yPositionScale);
@@ -92,6 +94,7 @@ ComplexPlanePlotWindow::ComplexPlanePlotWindow(RFIGuiWindow &rfiGuiWindow, PlotM
 
 	_mainBox.pack_start(_lengthLabel);
 	_lengthLabel.show();
+	_lengthScale.set_range(1.0, _rfiGuiWindow.GetOriginalData().ImageWidth());
 	_lengthScale.signal_value_changed().
 		connect(sigc::mem_fun(*this, &ComplexPlanePlotWindow::onTimeDurationChanged));
 	_mainBox.pack_start(_lengthScale);
@@ -99,6 +102,7 @@ ComplexPlanePlotWindow::ComplexPlanePlotWindow(RFIGuiWindow &rfiGuiWindow, PlotM
 
 	_mainBox.pack_start(_ySumLengthLabel);
 	_ySumLengthLabel.show();
+	_ySumLengthScale.set_range(1.0, _rfiGuiWindow.GetOriginalData().ImageHeight());
 	_ySumLengthScale.signal_value_changed().
 		connect(sigc::mem_fun(*this, &ComplexPlanePlotWindow::onFreqSizeChanged));
 	_mainBox.pack_start(_ySumLengthScale);

@@ -129,7 +129,7 @@ class SetImageFrame : public Gtk::Frame {
 		rfiStrategy::SetImageAction &_action;
 
 		Gtk::VBox _box;
-		Gtk::HButtonBox _buttonBox;
+		Gtk::ButtonBox _buttonBox;
 		Gtk::Label _baselinesLabel;
 		Gtk::RadioButton
 			_zeroButton, _originalButton, _revisedButton, _contaminatedToOriginalButton, _swapButton, _replaceFlaggedValuesButton, _setFlaggedValuesToZeroButton, _interpolateNansButton;

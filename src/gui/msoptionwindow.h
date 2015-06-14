@@ -46,7 +46,7 @@ class MSOptionWindow : public Gtk::Window {
 		class StrategyController &_strategyController;
 		const std::string _filename;
 
-		Gtk::HButtonBox _bottomButtonBox;
+		Gtk::ButtonBox _bottomButtonBox;
 		Gtk::VBox _leftVBox, _rightVBox;
 		Gtk::HBox _topHBox;
 		Gtk::Button _openButton;

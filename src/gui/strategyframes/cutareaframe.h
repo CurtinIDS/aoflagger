@@ -37,64 +37,58 @@ class CutAreaFrame : public Gtk::Frame {
 		: Gtk::Frame("Cut area"),
 		_editStrategyWindow(editStrategyWindow), _action(action),
 		_startTimeLabel("Start time steps to cut:"),
-		_startTimeScale(0, 64, 1),
+		_startTimeScale(),
 		_endTimeLabel("End time steps to cut:"),
-		_endTimeScale(0, 64, 1),
+		_endTimeScale(),
 		_topChannelsLabel("Top channels to cut:"),
-		_topChannelsScale(0, 64, 1),
+		_topChannelsScale(),
 		_bottomChannelsLabel("Bottom channels to cut:"),
-		_bottomChannelsScale(0, 64, 1),
+		_bottomChannelsScale(),
 		_applyButton("Apply")
 		{
 			_box.pack_start(_startTimeLabel);
-			_startTimeLabel.show();
+			_startTimeScale.set_range(0, 64);
 			_box.pack_start(_startTimeScale);
 			_startTimeScale.set_value(_action.StartTimeSteps());
-			_startTimeScale.show();
 
 			_box.pack_start(_endTimeLabel);
-			_endTimeLabel.show();
+			_endTimeScale.set_range(0, 64);
 			_box.pack_start(_endTimeScale);
 			_endTimeScale.set_value(_action.EndTimeSteps());
-			_endTimeScale.show();
 
 			_box.pack_start(_topChannelsLabel);
-			_topChannelsLabel.show();
+			_topChannelsScale.set_range(0, 64);
 			_box.pack_start(_topChannelsScale);
 			_topChannelsScale.set_value(_action.TopChannels());
-			_topChannelsScale.show();
 
 			_box.pack_start(_bottomChannelsLabel);
-			_bottomChannelsLabel.show();
+			_bottomChannelsScale.set_range(0, 64);
 			_box.pack_start(_bottomChannelsScale);
 			_bottomChannelsScale.set_value(_action.BottomChannels());
-			_bottomChannelsScale.show();
 
 			_buttonBox.pack_start(_applyButton);
 			_applyButton.signal_clicked().connect(sigc::mem_fun(*this, &CutAreaFrame::onApplyClicked));
-			_applyButton.show();
 
 			_box.pack_start(_buttonBox);
-			_buttonBox.show();
 
 			add(_box);
-			_box.show();
+			_box.show_all();
 		}
 	private:
 		EditStrategyWindow &_editStrategyWindow;
 		rfiStrategy::CutAreaAction &_action;
 
 		Gtk::Label _startTimeLabel;
-		Gtk::HScale _startTimeScale;
+		Gtk::Scale _startTimeScale;
 		Gtk::Label _endTimeLabel;
-		Gtk::HScale _endTimeScale;
+		Gtk::Scale _endTimeScale;
 		Gtk::Label _topChannelsLabel;
-		Gtk::HScale _topChannelsScale;
+		Gtk::Scale _topChannelsScale;
 		Gtk::Label _bottomChannelsLabel;
-		Gtk::HScale _bottomChannelsScale;
+		Gtk::Scale _bottomChannelsScale;
 
 		Gtk::VBox _box;
-		Gtk::HButtonBox _buttonBox;
+		Gtk::ButtonBox _buttonBox;
 		Gtk::Button _applyButton;
 
 		void onApplyClicked()

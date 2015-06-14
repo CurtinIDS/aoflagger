@@ -45,7 +45,7 @@ class ForEachBaselineFrame : public Gtk::Frame {
 		_autoOfCurrentBaselinesButton("Auto of current antennae"),
 		_currentBaselineButton("Current"),
 		_threadCountLabel("Thread count:"),
-		_threadCountScale(1, 10, 1),
+		_threadCountScale(),
 		_applyButton("A_pply")
 		{
 			_box.pack_start(_baselinesLabel);
@@ -103,6 +103,7 @@ class ForEachBaselineFrame : public Gtk::Frame {
 			_box.pack_start(_threadCountLabel);
 			_threadCountLabel.show();
 
+			_threadCountScale.set_range(1, 32);
 			_threadCountScale.set_value(action.ThreadCount());
 			_box.pack_start(_threadCountScale);
 			_threadCountScale.show();
@@ -122,12 +123,12 @@ class ForEachBaselineFrame : public Gtk::Frame {
 		rfiStrategy::ForEachBaselineAction &_action;
 
 		Gtk::VBox _box;
-		Gtk::HButtonBox _buttonBox;
+		Gtk::ButtonBox _buttonBox;
 		Gtk::Label _baselinesLabel;
 		Gtk::RadioButton
 			_allBaselinesButton, _crossBaselinesButton, _autoBaselinesButton, _equalToCurrentBaselinesButton, _autoOfCurrentBaselinesButton, _currentBaselineButton;
 		Gtk::Label _threadCountLabel;
-		Gtk::HScale _threadCountScale;
+		Gtk::Scale _threadCountScale;
 		Gtk::Button _applyButton;
 
 		void onApplyClicked()

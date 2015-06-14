@@ -105,7 +105,7 @@ class DirectionProfileFrame : public Gtk::Frame {
 		rfiStrategy::DirectionProfileAction &_action;
 
 		Gtk::VBox _box;
-		Gtk::HButtonBox _buttonBox;
+		Gtk::ButtonBox _buttonBox;
 		Gtk::Label _directionLabel;
 		Gtk::RadioButton
 			_horizontalDirectionButton,

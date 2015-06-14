@@ -39,9 +39,9 @@ class HighlightWindow : public Gtk::Window {
 		void onHighlightingToggled();
 
 		class RFIGuiWindow &_rfiGuiWindow;
-		Gtk::VScale _highlightThresholdHighScale;
-		Gtk::VScale _highlightThresholdLowScale;
-		Gtk::HScale _connectedCountScale;
+		Gtk::Scale _highlightThresholdHighScale;
+		Gtk::Scale _highlightThresholdLowScale;
+		Gtk::Scale _connectedCountScale;
 		Gtk::VBox _mainBox;
 		Gtk::HBox _highlightThresholdBox;
 		Gtk::CheckButton _highlightButton;

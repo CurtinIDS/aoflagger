@@ -21,7 +21,6 @@
 #include <iostream>
 #include <sstream>
 
-#include <gtkmm/stock.h>
 #include <gtkmm/filechooserdialog.h>
 
 #include "plotpropertieswindow.h"
@@ -33,10 +32,9 @@
 PlotPropertiesWindow::PlotPropertiesWindow(Plot2D &plot, const std::string &title) :
 	Gtk::Window(),
 	_plot(plot),
-	_applyButton(Gtk::Stock::APPLY),
-	_exportButton("Export"),
-	_closeButton(Gtk::Stock::CLOSE),
-	_saveImage(Gtk::Stock::SAVE, Gtk::ICON_SIZE_BUTTON),
+	_applyButton("_Apply", true),
+	_exportButton("_Export", true),
+	_closeButton("_Close", true),
 	
 	_vRangeFrame("Vertical scale"),
 	_minMaxVRangeButton("From min to max"),
@@ -78,13 +76,15 @@ PlotPropertiesWindow::PlotPropertiesWindow(Plot2D &plot, const std::string &titl
 	_framesHBox.pack_start(_framesRightVBox);
 	
 	_applyButton.signal_clicked().connect(sigc::mem_fun(*this, &PlotPropertiesWindow::onApplyClicked));
+	_applyButton.set_image_from_icon_name("gtk-ok");
 	_bottomButtonBox.pack_start(_applyButton);
 
 	_exportButton.signal_clicked().connect(sigc::mem_fun(*this, &PlotPropertiesWindow::onExportClicked));
-	_exportButton.set_image(_saveImage);
+	_exportButton.set_image_from_icon_name("document-save");
 	_bottomButtonBox.pack_start(_exportButton);
 
 	_closeButton.signal_clicked().connect(sigc::mem_fun(*this, &PlotPropertiesWindow::onCloseClicked));
+	_closeButton.set_image_from_icon_name("window-close");
 	_bottomButtonBox.pack_start(_closeButton);
 
 	_topVBox.pack_start(_framesHBox);
@@ -277,8 +277,8 @@ void PlotPropertiesWindow::onExportClicked()
 	dialog.set_transient_for(*this);
 
 	//Add response buttons the the dialog:
-	dialog.add_button(Gtk::Stock::CANCEL, Gtk::RESPONSE_CANCEL);
-	dialog.add_button("Save", Gtk::RESPONSE_OK);
+	dialog.add_button("_Cancel", Gtk::RESPONSE_CANCEL);
+	dialog.add_button("_Save", Gtk::RESPONSE_OK);
 
 	Glib::RefPtr<Gtk::FileFilter> pdfFilter = Gtk::FileFilter::create();
 	std::string pdfName = "Portable Document Format (*.pdf)";

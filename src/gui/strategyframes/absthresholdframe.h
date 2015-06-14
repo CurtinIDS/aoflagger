@@ -59,7 +59,7 @@ class AbsThresholdFrame : public Gtk::Frame {
 		rfiStrategy::AbsThresholdAction &_action;
 
 		Gtk::VBox _box;
-		Gtk::HButtonBox _buttonBox;
+		Gtk::ButtonBox _buttonBox;
 		Gtk::Label _thresholdLabel;
 		Gtk::Entry _thresholdEntry;
 		Gtk::Button _applyButton;

@@ -37,7 +37,7 @@ class SumThresholdFrame : public Gtk::Frame {
 		: Gtk::Frame("SumThreshold"),
 		_editStrategyWindow(editStrategyWindow), _action(action),
 		_sensitivityLabel("Base sensitivity: (low = sensitive)"),
-		_sensitivityScale(0, 10, 0.1),
+		_sensitivityScale(),
 		_timeDirectionButton("In time direction"),
 		_frequencyDirectionButton("In frequency direction"),
 		_applyButton("Apply")
@@ -46,6 +46,8 @@ class SumThresholdFrame : public Gtk::Frame {
 			_sensitivityLabel.show();
 
 			_box.pack_start(_sensitivityScale);
+			_sensitivityScale.set_range(0, 10);
+			_sensitivityScale.set_increments(0.1, 1.0);
 			_sensitivityScale.set_value(_action.BaseSensitivity());
 			_sensitivityScale.show();
 			
@@ -72,9 +74,9 @@ class SumThresholdFrame : public Gtk::Frame {
 		rfiStrategy::SumThresholdAction &_action;
 
 		Gtk::VBox _box;
-		Gtk::HButtonBox _buttonBox;
+		Gtk::ButtonBox _buttonBox;
 		Gtk::Label _sensitivityLabel;
-		Gtk::HScale _sensitivityScale;
+		Gtk::Scale _sensitivityScale;
 		Gtk::CheckButton _timeDirectionButton, _frequencyDirectionButton;
 		Gtk::Button _applyButton;
 

@@ -25,7 +25,7 @@ private:
 	Gtk::Label _telescopeLabel;
 	Gtk::ComboBox _telescopeCombo;
 	Glib::RefPtr<Gtk::ListStore> _telescopeList;
-	Gtk::HButtonBox _buttonBox;
+	Gtk::ButtonBox _buttonBox;
 	Gtk::Button _finishButton, _nextButton, _previousButton;
 	Gtk::CheckButton _transientsButton, _highTimeResolutionButton;
 	Gtk::RadioButton _lowFreqRadioButton, _normFreqRadioButton, _highFreqRadioButton;

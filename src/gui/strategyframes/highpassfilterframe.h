@@ -34,10 +34,10 @@ class HighPassFilterFrame : public Gtk::Frame {
 	public:
 		HighPassFilterFrame(rfiStrategy::HighPassFilterAction &action, EditStrategyWindow &editStrategyWindow)
 		: Gtk::Frame("Sliding window fit"), _editStrategyWindow(editStrategyWindow), _action(action),
-		_hWindowSizeScale(0.0, 400.0, 1.0),
-		_vWindowSizeScale(0.0, 400.0, 1.0),
-		_hKernelSigmaScale(0.1, 1000.0, 0.1),
-		_vKernelSigmaScale(0.1, 1000.0, 0.1),
+		_hWindowSizeScale(),
+		_vWindowSizeScale(),
+		_hKernelSigmaScale(),
+		_vKernelSigmaScale(),
 		_hWindowSizeLabel("Horizontal sliding window size:", Gtk::ALIGN_START),
 		_vWindowSizeLabel("Vertical sliding window size:", Gtk::ALIGN_START),
 		_hKernelSigmaLabel("Horizontal kernel sigma:", Gtk::ALIGN_START),
@@ -69,18 +69,22 @@ class HighPassFilterFrame : public Gtk::Frame {
 		void initScales()
 		{
 			_box.pack_start(_hWindowSizeLabel);
+			_hWindowSizeScale.set_range(0.0, 400.0);
 			_hWindowSizeScale.set_value(_action.WindowWidth());
 			_box.pack_start(_hWindowSizeScale);
 		
 			_box.pack_start(_vWindowSizeLabel);
+			_vWindowSizeScale.set_range(0.0, 400.0);
 			_vWindowSizeScale.set_value(_action.WindowHeight());
 			_box.pack_start(_vWindowSizeScale);
 		
 			_box.pack_start(_hKernelSigmaLabel);
+			_hKernelSigmaScale.set_range(0.1, 1000.0);
 			_hKernelSigmaScale.set_value(sqrt(_action.HKernelSigmaSq()));
 			_box.pack_start(_hKernelSigmaScale);
 		
 			_box.pack_start(_vKernelSigmaLabel);
+			_vKernelSigmaScale.set_range(0.1, 1000.0);
 			_vKernelSigmaScale.set_value(sqrt(_action.VKernelSigmaSq()));
 			_box.pack_start(_vKernelSigmaScale);
 		}
@@ -89,7 +93,7 @@ class HighPassFilterFrame : public Gtk::Frame {
 		rfiStrategy::HighPassFilterAction &_action;
 
 		Gtk::VBox _box;
-		Gtk::HScale
+		Gtk::Scale
 			_hWindowSizeScale, _vWindowSizeScale,
 			_hKernelSigmaScale, _vKernelSigmaScale;
 		Gtk::Label

@@ -255,7 +255,7 @@ class RFIGuiWindow : public Gtk::Window, private StrategyController {
 		class RFIGuiController *_controller;
 		
 		Gtk::VBox _mainVBox;
-		Gtk::VPaned _panedArea;
+		Gtk::Paned _panedArea;
 		ImageComparisonWidget _timeFrequencyWidget;
 		Glib::RefPtr<Gtk::ActionGroup> _actionGroup;
 		Gtk::Statusbar _statusbar;

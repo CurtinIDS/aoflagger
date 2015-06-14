@@ -81,6 +81,7 @@
 
 RFIGuiWindow::RFIGuiWindow() : 
 	_controller(new RFIGuiController(*this)),
+	_mainVBox(Gtk::ORIENTATION_VERTICAL),
 	_imagePlaneWindow(0), _histogramWindow(0), _optionWindow(0), _editStrategyWindow(0),
 	_gotoWindow(0), _progressWindow(0), _highlightWindow(0), _plotComplexPlaneWindow(0),
 	_imagePropertiesWindow(0),
