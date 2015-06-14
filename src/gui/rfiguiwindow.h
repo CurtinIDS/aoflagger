@@ -194,7 +194,6 @@ class RFIGuiWindow : public Gtk::Window, private StrategyController {
 		void onPlotComplexPlanePressed();
 		void onPlotMeanSpectrumPressed();
 		void onPlotSumSpectrumPressed();
-		//template<bool Weigh> void plotMeanSpectrumPressed();
 		void onPlotPowerSpectrumPressed();
 		void onPlotPowerSpectrumComparisonPressed();
 		void onPlotPowerRMSPressed();
@@ -254,7 +253,7 @@ class RFIGuiWindow : public Gtk::Window, private StrategyController {
 		
 		class RFIGuiController *_controller;
 		
-		Gtk::VBox _mainVBox;
+		Gtk::Box _mainVBox;
 		Gtk::Paned _panedArea;
 		ImageComparisonWidget _timeFrequencyWidget;
 		Glib::RefPtr<Gtk::ActionGroup> _actionGroup;

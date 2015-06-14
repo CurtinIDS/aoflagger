@@ -85,7 +85,6 @@ RFIGuiWindow::RFIGuiWindow() :
 	_imagePlaneWindow(0), _histogramWindow(0), _optionWindow(0), _editStrategyWindow(0),
 	_gotoWindow(0), _progressWindow(0), _highlightWindow(0), _plotComplexPlaneWindow(0),
 	_imagePropertiesWindow(0),
-	//_statistics(new RFIStatistics()),
 	_imageSet(0),
 	_imageSetIndex(0),
 	_gaussianTestSets(true),
@@ -94,7 +93,7 @@ RFIGuiWindow::RFIGuiWindow() :
 {
 	createToolbar();
 
-	_mainVBox.pack_start(_timeFrequencyWidget);
+	_mainVBox.pack_start(_timeFrequencyWidget, Gtk::PACK_EXPAND_WIDGET);
 	_timeFrequencyWidget.OnMouseMovedEvent().connect(sigc::mem_fun(*this, &RFIGuiWindow::onTFWidgetMouseMoved));
 	_timeFrequencyWidget.OnMouseLeaveEvent().connect(sigc::mem_fun(*this, &RFIGuiWindow::setSetNameInStatusBar));
 	_timeFrequencyWidget.OnButtonReleasedEvent().connect(sigc::mem_fun(*this, &RFIGuiWindow::onTFWidgetButtonReleased));
@@ -148,7 +147,6 @@ RFIGuiWindow::~RFIGuiWindow()
 	// The rfistrategy needs the lock to clean up
 	lock.unlock();
 	
-	//delete _statistics;
 	delete _strategy;
 	if(HasImageSet())
 	{
