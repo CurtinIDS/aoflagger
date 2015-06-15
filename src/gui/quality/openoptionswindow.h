@@ -74,14 +74,14 @@ class OpenOptionsWindow : public Gtk::Window {
 		void ShowForFile(const std::vector<std::string>&files)
 		{
 			_files = files;
-			show();
+			present();
 		}
 		
 		void ShowForFile(const std::string& filename)
 		{
 			_files.clear();
 			_files.push_back(filename);
-			show();
+			present();
 		}
 		
 		sigc::signal<void, const std::vector<std::string>&, bool, bool, size_t, size_t, bool> &SignalOpen() { return _signalOpen; }

@@ -25,7 +25,7 @@
 
 int main(int argc, char *argv[])
 {
-	Glib::RefPtr<Gtk::Application> app = Gtk::Application::create();
+	Glib::RefPtr<Gtk::Application> app = Gtk::Application::create("", Gio::APPLICATION_HANDLES_OPEN);
 	AOQPlotWindow window;
 	bool wantHelp = false;
 	for(int i=1;i<argc;++i)
@@ -43,6 +43,7 @@ int main(int argc, char *argv[])
 			"by André Offringa (offringa@gmail.com).\n";
 	} 
 	else {
+		window.show();
 		if(argc>1)
 		{
 			std::vector<std::string> files;
@@ -70,7 +71,7 @@ int main(int argc, char *argv[])
 			}
 			else return 0;
 		}
-		app->run(window, argc, argv);
+		app->run(window);
 	}
 	return 0;
 }

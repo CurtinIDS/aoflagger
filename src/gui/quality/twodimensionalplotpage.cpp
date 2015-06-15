@@ -107,24 +107,23 @@ void TwoDimensionalPlotPage::updatePlot()
 	{
 		_plot.Clear();
 		
-		if(_countButton.get_active())
-			plotStatistic(QualityTablesFormatter::CountStatistic);
-		if(_meanButton.get_active())
-			plotStatistic(QualityTablesFormatter::MeanStatistic);
-		if(_stdDevButton.get_active())
-			plotStatistic(QualityTablesFormatter::StandardDeviationStatistic);
-		if(_varianceButton.get_active())
-			plotStatistic(QualityTablesFormatter::VarianceStatistic);
-		if(_dCountButton.get_active())
-			plotStatistic(QualityTablesFormatter::DCountStatistic);
-		if(_dMeanButton.get_active())
-			plotStatistic(QualityTablesFormatter::DMeanStatistic);
-		if(_dStdDevButton.get_active())
-			plotStatistic(QualityTablesFormatter::DStandardDeviationStatistic);
-		if(_rfiPercentageButton.get_active())
-			plotStatistic(QualityTablesFormatter::RFIPercentageStatistic);
-		if(_snrButton.get_active())
-			plotStatistic(QualityTablesFormatter::SignalToNoiseStatistic);
+		const std::set<QualityTablesFormatter::StatisticKind> kinds = getSelectedKinds();
+		const std::set<std::pair<unsigned int, unsigned int> > pols = getSelectedPolarizations();
+		const std::set<PhaseType> phases = getSelectedPhases();
+		
+		for(std::set<QualityTablesFormatter::StatisticKind>::const_iterator k=kinds.begin();
+				k!=kinds.end(); ++k)
+		{
+			for(std::set<std::pair<unsigned,unsigned> >::const_iterator p=pols.begin();
+					p!=pols.end(); ++p)
+			{
+				for(std::set<PhaseType>::const_iterator ph=phases.begin();
+						ph!=phases.end(); ++ph)
+				{
+					plotStatistic(*k, p->first, p->second, *ph);
+				}
+			}
+		}
 		
 		processPlot(_plot);
 		
@@ -144,10 +143,9 @@ void TwoDimensionalPlotPage::updatePlotConfig()
 	_plotWidget.Update();
 }
 
-template<enum TwoDimensionalPlotPage::PhaseType Phase>
-double TwoDimensionalPlotPage::getValue(const std::complex<long double> val)
+double TwoDimensionalPlotPage::getValue(enum PhaseType phase, const std::complex<long double> val)
 {
-	switch(Phase)
+	switch(phase)
 	{
 		case AmplitudePhaseType: return sqrt(val.real()*val.real() + val.imag()*val.imag());
 		case PhasePhaseType: return atan2(val.imag(), val.real());
@@ -156,79 +154,91 @@ double TwoDimensionalPlotPage::getValue(const std::complex<long double> val)
 	}
 }
 
-template<enum TwoDimensionalPlotPage::PhaseType Phase>
-void TwoDimensionalPlotPage::plotPhase(QualityTablesFormatter::StatisticKind kind, unsigned polarization)
+std::set<QualityTablesFormatter::StatisticKind> TwoDimensionalPlotPage::getSelectedKinds() const
 {
-	std::ostringstream s;
-	s << "Polarization " << polarization;
-	StartLine(_plot, s.str(), getYDesc());
-	StatisticsDerivator derivator(*_statCollection);
-	const std::map<double, DefaultStatistics> &statistics = GetStatistics();
-	for(std::map<double, DefaultStatistics>::const_iterator i=statistics.begin();i!=statistics.end();++i)
-	{
-		const double x = i->first;
-		const std::complex<long double> val = derivator.GetComplexStatistic(kind, i->second, polarization);
-		_plot.PushDataPoint(x, getValue<Phase>(val));
-	}
+	std::set<QualityTablesFormatter::StatisticKind> kinds;
+	if(_countButton.get_active())
+		kinds.insert(QualityTablesFormatter::CountStatistic);
+	if(_meanButton.get_active())
+		kinds.insert(QualityTablesFormatter::MeanStatistic);
+	if(_stdDevButton.get_active())
+		kinds.insert(QualityTablesFormatter::StandardDeviationStatistic);
+	if(_varianceButton.get_active())
+		kinds.insert(QualityTablesFormatter::VarianceStatistic);
+	if(_dCountButton.get_active())
+		kinds.insert(QualityTablesFormatter::DCountStatistic);
+	if(_dMeanButton.get_active())
+		kinds.insert(QualityTablesFormatter::DMeanStatistic);
+	if(_dStdDevButton.get_active())
+		kinds.insert(QualityTablesFormatter::DStandardDeviationStatistic);
+	if(_rfiPercentageButton.get_active())
+		kinds.insert(QualityTablesFormatter::RFIPercentageStatistic);
+	if(_snrButton.get_active())
+		kinds.insert(QualityTablesFormatter::SignalToNoiseStatistic);
+	return kinds;
 }
 
-template<enum TwoDimensionalPlotPage::PhaseType Phase>
-void TwoDimensionalPlotPage::plotPhase(QualityTablesFormatter::StatisticKind kind, unsigned polarizationA, unsigned polarizationB)
+std::set<std::pair<unsigned int, unsigned int> > TwoDimensionalPlotPage::getSelectedPolarizations() const
 {
-	std::ostringstream s;
-	s << "Polarization " << polarizationA << " and " << polarizationB;
-	StartLine(_plot, s.str(), getYDesc());
-	StatisticsDerivator derivator(*_statCollection);
-	const std::map<double, DefaultStatistics> &statistics = GetStatistics();
-	for(std::map<double, DefaultStatistics>::const_iterator i=statistics.begin();i!=statistics.end();++i)
-	{
-		const double x = i->first;
-		const std::complex<long double>
-			valA = derivator.GetComplexStatistic(kind, i->second, polarizationA),
-			valB = derivator.GetComplexStatistic(kind, i->second, polarizationB),
-			val = valA*0.5l + valB*0.5l;
-		_plot.PushDataPoint(x, getValue<Phase>(val));
-	}
-}
-
-void TwoDimensionalPlotPage::plotStatistic(QualityTablesFormatter::StatisticKind kind)
-{
+	std::set<std::pair<unsigned, unsigned> > pols;
 	if(_polXXButton.get_active())
-		plotPolarization(kind, 0);
+		pols.insert(std::make_pair(0, 0));
 	if(_polXYButton.get_active())
-		plotPolarization(kind, 1);
+		pols.insert(std::make_pair(1, 1));
 	if(_polYXButton.get_active())
-		plotPolarization(kind, 2);
+		pols.insert(std::make_pair(2, 2));
 	if(_polYYButton.get_active())
-		plotPolarization(kind, 3);
+		pols.insert(std::make_pair(3, 3));
 	if(_polXXandYYButton.get_active())
-		plotPolarization(kind, 0, 3);
+		pols.insert(std::make_pair(0, 3));
 	if(_polXYandYXButton.get_active())
-		plotPolarization(kind, 1, 2);
+		pols.insert(std::make_pair(1, 2));
+	return pols;
 }
 
-void TwoDimensionalPlotPage::plotPolarization(QualityTablesFormatter::StatisticKind kind, unsigned polarization)
+std::set<TwoDimensionalPlotPage::PhaseType> TwoDimensionalPlotPage::getSelectedPhases() const
 {
+	std::set<TwoDimensionalPlotPage::PhaseType> phases;
 	if(_amplitudeButton.get_active())
-		plotPhase<AmplitudePhaseType>(kind, polarization);
+		phases.insert(AmplitudePhaseType);
 	if(_phaseButton.get_active())
-		plotPhase<PhasePhaseType>(kind, polarization);
+		phases.insert(PhasePhaseType);
 	if(_realButton.get_active())
-		plotPhase<RealPhaseType>(kind, polarization);
+		phases.insert(RealPhaseType);
 	if(_imaginaryButton.get_active())
-		plotPhase<ImaginaryPhaseType>(kind, polarization);
+		phases.insert(ImaginaryPhaseType);
+	return phases;
 }
 
-void TwoDimensionalPlotPage::plotPolarization(QualityTablesFormatter::StatisticKind kind, unsigned polarizationA, unsigned polarizationB)
+void TwoDimensionalPlotPage::plotStatistic(QualityTablesFormatter::StatisticKind kind, unsigned polA, unsigned polB, PhaseType phase)
 {
-	if(_amplitudeButton.get_active())
-		plotPhase<AmplitudePhaseType>(kind, polarizationA, polarizationB);
-	if(_phaseButton.get_active())
-		plotPhase<PhasePhaseType>(kind, polarizationA, polarizationB);
-	if(_realButton.get_active())
-		plotPhase<RealPhaseType>(kind, polarizationA, polarizationB);
-	if(_imaginaryButton.get_active())
-		plotPhase<ImaginaryPhaseType>(kind, polarizationA, polarizationB);
+	std::ostringstream s;
+	StatisticsDerivator derivator(*_statCollection);
+	const std::map<double, DefaultStatistics> &statistics = GetStatistics();
+	if(polA == polB)
+	{
+		s << "Polarization " << polA;
+		StartLine(_plot, s.str(), getYDesc());
+		for(std::map<double, DefaultStatistics>::const_iterator i=statistics.begin();i!=statistics.end();++i)
+		{
+			const double x = i->first;
+			const std::complex<long double> val = derivator.GetComplexStatistic(kind, i->second, polA);
+			_plot.PushDataPoint(x, getValue(phase, val));
+		}
+	}
+	else {
+		s << "Polarization " << polA << " and " << polB;
+		StartLine(_plot, s.str(), getYDesc());
+		for(std::map<double, DefaultStatistics>::const_iterator i=statistics.begin();i!=statistics.end();++i)
+		{
+			const double x = i->first;
+			const std::complex<long double>
+				valA = derivator.GetComplexStatistic(kind, i->second, polA),
+				valB = derivator.GetComplexStatistic(kind, i->second, polB),
+				val = valA*0.5l + valB*0.5l;
+			_plot.PushDataPoint(x, getValue(phase, val));
+		}
+	}
 }
 
 void TwoDimensionalPlotPage::initStatisticKindButtons()

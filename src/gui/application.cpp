@@ -33,13 +33,13 @@ Application::~Application()
 
 void Application::Run(int argc, char *argv[])
 {
-	Glib::RefPtr<Gtk::Application> app = Gtk::Application::create();
+	Glib::RefPtr<Gtk::Application> app = Gtk::Application::create("", Gio::APPLICATION_HANDLES_OPEN);
 	RFIGuiWindow window;
 	window.present();
 	if(argc > 1)
 	{
 		window.OpenPath(argv[1]);
 	}
-	app->run(window, argc, argv);
+	app->run(window);
 }
 

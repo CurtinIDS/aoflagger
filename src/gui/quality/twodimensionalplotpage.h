@@ -90,15 +90,13 @@ class TwoDimensionalPlotPage : public Gtk::HBox {
 		void updatePlotConfig();
 		void updateDataWindow();
 		
-		template<enum PhaseType Phase>
-		inline double getValue(const std::complex<long double> val);
-		void plotStatistic(QualityTablesFormatter::StatisticKind kind);
-		void plotPolarization(QualityTablesFormatter::StatisticKind kind, unsigned polarization);
-		void plotPolarization(QualityTablesFormatter::StatisticKind kind, unsigned polarizationA, unsigned polarizationB);
-		template<enum PhaseType Phase>
-		void plotPhase(QualityTablesFormatter::StatisticKind kind, unsigned polarization);
-		template<enum PhaseType Phase>
-		void plotPhase(QualityTablesFormatter::StatisticKind kind, unsigned polarizationA, unsigned polarizationB);
+		inline double getValue(enum PhaseType Phase, const std::complex<long double> val);
+		
+		std::set<QualityTablesFormatter::StatisticKind> getSelectedKinds() const;
+		std::set<std::pair<unsigned, unsigned> > getSelectedPolarizations() const;
+		std::set<enum PhaseType> getSelectedPhases() const;
+		
+		void plotStatistic(QualityTablesFormatter::StatisticKind kind, unsigned polA, unsigned polB, PhaseType phase);
 		
 		void initStatisticKindButtons();
 		void initPolarizationButtons();
