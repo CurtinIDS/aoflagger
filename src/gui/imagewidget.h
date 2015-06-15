@@ -86,11 +86,13 @@ class ImageWidget : public Gtk::DrawingArea {
 		{
 			_startHorizontal = start;
 			_endHorizontal = end;
+			_onZoomChanged.emit();
 		}
 		void SetVerticalDomain(double start, double end)
 		{
 			_startVertical = start;
 			_endVertical = end;
+			_onZoomChanged.emit();
 		}
 		void ZoomFit();
 		void ZoomIn();
@@ -108,6 +110,7 @@ class ImageWidget : public Gtk::DrawingArea {
 		sigc::signal<void, size_t, size_t> &OnMouseMovedEvent() { return _onMouseMoved; }
 		sigc::signal<void> &OnMouseLeaveEvent() { return _onMouseLeft; }
 		sigc::signal<void, size_t, size_t> &OnButtonReleasedEvent() { return _onButtonReleased; }
+		sigc::signal<void> &OnZoomChanged() { return _onZoomChanged; }
 		
 		num_t Max() const { return _max; }
 		num_t Min() const { return _min; }
@@ -211,6 +214,14 @@ class ImageWidget : public Gtk::DrawingArea {
 		bool IsMouseInImage() const { return _mouseIsIn; }
 		size_t MouseX() { return _mouseX; }
 		size_t MouseY() { return _mouseY; }
+		
+		bool IsZoomedOut() const {
+			return
+				_startHorizontal == 0.0 &&
+				_endHorizontal == 1.0 &&
+				_startVertical == 0.0 &&
+				_endVertical == 1.0;
+		}
 
 	private:
 		void findMinMax(Image2DCPtr image, Mask2DCPtr mask, num_t &min, num_t &max);
@@ -273,6 +284,7 @@ class ImageWidget : public Gtk::DrawingArea {
 		sigc::signal<void, size_t, size_t> _onMouseMoved;
 		sigc::signal<void> _onMouseLeft;
 		sigc::signal<void, size_t, size_t> _onButtonReleased;
+		sigc::signal<void> _onZoomChanged;
 };
 
 #endif

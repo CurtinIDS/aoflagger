@@ -128,6 +128,7 @@ void ImageWidget::ZoomFit()
 	_endHorizontal = 1.0;
 	_startVertical = 0.0;
 	_endVertical = 1.0;
+	_onZoomChanged.emit();
 }
 
 void ImageWidget::ZoomIn()
@@ -138,6 +139,7 @@ void ImageWidget::ZoomIn()
 	double distY = (_endVertical-_startVertical)*0.25;
 	_startVertical += distY;
 	_endVertical -= distY;
+	_onZoomChanged.emit();
 }
 
 void ImageWidget::ZoomInOn(size_t x, size_t y)
@@ -169,35 +171,40 @@ void ImageWidget::ZoomInOn(size_t x, size_t y)
 		_startVertical -= _endVertical - 1.0;
 		_endVertical = 1.0;
 	}
+	_onZoomChanged.emit();
 }
 
 void ImageWidget::ZoomOut()
 {
-	double distX = (_endHorizontal-_startHorizontal)*0.5;
-	_startHorizontal -= distX;
-	_endHorizontal += distX;
-	if(_startHorizontal < 0.0) {
-		_endHorizontal -= _startHorizontal;
-		_startHorizontal = 0.0;
+	if(!IsZoomedOut())
+	{
+		double distX = (_endHorizontal-_startHorizontal)*0.5;
+		_startHorizontal -= distX;
+		_endHorizontal += distX;
+		if(_startHorizontal < 0.0) {
+			_endHorizontal -= _startHorizontal;
+			_startHorizontal = 0.0;
+		}
+		if(_endHorizontal > 1.0) {
+			_startHorizontal -= _endHorizontal-1.0;
+			_endHorizontal = 1.0;
+		}
+		if(_startHorizontal < 0.0) _startHorizontal = 0.0;
+		
+		double distY = (_endVertical-_startVertical)*0.5;
+		_startVertical -= distY;
+		_endVertical += distY;
+		if(_startVertical < 0.0) {
+			_endVertical -= _startVertical;
+			_startVertical = 0.0;
+		}
+		if(_endVertical > 1.0) {
+			_startVertical -= _endVertical-1.0;
+			_endVertical = 1.0;
+		}
+		if(_startVertical < 0.0) _startVertical = 0.0;
+		_onZoomChanged.emit();
 	}
-	if(_endHorizontal > 1.0) {
-		_startHorizontal -= _endHorizontal-1.0;
-		_endHorizontal = 1.0;
-	}
-	if(_startHorizontal < 0.0) _startHorizontal = 0.0;
-	
-	double distY = (_endVertical-_startVertical)*0.5;
-	_startVertical -= distY;
-	_endVertical += distY;
-	if(_startVertical < 0.0) {
-		_endVertical -= _startVertical;
-		_startVertical = 0.0;
-	}
-	if(_endVertical > 1.0) {
-		_startVertical -= _endVertical-1.0;
-		_endVertical = 1.0;
-	}
-	if(_startVertical < 0.0) _startVertical = 0.0;
 }
 
 void ImageWidget::Update()

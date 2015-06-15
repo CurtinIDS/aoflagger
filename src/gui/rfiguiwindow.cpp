@@ -97,6 +97,7 @@ RFIGuiWindow::RFIGuiWindow() :
 	_timeFrequencyWidget.OnMouseMovedEvent().connect(sigc::mem_fun(*this, &RFIGuiWindow::onTFWidgetMouseMoved));
 	_timeFrequencyWidget.OnMouseLeaveEvent().connect(sigc::mem_fun(*this, &RFIGuiWindow::setSetNameInStatusBar));
 	_timeFrequencyWidget.OnButtonReleasedEvent().connect(sigc::mem_fun(*this, &RFIGuiWindow::onTFWidgetButtonReleased));
+	_timeFrequencyWidget.OnZoomChanged().connect(sigc::mem_fun(*this, &RFIGuiWindow::onTFZoomChanged));
 	_timeFrequencyWidget.SetShowXAxisDescription(false);
 	_timeFrequencyWidget.SetShowYAxisDescription(false);
 	_timeFrequencyWidget.SetShowZAxisDescription(false);
@@ -116,6 +117,8 @@ RFIGuiWindow::RFIGuiWindow() :
 		rfiStrategy::DefaultStrategy::GENERIC_TELESCOPE,
 		rfiStrategy::DefaultStrategy::FLAG_GUI_FRIENDLY);
 	_imagePlaneWindow = new ImagePlaneWindow();
+	
+	onTFZoomChanged();
 	
 	_controller->SignalStateChange().connect(
 		sigc::mem_fun(*this, &RFIGuiWindow::onControllerStateChange));
@@ -649,17 +652,17 @@ void RFIGuiWindow::createToolbar()
   sigc::mem_fun(*this, &RFIGuiWindow::onPlotTimeScatterComparisonPressed) );
 	_actionGroup->add( Gtk::Action::create("PlotSingularValues", "Plot _singular values"),
   sigc::mem_fun(*this, &RFIGuiWindow::onPlotSingularValuesPressed) );
-	action = Gtk::Action::create("ZoomFit", "Zoom _fit");
-	action->set_icon_name("zoom-fit-best");
-	_actionGroup->add(action, Gtk::AccelKey("<control>0"),
+	_zoomToFitButton = Gtk::Action::create("ZoomFit", "Zoom _fit");
+	_zoomToFitButton->set_icon_name("zoom-fit-best");
+	_actionGroup->add(_zoomToFitButton, Gtk::AccelKey("<control>0"),
 		sigc::mem_fun(*this, &RFIGuiWindow::onZoomFit) );
-	action = Gtk::Action::create("ZoomIn", "Zoom in");
-	action->set_icon_name("zoom-in");
-	_actionGroup->add(action, Gtk::AccelKey("<control>equal"),
+	_zoomInButton = Gtk::Action::create("ZoomIn", "Zoom in");
+	_zoomInButton->set_icon_name("zoom-in");
+	_actionGroup->add(_zoomInButton, Gtk::AccelKey("<control>equal"),
 		sigc::mem_fun(*this, &RFIGuiWindow::onZoomIn) );
-	action = Gtk::Action::create("ZoomOut", "Zoom out");
-	action->set_icon_name("zoom-out");
-	_actionGroup->add(action, Gtk::AccelKey("<control>minus"),
+	_zoomOutButton = Gtk::Action::create("ZoomOut", "Zoom out");
+	_zoomOutButton->set_icon_name("zoom-out");
+	_actionGroup->add(_zoomOutButton, Gtk::AccelKey("<control>minus"),
 	sigc::mem_fun(*this, &RFIGuiWindow::onZoomOut) );
 	_actionGroup->add( Gtk::Action::create("ShowImagePlane", "_Show image plane"),
 		Gtk::AccelKey("<control>I"),
@@ -1027,13 +1030,17 @@ void RFIGuiWindow::createToolbar()
     "  <toolbar  name='ToolBar'>"
     "    <toolitem action='OpenDirectory'/>"
     "    <separator/>"
-    "    <toolitem action='Previous'/>"
-    "    <toolitem action='Reload'/>"
-    "    <toolitem action='Next'/>"
-    "    <separator/>"
     "    <toolitem action='ExecuteStrategy'/>"
     "    <toolitem action='OriginalFlags'/>"
     "    <toolitem action='AlternativeFlags'/>"
+    "    <separator/>"
+    "    <toolitem action='ZoomFit'/>"
+    "    <toolitem action='ZoomIn'/>"
+    "    <toolitem action='ZoomOut'/>"
+    "    <separator/>"
+    "    <toolitem action='Previous'/>"
+    "    <toolitem action='Reload'/>"
+    "    <toolitem action='Next'/>"
     "    <separator/>"
     "    <toolitem action='ImageOriginal'/>"
     "    <toolitem action='ImageBackground'/>"
@@ -1920,6 +1927,15 @@ void RFIGuiWindow::onControllerStateChange()
 	_timeFrequencyWidget.SetShowAlternativeMask(_controller->AreAlternativeFlagsShown());
 	
 	_timeFrequencyWidget.Update();
+}
+
+void RFIGuiWindow::onTFZoomChanged()
+{
+	bool s = !_timeFrequencyWidget.IsZoomedOut();
+	bool i = _timeFrequencyWidget.HasImage();
+	_zoomToFitButton->set_sensitive(s && i);
+	_zoomOutButton->set_sensitive(s && i);
+	_zoomInButton->set_sensitive(i);
 }
 
 void RFIGuiWindow::onHelpAbout()

@@ -124,7 +124,11 @@ class RFIGuiWindow : public Gtk::Window, private StrategyController {
 		void onActionDirectoryOpen();
 		void onActionDirectoryOpenForSpatial();
 		void onActionDirectoryOpenForST();
-		void onZoomFit() { _timeFrequencyWidget.ZoomFit(); _timeFrequencyWidget.Update();  }
+		void onTFZoomChanged();
+		void onZoomFit() {
+			_timeFrequencyWidget.ZoomFit();
+			_timeFrequencyWidget.Update();
+		}
 		void onZoomIn()
 		{ 
 			if(_timeFrequencyWidget.IsMouseInImage())
@@ -133,7 +137,10 @@ class RFIGuiWindow : public Gtk::Window, private StrategyController {
 				_timeFrequencyWidget.ZoomIn();
 			_timeFrequencyWidget.Update();
 		}
-		void onZoomOut() { _timeFrequencyWidget.ZoomOut();  _timeFrequencyWidget.Update(); }
+		void onZoomOut() {
+			_timeFrequencyWidget.ZoomOut(); 
+			_timeFrequencyWidget.Update();
+		}
 		void onShowImagePlane();
 		void onSetAndShowImagePlane();
 		void onAddToImagePlane();
@@ -217,7 +224,7 @@ class RFIGuiWindow : public Gtk::Window, private StrategyController {
 		void onClassify();
 		void onRemoveSmallSegments();
 		void onTimeGraphButtonPressed();
-		void onFrequencyGraphButtonPressed();
+//		void onFrequencyGraphButtonPressed();
 		void onUnrollPhaseButtonPressed();
 		void onVertEVD();
 		void onApplyTimeProfile();
@@ -262,7 +269,8 @@ class RFIGuiWindow : public Gtk::Window, private StrategyController {
 		std::string _imageSetName, _imageSetIndexDescription;
 
 		Glib::RefPtr<Gtk::Action>
-			_previousButton, _nextButton;
+			_previousButton, _nextButton,
+			_zoomToFitButton, _zoomInButton, _zoomOutButton;
 		Glib::RefPtr<Gtk::ToggleAction>
 			_originalFlagsButton, _altFlagsButton,
 			_originalImageButton, _backgroundImageButton, _diffImageButton,
