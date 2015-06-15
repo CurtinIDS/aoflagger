@@ -40,7 +40,14 @@ class TimeFrequencyData
 
 		enum FlagCoverage { NoFlagCoverage, GlobalFlagCoverage, IndividualPolarisationFlagCoverage };
 		
-		TimeFrequencyData() : _containsData(false), _flagCoverage(NoFlagCoverage) { }
+		TimeFrequencyData() :
+			_containsData(false),
+			_phaseRepresentation(AmplitudePart),
+			_polarisationType(StokesIPolarisation),
+			_flagCoverage(NoFlagCoverage),
+			_images(),
+			_flagging()
+		{ }
 
 		TimeFrequencyData(const TimeFrequencyData &source) :
 			_containsData(source._containsData),
