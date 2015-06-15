@@ -269,7 +269,7 @@ class RFIGuiWindow : public Gtk::Window, private StrategyController {
 		std::string _imageSetName, _imageSetIndexDescription;
 
 		Glib::RefPtr<Gtk::Action>
-			_previousButton, _nextButton,
+			_previousButton, _reloadButton, _nextButton,
 			_zoomToFitButton, _zoomInButton, _zoomOutButton;
 		Glib::RefPtr<Gtk::ToggleAction>
 			_originalFlagsButton, _altFlagsButton,

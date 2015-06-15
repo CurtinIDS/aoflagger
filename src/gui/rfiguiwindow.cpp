@@ -307,6 +307,7 @@ void RFIGuiWindow::loadCurrentTFData()
 			bool multipleBaselines = firstIndex->IsValid();
 			delete firstIndex;
 			_previousButton->set_sensitive(multipleBaselines);
+			_reloadButton->set_sensitive(true);
 			_nextButton->set_sensitive(multipleBaselines);
 			
 			// We store these seperate, as they might access the measurement set. This is
@@ -724,19 +725,23 @@ void RFIGuiWindow::createToolbar()
 	_previousButton = Gtk::Action::create("Previous", "Previous");
 	_previousButton->set_icon_name("go-previous");
 	_previousButton->set_tooltip("Load and display the previous baseline. Normally, this steps from the baseline between antennas (i) and (j) to (i) and (j-1).");
+	_previousButton->set_sensitive(false);
+	
 	_actionGroup->add(_previousButton,
 		Gtk::AccelKey("F6"),
 		sigc::mem_fun(*this, &RFIGuiWindow::onLoadPrevious) );
 	_nextButton = Gtk::Action::create("Next", "Next");
 	_nextButton->set_icon_name("go-next");
 	_nextButton->set_tooltip("Load and display the next baseline. Normally, this steps from the baseline between antennas (i) and (j) to (i) and (j+1).");
+	_nextButton->set_sensitive(false);
 	_actionGroup->add(_nextButton,
 		Gtk::AccelKey("F7"),
 		sigc::mem_fun(*this, &RFIGuiWindow::onLoadNext) );
-	action = Gtk::Action::create("Reload", "_Reload");
-	action->set_icon_name("view-refresh");
-	action->set_tooltip("Reload the currently displayed baseline. This will reset the purple flags to the measurement set flags, and clear the yellow flags.");
-	_actionGroup->add(action, Gtk::AccelKey("F5"),
+	_reloadButton = Gtk::Action::create("Reload", "_Reload");
+	_reloadButton->set_icon_name("view-refresh");
+	_reloadButton->set_tooltip("Reload the currently displayed baseline. This will reset the purple flags to the measurement set flags, and clear the yellow flags.");
+	_reloadButton->set_sensitive(false);
+	_actionGroup->add(_reloadButton, Gtk::AccelKey("F5"),
   sigc::mem_fun(*this, &RFIGuiWindow::onReloadPressed) );
 	_actionGroup->add( Gtk::Action::create("GoTo", "_Go to..."),
 		Gtk::AccelKey("<control>G"),
