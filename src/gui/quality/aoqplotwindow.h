@@ -60,10 +60,20 @@ class AOQPlotWindow : public Gtk::Window {
 			files[0] = file;
 			Open(files);
 		}
+		void OpenWithoutGUI(const std::vector<std::string>& files)
+		{
+			onOpenOptionsSelected(files, true, true, 1000, 1000, false);
+		}
 		void SetStatus(const std::string &newStatus)
 		{
 			onStatusChange(newStatus);
 		}
+		struct PlotSavingData
+		{
+			QualityTablesFormatter::StatisticKind statisticKind;
+			std::string filenamePrefix;
+		};
+		void Save(PlotSavingData& data);
 	private:
 		void onOpenOptionsSelected(const std::vector<std::string>& files, bool downsampleTime, bool downsampleFreq, size_t timeSize, size_t freqSize, bool correctHistograms);
 		void close();

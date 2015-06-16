@@ -242,3 +242,7 @@ void AOQPlotWindow::onStatusChange(const std::string &newStatus)
 	_statusBar.push(newStatus);
 }
 
+void AOQPlotWindow::Save(AOQPlotWindow::PlotSavingData& data)
+{
+
+}
