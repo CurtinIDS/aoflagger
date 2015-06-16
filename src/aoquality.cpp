@@ -729,6 +729,7 @@ void printSyntax(std::ostream &stream, char *argv[])
 		"\t              and writes them in the quality tables.\n"
 		"\tcombine     - Combine several tables.\n"
 		"\thistogram   - Various histogram actions.\n"
+		"\tliststats   - Display a list of possible statistic kinds.\n"
 		"\tquery_b     - Query per baseline.\n"
 		"\tquery_t     - Query per time step.\n"
 		"\tquery_f     - Query per frequency.\n"
@@ -738,8 +739,7 @@ void printSyntax(std::ostream &stream, char *argv[])
 		"\tsummarizerfi- Give a summary of the rfi statistics.\n"
 		"\n\n"
 		"A few actions take a statistic kind. Some common statistic kinds are: StandardDeviation,\n"
-		"Variance, Mean, RFIPercentage, RFIRatio, Count. These are case sensitive.\n";
-
+		"Variance, Mean, RFIPercentage, RFIRatio, Count. These are case sensitive. Run 'aoquality liststats' for a full list.\n";
 }
 
 int main(int argc, char *argv[])
@@ -829,6 +829,15 @@ int main(int argc, char *argv[])
 					std::cerr << "Unknown action specified in help.\n";
 					return -1;
 				}
+			}
+		}
+		else if(action == "liststats")
+		{
+			for(int i=0; i!=QualityTablesFormatter::EndPlaceHolderStatistic; ++i)
+			{
+				QualityTablesFormatter::StatisticKind kind =
+					(QualityTablesFormatter::StatisticKind) i;
+				std::cout << QualityTablesFormatter::KindToName(kind) << '\n';
 			}
 		}
 		else if(action == "collect" || action == "mwacollect")
