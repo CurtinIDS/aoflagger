@@ -86,6 +86,7 @@ TwoDimensionalPlotPage::~TwoDimensionalPlotPage()
 		delete _plotPropertiesWindow;
 }
 
+/*
 unsigned TwoDimensionalPlotPage::selectedKindCount() const
 {
 	unsigned count = 0;
@@ -99,17 +100,21 @@ unsigned TwoDimensionalPlotPage::selectedKindCount() const
 	if(_rfiPercentageButton.get_active()) ++count;
 	if(_snrButton.get_active()) ++count;
 	return count;
-}
+}*/
 
 void TwoDimensionalPlotPage::updatePlot()
+{
+	updatePlotForSettings(getSelectedKinds(), getSelectedPolarizations(), getSelectedPhases());
+}
+
+void TwoDimensionalPlotPage::updatePlotForSettings(
+	const std::set<QualityTablesFormatter::StatisticKind>& kinds,
+	const std::set<std::pair<unsigned int, unsigned int> >& pols,
+	const std::set<PhaseType>& phases)
 {
 	if(HasStatistics())
 	{
 		_plot.Clear();
-		
-		const std::set<QualityTablesFormatter::StatisticKind> kinds = getSelectedKinds();
-		const std::set<std::pair<unsigned int, unsigned int> > pols = getSelectedPolarizations();
-		const std::set<PhaseType> phases = getSelectedPhases();
 		
 		for(std::set<QualityTablesFormatter::StatisticKind>::const_iterator k=kinds.begin();
 				k!=kinds.end(); ++k)
@@ -120,7 +125,7 @@ void TwoDimensionalPlotPage::updatePlot()
 				for(std::set<PhaseType>::const_iterator ph=phases.begin();
 						ph!=phases.end(); ++ph)
 				{
-					plotStatistic(*k, p->first, p->second, *ph);
+					plotStatistic(*k, p->first, p->second, *ph, getYDesc(kinds));
 				}
 			}
 		}
@@ -147,6 +152,7 @@ double TwoDimensionalPlotPage::getValue(enum PhaseType phase, const std::complex
 {
 	switch(phase)
 	{
+		default:
 		case AmplitudePhaseType: return sqrt(val.real()*val.real() + val.imag()*val.imag());
 		case PhasePhaseType: return atan2(val.imag(), val.real());
 		case RealPhaseType: return val.real();
@@ -210,7 +216,7 @@ std::set<TwoDimensionalPlotPage::PhaseType> TwoDimensionalPlotPage::getSelectedP
 	return phases;
 }
 
-void TwoDimensionalPlotPage::plotStatistic(QualityTablesFormatter::StatisticKind kind, unsigned polA, unsigned polB, PhaseType phase)
+void TwoDimensionalPlotPage::plotStatistic(QualityTablesFormatter::StatisticKind kind, unsigned polA, unsigned polB, PhaseType phase, const std::string& yDesc)
 {
 	std::ostringstream s;
 	StatisticsDerivator derivator(*_statCollection);
@@ -218,7 +224,7 @@ void TwoDimensionalPlotPage::plotStatistic(QualityTablesFormatter::StatisticKind
 	if(polA == polB)
 	{
 		s << "Polarization " << polA;
-		StartLine(_plot, s.str(), getYDesc());
+		StartLine(_plot, s.str(), yDesc);
 		for(std::map<double, DefaultStatistics>::const_iterator i=statistics.begin();i!=statistics.end();++i)
 		{
 			const double x = i->first;
@@ -228,7 +234,7 @@ void TwoDimensionalPlotPage::plotStatistic(QualityTablesFormatter::StatisticKind
 	}
 	else {
 		s << "Polarization " << polA << " and " << polB;
-		StartLine(_plot, s.str(), getYDesc());
+		StartLine(_plot, s.str(), yDesc);
 		for(std::map<double, DefaultStatistics>::const_iterator i=statistics.begin();i!=statistics.end();++i)
 		{
 			const double x = i->first;
@@ -368,23 +374,29 @@ void TwoDimensionalPlotPage::onDataExportClicked()
 	updateDataWindow();
 }
 
-std::string TwoDimensionalPlotPage::getYDesc() const
+std::string TwoDimensionalPlotPage::getYDesc(const std::set<QualityTablesFormatter::StatisticKind>& kinds) const
 {
-	if(selectedKindCount() != 1)
+	if(kinds.size() != 1)
 		return "Value";
 	else
 	{
-		QualityTablesFormatter::StatisticKind kind;
-		if(_countButton.get_active()) kind = QualityTablesFormatter::CountStatistic;
-		if(_meanButton.get_active()) kind = QualityTablesFormatter::MeanStatistic;
-		if(_stdDevButton.get_active()) kind = QualityTablesFormatter::StandardDeviationStatistic;
-		if(_varianceButton.get_active()) kind = QualityTablesFormatter::VarianceStatistic;
-		if(_dCountButton.get_active()) kind = QualityTablesFormatter::DCountStatistic;
-		if(_dMeanButton.get_active()) kind = QualityTablesFormatter::DMeanStatistic;
-		if(_dStdDevButton.get_active()) kind = QualityTablesFormatter::DStandardDeviationStatistic;
-		if(_rfiPercentageButton.get_active()) kind = QualityTablesFormatter::RFIPercentageStatistic;
-		if(_snrButton.get_active()) kind = QualityTablesFormatter::SignalToNoiseStatistic;
+		QualityTablesFormatter::StatisticKind kind = *kinds.begin();
 		return StatisticsDerivator::GetDescWithUnits(kind);
 	}
 }
 
+void TwoDimensionalPlotPage::SavePdf(const string& filename, QualityTablesFormatter::StatisticKind kind)
+{
+	std::set<QualityTablesFormatter::StatisticKind> kinds;
+	kinds.insert(kind);
+	
+	std::set<std::pair<unsigned int, unsigned int> > pols;
+	pols.insert(std::make_pair(0, 3));
+	
+	std::set<PhaseType> phases;
+	phases.insert(AmplitudePhaseType);
+
+	updatePlotForSettings(kinds, pols, phases);
+	
+	_plot.SavePdf(filename);
+}

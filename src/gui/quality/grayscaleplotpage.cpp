@@ -85,8 +85,6 @@ GrayScalePlotPage::GrayScalePlotPage() :
 	
 	pack_start(_imageWidget);
 	
-	show_all_children();
-	
 	_ready = true;
 }
 
@@ -245,18 +243,19 @@ void GrayScalePlotPage::initPlotOptions()
 	_sideBox.pack_start(_plotFrame, Gtk::PACK_SHRINK);
 }
 
-
-void GrayScalePlotPage::UpdateImage()
+void GrayScalePlotPage::updateImage(QualityTablesFormatter::StatisticKind statisticKind, PolarisationType polarisation, enum TimeFrequencyData::PhaseRepresentation phase)
 {
 	if(_ready)
 	{
-		std::pair<TimeFrequencyData, TimeFrequencyMetaDataCPtr> pair = ConstructImage();
+		std::pair<TimeFrequencyData, TimeFrequencyMetaDataCPtr> pair = ConstructImage(statisticKind);
+		
 		TimeFrequencyData &data = pair.first;
+		
 		if(!data.IsEmpty())
 		{
-			setToSelectedPolarization(data);
+			setToPolarization(data, polarisation);
 			
-			setToSelectedPhase(data);
+			setToPhase(data, phase);
 			
 			Image2DCPtr image = data.GetSingleImage();
 			if(_normalizeXAxisButton.get_active())
@@ -264,7 +263,7 @@ void GrayScalePlotPage::UpdateImage()
 			if(_normalizeYAxisButton.get_active())
 				image = normalizeYAxis(image);
 			
-			_imageWidget.SetZAxisDescription(StatisticsDerivator::GetDescWithUnits(GetSelectedStatisticKind()));
+			_imageWidget.SetZAxisDescription(StatisticsDerivator::GetDescWithUnits(statisticKind));
 			_imageWidget.SetImage(image);
 			_imageWidget.SetOriginalMask(data.GetSingleMask());
 			if(pair.second != 0)
@@ -274,53 +273,63 @@ void GrayScalePlotPage::UpdateImage()
 	}
 }
 
-void GrayScalePlotPage::setToSelectedPolarization(TimeFrequencyData &data)
+void GrayScalePlotPage::UpdateImage()
+{
+	updateImage(GetSelectedStatisticKind(), getSelectedPolarization(), getSelectedPhase());
+}
+
+PolarisationType GrayScalePlotPage::getSelectedPolarization() const
+{
+	if(_polXXButton.get_active())
+		return XXPolarisation;
+	else if(_polXYButton.get_active())
+		return XYPolarisation;
+	else if(_polYXButton.get_active())
+		return YXPolarisation;
+	else if(_polYYButton.get_active())
+		return YYPolarisation;
+	else if(_polXXandYYButton.get_active())
+		return AutoDipolePolarisation;
+	else if(_polXYandYXButton.get_active())
+		return CrossDipolePolarisation;
+	else
+		return AutoDipolePolarisation;
+}
+
+enum TimeFrequencyData::PhaseRepresentation GrayScalePlotPage::getSelectedPhase() const
+{
+	if(_amplitudePhaseButton.get_active())
+		return TimeFrequencyData::AmplitudePart;
+	else if(_phasePhaseButton.get_active())
+		return TimeFrequencyData::PhasePart;
+	else if(_realPhaseButton.get_active())
+		return TimeFrequencyData::RealPart;
+	else if(_imaginaryPhaseButton.get_active())
+		return TimeFrequencyData::ImaginaryPart;
+	else
+		return TimeFrequencyData::AmplitudePart;
+}
+
+void GrayScalePlotPage::setToPolarization(TimeFrequencyData &data, PolarisationType polarisation)
 {
 	try {
-		TimeFrequencyData *newData = 0;
-		if(_polXXButton.get_active())
-			newData = data.CreateTFData(XXPolarisation);
-		else if(_polXYButton.get_active())
-			newData = data.CreateTFData(XYPolarisation);
-		else if(_polYXButton.get_active())
-			newData = data.CreateTFData(YXPolarisation);
-		else if(_polYYButton.get_active())
-			newData = data.CreateTFData(YYPolarisation);
-		else if(_polXXandYYButton.get_active())
-		{
-			newData = data.CreateTFData(AutoDipolePolarisation);
+		TimeFrequencyData* newData = data.CreateTFData(polarisation);
+		if(polarisation == AutoDipolePolarisation)
 			newData->MultiplyImages(0.5);
-		}
-		else if(_polXYandYXButton.get_active())
-			newData = data.CreateTFData(CrossDipolePolarisation);
-		if(newData != 0)
-		{
-			data = *newData;
-			delete newData;
-		}
-	} catch(std::exception &e)
+		data = *newData;
+		delete newData;
+	} catch(std::exception& e)
 	{
 		// probably a conversion error -- polarisation was not available.
 		// Best solution is probably to ignore.
 	}
 }
 
-void GrayScalePlotPage::setToSelectedPhase(TimeFrequencyData &data)
+void GrayScalePlotPage::setToPhase(TimeFrequencyData &data, enum TimeFrequencyData::PhaseRepresentation phase)
 {
-	TimeFrequencyData *newData = 0;
-	if(_amplitudePhaseButton.get_active())
-		newData = data.CreateTFData(TimeFrequencyData::AmplitudePart);
-	else if(_phasePhaseButton.get_active())
-		newData = data.CreateTFData(TimeFrequencyData::PhasePart);
-	else if(_realPhaseButton.get_active())
-		newData = data.CreateTFData(TimeFrequencyData::RealPart);
-	else if(_imaginaryPhaseButton.get_active())
-		newData = data.CreateTFData(TimeFrequencyData::ImaginaryPart);
-	if(newData != 0)
-	{
-		data = *newData;
-		delete newData;
-	}
+	TimeFrequencyData *newData = data.CreateTFData(phase);
+	data = *newData;
+	delete newData;
 }
 
 Image2DCPtr GrayScalePlotPage::normalizeXAxis(Image2DCPtr input)

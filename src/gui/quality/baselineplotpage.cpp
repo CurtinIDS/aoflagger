@@ -40,12 +40,10 @@ BaselinePlotPage::~BaselinePlotPage()
 {
 }
 
-std::pair<TimeFrequencyData, TimeFrequencyMetaDataCPtr> BaselinePlotPage::ConstructImage()
+std::pair<TimeFrequencyData, TimeFrequencyMetaDataCPtr> BaselinePlotPage::ConstructImage(QualityTablesFormatter::StatisticKind kind)
 {
 	if(HasStatistics())
 	{
-		const QualityTablesFormatter::StatisticKind kind = GetSelectedStatisticKind();
-		
 		const unsigned polarizationCount = _statCollection->PolarizationCount();
 		std::vector<std::pair<unsigned, unsigned> > baselines = _statCollection->BaselineStatistics().BaselineList();
 		StatisticsDerivator derivator(*_statCollection);

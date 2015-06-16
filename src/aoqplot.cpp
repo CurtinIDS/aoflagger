@@ -45,9 +45,22 @@ int main(int argc, char *argv[])
 				"<observation> can be a measurement set for opening a single observation.\n"
 				"To get statistics for a (remote) observation consisting of multiple measurement\n"
 				"sets, specify a measurement set specifier instead (generally a .ref, .vds\n"
-				".gvds or .gds file).\n\n"
-				"aoqplot is part of the AOFlagger software package, written\n"
-				"by André Offringa (offringa@gmail.com).\n";
+				".gvds or .gds file).\n"
+				"\n"
+				"Options can be:\n"
+				"-help\n"
+				"  Show syntax help.\n"
+				"-version\n"
+				"  Print version info and exit.\n"
+				"-save [filename prefix] [statistic name]\n"
+				"  Save every plot for the given kind of statistic as a PDF file. This\n"
+				"  will prevent the GUI from opening. You can repeat this parameter to save\n"
+				"  multiple kinds at once. A list of allowed names can be retrieved with\n"
+				"  'aoquality liststats'. Some common ones are: StandardDeviation, Variance, Mean,\n"
+				"  RFIPercentage, RFIRatio, Count.\n"
+				"\n"
+				"AOQPlot is part of the AOFlagger software package, written by André Offringa\n"
+				"  (offringa@gmail.com). This AOQPlot belongs to AOFlagger " << AOFLAGGER_VERSION_STR << " (" << AOFLAGGER_VERSION_DATE_STR << ")\n";
 			return 0;
 		}
 		else if(p=="save")
@@ -61,7 +74,7 @@ int main(int argc, char *argv[])
 		}
 		else if(p == "version")
 		{
-			std::cout << "AOFlagger " << AOFLAGGER_VERSION_STR << " (" << AOFLAGGER_VERSION_DATE_STR << ")\n";
+			std::cout << "AOQplot " << AOFLAGGER_VERSION_STR << " (" << AOFLAGGER_VERSION_DATE_STR << ")\n";
 			return 0;
 		}
 		else {
@@ -71,7 +84,7 @@ int main(int argc, char *argv[])
 		++argi;
 	}
 	if(openGUI)
-		window.show();
+		window.show_all();
 	
 	if(argc>argi)
 	{
@@ -83,6 +96,11 @@ int main(int argc, char *argv[])
 		else
 			window.OpenWithoutGUI(files);
 	} else {
+		if(!openGUI)
+		{
+			std::cout << "No observation specified.\n";
+			return 1;
+		}
 		Gtk::FileChooserDialog fileDialog(window, "Open observation set");
 		
 		fileDialog.add_button("_Cancel", Gtk::RESPONSE_CANCEL);
@@ -103,7 +121,14 @@ int main(int argc, char *argv[])
 		}
 		else return 0;
 	}
+	
+	for(std::vector<AOQPlotWindow::PlotSavingData>::const_iterator plot=savedPlots.begin(); plot!=savedPlots.end(); ++plot)
+	{
+		window.Save(*plot);
+	}
+		
 	if(openGUI)
 		app->run(window);
+	
 	return 0;
 }

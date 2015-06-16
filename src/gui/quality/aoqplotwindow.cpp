@@ -40,41 +40,27 @@ AOQPlotWindow::AOQPlotWindow() :
 	set_default_icon_name("aoqplot");
 	
 	_notebook.append_page(_baselinePlotPage, "Baselines");
-	_baselinePlotPage.show();
 	_baselinePlotPage.SignalStatusChange().connect(sigc::mem_fun(*this, &AOQPlotWindow::onStatusChange));
 	
 	_notebook.append_page(_antennaePlotPage, "Antennae");
-	_antennaePlotPage.show();
-	
 	_notebook.append_page(_bLengthPlotPage, "Baselines length");
-	_bLengthPlotPage.show();
-	
 	_notebook.append_page(_timePlotPage, "Time");
-	_timePlotPage.show();
-	
 	_notebook.append_page(_frequencyPlotPage, "Frequency");
-	_frequencyPlotPage.show();
-	
 	_notebook.append_page(_timeFrequencyPlotPage, "Time-frequency");
-	_timeFrequencyPlotPage.show();
 	_timeFrequencyPlotPage.SignalStatusChange().connect(sigc::mem_fun(*this, &AOQPlotWindow::onStatusChange));
 	//_timeFrequencyPlotPage.set_sensitive(false);
 	
 	_notebook.append_page(_summaryPage, "Summary");
-	_summaryPage.show();
 	
 	_notebook.append_page(_histogramPage, "Histograms");
 	
 	_vBox.pack_start(_notebook);
 	_notebook.signal_switch_page().connect(sigc::mem_fun(*this, &AOQPlotWindow::onSwitchPage));
-	_notebook.show();
 	
 	_vBox.pack_end(_statusBar, Gtk::PACK_SHRINK);
 	_statusBar.push("Quality plot util is ready. Author: André Offringa (offringa@astro.rug.nl)");
-	_statusBar.show();
 	
 	add(_vBox);
-	_vBox.show();
 	
 	_openOptionsWindow.SignalOpen().connect(sigc::mem_fun(*this, &AOQPlotWindow::onOpenOptionsSelected));
 	signal_hide().connect(sigc::mem_fun(*this, &AOQPlotWindow::onHide));
@@ -82,6 +68,7 @@ AOQPlotWindow::AOQPlotWindow() :
 
 void AOQPlotWindow::Open(const std::vector<std::string> &files)
 {
+	show_all();
 	_openOptionsWindow.ShowForFile(files);
 }
 
@@ -242,7 +229,26 @@ void AOQPlotWindow::onStatusChange(const std::string &newStatus)
 	_statusBar.push(newStatus);
 }
 
-void AOQPlotWindow::Save(AOQPlotWindow::PlotSavingData& data)
+void AOQPlotWindow::Save(const AOQPlotWindow::PlotSavingData& data)
 {
-
+	const std::string& prefix = data.filenamePrefix;
+	QualityTablesFormatter::StatisticKind kind = data.statisticKind;
+	
+	std::cout << "Saving " << prefix << "-antennas.pdf...\n";
+	_antennaePlotPage.SavePdf(prefix+"-antennas.pdf", kind);
+	
+	std::cout << "Saving " << prefix << "-baselines.pdf...\n";
+	_baselinePlotPage.SavePdf(prefix+"-baselines.pdf", kind);
+	
+	std::cout << "Saving " << prefix << "-baselinelengths.pdf...\n";
+	_bLengthPlotPage.SavePdf(prefix+"-baselinelengths.pdf", kind);
+	
+	std::cout << "Saving " << prefix << "-timefrequency.pdf...\n";
+	_timeFrequencyPlotPage.SavePdf(prefix+"-timefrequency.pdf", kind);
+	
+	std::cout << "Saving " << prefix << "-time.pdf...\n";
+	_timePlotPage.SavePdf(prefix+"-time.pdf", kind);
+	
+	std::cout << "Saving " << prefix << "-frequency.pdf...\n";
+	_frequencyPlotPage.SavePdf(prefix+"-frequency.pdf", kind);
 }

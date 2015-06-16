@@ -56,7 +56,7 @@ class TimeFrequencyPlotPage : public GrayScalePlotPage {
 		}
 		
 	protected:
-		virtual std::pair<TimeFrequencyData, TimeFrequencyMetaDataCPtr> ConstructImage();
+		virtual std::pair<TimeFrequencyData, TimeFrequencyMetaDataCPtr> ConstructImage(QualityTablesFormatter::StatisticKind kind);
 	private:
 		void onMouseMoved(size_t x, size_t y);
 		

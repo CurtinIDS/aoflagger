@@ -24,9 +24,12 @@
 #include "../../util/aologger.h"
 
 Plot2D::Plot2D() :
+	_width(640),
+	_height(480),
 	_logarithmicYAxis(false),
 	_showAxes(true),
 	_showAxisDescriptions(true),
+	_hRangeDetermination(MinMaxRange),
 	_vRangeDetermination(MinMaxRange)
 {
 }

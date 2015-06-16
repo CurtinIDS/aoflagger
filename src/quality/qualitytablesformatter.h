@@ -70,7 +70,8 @@ class QualityTablesFormatter {
 			CorrectedDMeanStatistic,
 			CorrectedDSumP2Statistic,
 			FTSumStatistic,
-			FTSumP2Statistic
+			FTSumP2Statistic,
+			EndPlaceHolderStatistic
 		};
 		
 		enum StatisticDimension

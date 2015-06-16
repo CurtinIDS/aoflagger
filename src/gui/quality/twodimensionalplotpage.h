@@ -30,6 +30,8 @@
 #include "../plot/plot2d.h"
 #include "../plot/plotwidget.h"
 
+#include <set>
+
 /**
 	@author A.R. Offringa <offringa@astro.rug.nl>
 */
@@ -60,6 +62,7 @@ class TwoDimensionalPlotPage : public Gtk::HBox {
 		{
 			return _statCollection != 0;
 		}
+		void SavePdf(const std::string& filename, QualityTablesFormatter::StatisticKind kind);
 	protected:
 		virtual void processStatistics(class StatisticsCollection *, const std::vector<AntennaInfo> &)
 		{
@@ -83,9 +86,15 @@ class TwoDimensionalPlotPage : public Gtk::HBox {
 		}
 		void updatePlot();
 		
-		unsigned selectedKindCount() const;
+		//unsigned selectedKindCount() const;
 	private:
 		enum PhaseType { AmplitudePhaseType, PhasePhaseType, RealPhaseType, ImaginaryPhaseType} ;
+		
+		void updatePlotForSettings(
+			const std::set<QualityTablesFormatter::StatisticKind>& kinds,
+			const std::set<std::pair<unsigned int, unsigned int> >& pols,
+			const std::set<PhaseType>& phases
+		);
 		
 		void updatePlotConfig();
 		void updateDataWindow();
@@ -96,7 +105,7 @@ class TwoDimensionalPlotPage : public Gtk::HBox {
 		std::set<std::pair<unsigned, unsigned> > getSelectedPolarizations() const;
 		std::set<enum PhaseType> getSelectedPhases() const;
 		
-		void plotStatistic(QualityTablesFormatter::StatisticKind kind, unsigned polA, unsigned polB, PhaseType phase);
+		void plotStatistic(QualityTablesFormatter::StatisticKind kind, unsigned polA, unsigned polB, PhaseType phase, const std::string& yDesc);
 		
 		void initStatisticKindButtons();
 		void initPolarizationButtons();
@@ -140,7 +149,7 @@ class TwoDimensionalPlotPage : public Gtk::HBox {
 		
 		bool _customButtonsCreated;
 		
-		std::string getYDesc() const;
+		std::string getYDesc(const std::set<QualityTablesFormatter::StatisticKind>& kinds) const;
 };
 
 #endif

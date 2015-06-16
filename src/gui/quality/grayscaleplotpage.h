@@ -41,8 +41,13 @@ class GrayScalePlotPage : public Gtk::HBox {
 		GrayScalePlotPage();
     virtual ~GrayScalePlotPage();
 		
+		void SavePdf(const std::string& filename, QualityTablesFormatter::StatisticKind kind)
+		{
+			updateImage(kind, AutoDipolePolarisation, TimeFrequencyData::AmplitudePart);
+			_imageWidget.SavePdf(filename);
+		}
 	protected:
-		virtual std::pair<TimeFrequencyData, TimeFrequencyMetaDataCPtr> ConstructImage() = 0;
+		virtual std::pair<TimeFrequencyData, TimeFrequencyMetaDataCPtr> ConstructImage(QualityTablesFormatter::StatisticKind kind) = 0;
 		
 		QualityTablesFormatter::StatisticKind GetSelectedStatisticKind() const
 		{
@@ -53,10 +58,15 @@ class GrayScalePlotPage : public Gtk::HBox {
 		
 		ImageWidget &GrayScaleWidget() { return _imageWidget; }
 	private:
+		void updateImage(QualityTablesFormatter::StatisticKind statisticKind, PolarisationType polarisation, enum TimeFrequencyData::PhaseRepresentation phase);
+		
 		void initStatisticKinds();
 		void initPolarizations();
 		void initPhaseButtons();
 		void initPlotOptions();
+		
+		enum PolarisationType getSelectedPolarization() const;
+		enum TimeFrequencyData::PhaseRepresentation getSelectedPhase() const;
 		
 		void onSelectCount() { _selectStatisticKind = QualityTablesFormatter::CountStatistic; UpdateImage(); }
 		void onSelectMean() { _selectStatisticKind = QualityTablesFormatter::MeanStatistic; UpdateImage(); }
@@ -91,8 +101,8 @@ class GrayScalePlotPage : public Gtk::HBox {
 		Image2DCPtr normalizeXAxis(Image2DCPtr input);
 		Image2DCPtr normalizeYAxis(Image2DCPtr input);
 		
-		void setToSelectedPolarization(TimeFrequencyData &data);
-		void setToSelectedPhase(TimeFrequencyData &data);
+		void setToPolarization(TimeFrequencyData &data, PolarisationType polarisation);
+		void setToPhase(TimeFrequencyData &data, enum TimeFrequencyData::PhaseRepresentation phase);
 		
 		Gtk::Expander _expander;
 		Gtk::VBox _sideBox;

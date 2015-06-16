@@ -37,12 +37,10 @@ TimeFrequencyPlotPage::~TimeFrequencyPlotPage()
 {
 }
 
-std::pair<TimeFrequencyData, TimeFrequencyMetaDataCPtr> TimeFrequencyPlotPage::ConstructImage()
+std::pair<TimeFrequencyData, TimeFrequencyMetaDataCPtr> TimeFrequencyPlotPage::ConstructImage(QualityTablesFormatter::StatisticKind kind)
 {
 	if(HasStatistics())
 	{
-		const QualityTablesFormatter::StatisticKind kind = GetSelectedStatisticKind();
-		
 		StatisticsDerivator derivator(*_statCollection);
 		
 		std::pair<TimeFrequencyData, TimeFrequencyMetaDataCPtr> data = derivator.CreateTFData(kind);

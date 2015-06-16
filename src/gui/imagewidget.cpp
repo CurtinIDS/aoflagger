@@ -222,7 +222,16 @@ void ImageWidget::Update()
 
 void ImageWidget::SavePdf(const std::string &filename)
 {
-	unsigned width = get_width(), height = get_height();
+	unsigned width, height;
+	if(is_visible())
+	{
+		width = get_width();
+		height = get_height();
+	}
+	else {
+		width = 640;
+		height = 480;
+	}
 	Cairo::RefPtr<Cairo::PdfSurface> surface = Cairo::PdfSurface::create(filename, width, height);
 	Cairo::RefPtr<Cairo::Context> cairo = Cairo::Context::create(surface);
 	if(HasImage())

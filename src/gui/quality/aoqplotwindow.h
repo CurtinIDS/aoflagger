@@ -73,7 +73,7 @@ class AOQPlotWindow : public Gtk::Window {
 			QualityTablesFormatter::StatisticKind statisticKind;
 			std::string filenamePrefix;
 		};
-		void Save(PlotSavingData& data);
+		void Save(const PlotSavingData& data);
 	private:
 		void onOpenOptionsSelected(const std::vector<std::string>& files, bool downsampleTime, bool downsampleFreq, size_t timeSize, size_t freqSize, bool correctHistograms);
 		void close();
