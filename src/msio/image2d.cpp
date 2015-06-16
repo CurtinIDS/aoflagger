@@ -231,7 +231,7 @@ num_t Image2D::GetMinimum() const {
 }
 
 num_t Image2D::GetMaximumFinite() const {
-	num_t max = -1e100;
+	num_t max = std::numeric_limits<num_t>::min();
 	for(size_t y=0;y<_height;++y)
 	{
 		for(size_t x=0;x<_width;++x) {
@@ -244,7 +244,7 @@ num_t Image2D::GetMaximumFinite() const {
 }
 
 num_t Image2D::GetMinimumFinite() const {
-	num_t min = 1e100;
+	num_t min = std::numeric_limits<num_t>::max();
 	for(size_t y=0;y<_height;++y)
 	{
 		for(size_t x=0;x<_width;++x) {
@@ -388,7 +388,7 @@ void Image2D::SaveToFitsFile(const std::string &filename) const
 		}
 	}
 	try {
-		file.WriteImage(0, buffer, bufferSize, -1e100);
+		file.WriteImage(0, buffer, bufferSize);
 		file.Close();
 	} catch(FitsIOException &exception) {
 		delete[] buffer;
