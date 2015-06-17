@@ -9,6 +9,8 @@
 #include <gsl/gsl_blas.h>
 #include <gsl/gsl_multifit_nlin.h>
 
+#include <boost/numeric/conversion/bounds.hpp>
+
 static int fit_f(const gsl_vector *xvec, void *data, gsl_vector *f)
 {
 	const double sigma = gsl_vector_get(xvec, 0);
@@ -178,7 +180,7 @@ double RayleighFitter::SigmaEstimate(const LogHistogram &hist)
 
 double RayleighFitter::SigmaEstimate(const LogHistogram &hist, double rangeStart, double rangeEnd)
 {
-	double maxAmplitude = 0.0, maxNormalizedCount = std::numeric_limits<double>::min();
+	double maxAmplitude = 0.0, maxNormalizedCount = boost::numeric::bounds<double>::lowest();
 	for (LogHistogram::const_iterator i=hist.begin(); i!=hist.end(); ++i)
 	{
 		if(i.value() > rangeStart && i.value() < rangeEnd && std::isfinite(i.value()))

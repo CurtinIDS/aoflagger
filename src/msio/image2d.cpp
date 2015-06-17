@@ -29,6 +29,8 @@
 #include <xmmintrin.h>
 #include <string.h>
 
+#include <boost/numeric/conversion/bounds.hpp>
+
 Image2D::Image2D(size_t width, size_t height) :
 	_width(width),
 	_height(height),
@@ -231,7 +233,7 @@ num_t Image2D::GetMinimum() const {
 }
 
 num_t Image2D::GetMaximumFinite() const {
-	num_t max = std::numeric_limits<num_t>::min();
+	num_t max = boost::numeric::bounds<double>::lowest();
 	for(size_t y=0;y<_height;++y)
 	{
 		for(size_t x=0;x<_width;++x) {
