@@ -20,6 +20,8 @@
 #include <deque>
 #include <limits>
 
+#include <boost/numeric/conversion/bounds.hpp>
+
 #include "../../util/rng.h"
 
 #include "thresholdtools.h"
@@ -287,7 +289,7 @@ num_t ThresholdTools::MinValue(const Image2DCPtr &image, const Mask2DCPtr &mask)
 
 num_t ThresholdTools::MaxValue(const Image2DCPtr &image, const Mask2DCPtr &mask)
 {
-	num_t maxValue = std::numeric_limits<num_t>::min();
+	num_t maxValue = boost::numeric::bounds<num_t>::lowest();
 	for(size_t y=0;y<image->Height();++y) {
 		for(size_t x=0;x<image->Width();++x) {
 			if(!mask->Value(x, y) && std::isfinite(image->Value(x, y)) && image->Value(x, y) > maxValue)
