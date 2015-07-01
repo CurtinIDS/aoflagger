@@ -40,7 +40,7 @@ class FrequencyConvolutionFrame : public Gtk::Frame {
 		_sincKernelButton("Sinc kernel"),
 		_totalKernelButton("Total kernel"),
 		_convolutionSizeLabel("Convolution size:"),
-		_convolutionSizeScale(),
+		_convolutionSizeScale(Gtk::ORIENTATION_HORIZONTAL),
 		_inSamplesButton("Size in samples"),
 		_applyButton("Apply")
 		{

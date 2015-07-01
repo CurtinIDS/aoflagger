@@ -37,13 +37,13 @@ class CutAreaFrame : public Gtk::Frame {
 		: Gtk::Frame("Cut area"),
 		_editStrategyWindow(editStrategyWindow), _action(action),
 		_startTimeLabel("Start time steps to cut:"),
-		_startTimeScale(),
+		_startTimeScale(Gtk::ORIENTATION_HORIZONTAL),
 		_endTimeLabel("End time steps to cut:"),
-		_endTimeScale(),
+		_endTimeScale(Gtk::ORIENTATION_HORIZONTAL),
 		_topChannelsLabel("Top channels to cut:"),
-		_topChannelsScale(),
+		_topChannelsScale(Gtk::ORIENTATION_HORIZONTAL),
 		_bottomChannelsLabel("Bottom channels to cut:"),
-		_bottomChannelsScale(),
+		_bottomChannelsScale(Gtk::ORIENTATION_HORIZONTAL),
 		_applyButton("Apply")
 		{
 			_box.pack_start(_startTimeLabel);

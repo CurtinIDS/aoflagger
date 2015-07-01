@@ -34,10 +34,10 @@ class HighPassFilterFrame : public Gtk::Frame {
 	public:
 		HighPassFilterFrame(rfiStrategy::HighPassFilterAction &action, EditStrategyWindow &editStrategyWindow)
 		: Gtk::Frame("Sliding window fit"), _editStrategyWindow(editStrategyWindow), _action(action),
-		_hWindowSizeScale(),
-		_vWindowSizeScale(),
-		_hKernelSigmaScale(),
-		_vKernelSigmaScale(),
+		_hWindowSizeScale(Gtk::ORIENTATION_HORIZONTAL),
+		_vWindowSizeScale(Gtk::ORIENTATION_HORIZONTAL),
+		_hKernelSigmaScale(Gtk::ORIENTATION_HORIZONTAL),
+		_vKernelSigmaScale(Gtk::ORIENTATION_HORIZONTAL),
 		_hWindowSizeLabel("Horizontal sliding window size:", Gtk::ALIGN_START),
 		_vWindowSizeLabel("Vertical sliding window size:", Gtk::ALIGN_START),
 		_hKernelSigmaLabel("Horizontal kernel sigma:", Gtk::ALIGN_START),

@@ -40,8 +40,8 @@ class ResamplingFrame : public Gtk::Frame {
 		_nnButton("Nearest neighbour"),
 		_sizeXLabel("Size x:"),
 		_sizeYLabel("Size y"),
-		_sizeXScale(),
-		_sizeYScale(),
+		_sizeXScale(Gtk::ORIENTATION_HORIZONTAL),
+		_sizeYScale(Gtk::ORIENTATION_HORIZONTAL),
 		_applyButton("Apply")
 		{
 			Gtk::RadioButton::Group group;

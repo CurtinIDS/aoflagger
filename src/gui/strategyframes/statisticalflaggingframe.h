@@ -37,13 +37,13 @@ class StatisticalFlaggingFrame : public Gtk::Frame {
 		: Gtk::Frame("Statistical flagging"),
 		_editStrategyWindow(editStrategyWindow), _action(action),
 		_dilluteTimeSizeLabel("Dillution time size:"),
-		_dilluteTimeSizeScale(),
+		_dilluteTimeSizeScale(Gtk::ORIENTATION_HORIZONTAL),
 		_dilluteFrequencySizeLabel("Dillution frequency size:"),
-		_dilluteFrequencySizeScale(),
+		_dilluteFrequencySizeScale(Gtk::ORIENTATION_HORIZONTAL),
 		_minTimeRatioLabel("Minimum time ratio:"),
-		_minTimeRatioScale(),
+		_minTimeRatioScale(Gtk::ORIENTATION_HORIZONTAL),
 		_minFreqRatioLabel("Minimum frequency ratio:"),
-		_minFreqRatioScale(),
+		_minFreqRatioScale(Gtk::ORIENTATION_HORIZONTAL),
 		_applyButton("Apply")
 		{
 			_box.pack_start(_dilluteTimeSizeLabel);

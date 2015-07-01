@@ -38,8 +38,8 @@ class IterationFrame : public Gtk::Frame {
 		_editStrategyWindow(editStrategyWindow), _iterationBlock(iterationBlock),
 		_iterationCountLabel("Iteration count:"),
 		_sensitivityStartLabel("Sensitivity start value (moves to 1):"),
-		_iterationCountScale(),
-		_sensitivityStartScale(),
+		_iterationCountScale(Gtk::ORIENTATION_HORIZONTAL),
+		_sensitivityStartScale(Gtk::ORIENTATION_HORIZONTAL),
 		_applyButton("Apply")
 		{
 			_box.pack_start(_iterationCountLabel);

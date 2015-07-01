@@ -37,7 +37,7 @@ class SVDFrame : public Gtk::Frame {
 		: Gtk::Frame("Singular value decomposition"),
 		_editStrategyWindow(editStrategyWindow), _svdAction(svdAction),
 		_singularValueCountLabel("Singular value count:"),
-		_singularValueCountScale(),
+		_singularValueCountScale(Gtk::ORIENTATION_HORIZONTAL),
 		_applyButton("Apply")
 		{
 			_box.pack_start(_singularValueCountLabel);

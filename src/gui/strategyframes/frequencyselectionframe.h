@@ -37,7 +37,7 @@ class FrequencySelectionFrame : public Gtk::Frame {
 		: Gtk::Frame("Frequency selection"),
 		_editStrategyWindow(editStrategyWindow), _action(action),
 		_thresholdLabel("Threshold:"),
-		_thresholdScale(),
+		_thresholdScale(Gtk::ORIENTATION_HORIZONTAL),
 		_clipDownButton("Clip values below rms as well as above"),
 		_applyButton("Apply")
 		{

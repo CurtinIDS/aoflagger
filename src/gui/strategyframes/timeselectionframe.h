@@ -37,7 +37,7 @@ class TimeSelectionFrame : public Gtk::Frame {
 		: Gtk::Frame("Time selection"),
 		_editStrategyWindow(editStrategyWindow), _action(action),
 		_thresholdLabel("Threshold:"),
-		_thresholdScale(),
+		_thresholdScale(Gtk::ORIENTATION_HORIZONTAL),
 		_applyButton("Apply")
 		{
 			_box.pack_start(_thresholdLabel);

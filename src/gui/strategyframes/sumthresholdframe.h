@@ -37,7 +37,7 @@ class SumThresholdFrame : public Gtk::Frame {
 		: Gtk::Frame("SumThreshold"),
 		_editStrategyWindow(editStrategyWindow), _action(action),
 		_sensitivityLabel("Base sensitivity: (low = sensitive)"),
-		_sensitivityScale(),
+		_sensitivityScale(Gtk::ORIENTATION_HORIZONTAL),
 		_timeDirectionButton("In time direction"),
 		_frequencyDirectionButton("In frequency direction"),
 		_applyButton("Apply")

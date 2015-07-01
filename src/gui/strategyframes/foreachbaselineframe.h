@@ -45,7 +45,7 @@ class ForEachBaselineFrame : public Gtk::Frame {
 		_autoOfCurrentBaselinesButton("Auto of current antennae"),
 		_currentBaselineButton("Current"),
 		_threadCountLabel("Thread count:"),
-		_threadCountScale(),
+		_threadCountScale(Gtk::ORIENTATION_HORIZONTAL),
 		_applyButton("A_pply")
 		{
 			_box.pack_start(_baselinesLabel);
