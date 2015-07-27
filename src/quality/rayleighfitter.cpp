@@ -3,13 +3,13 @@
 #include <iostream>
 #include <limits>
 
+#include <boost/numeric/conversion/bounds.hpp>
+
 #ifdef HAVE_GSL
 
 #include <gsl/gsl_vector.h>
 #include <gsl/gsl_blas.h>
 #include <gsl/gsl_multifit_nlin.h>
-
-#include <boost/numeric/conversion/bounds.hpp>
 
 static int fit_f(const gsl_vector *xvec, void *data, gsl_vector *f)
 {
