@@ -23,7 +23,7 @@
 
 #include <string.h>
 
-#include <ms/MeasurementSets/MSColumns.h>
+#include <casacore/ms/MeasurementSets/MSColumns.h>
 
 #include "types.h"
 

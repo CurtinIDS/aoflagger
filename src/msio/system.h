@@ -20,19 +20,19 @@
 #ifndef MSIOSYSTEM_H
 #define MSIOSYSTEM_H
 
-#include <casa/OS/HostInfo.h>
+#include <casacore/casa/OS/HostInfo.h>
 
 class System
 {
 	public:
 		static long TotalMemory()
 		{
-			return casa::HostInfo::memoryTotal()*1024;
+			return casacore::HostInfo::memoryTotal()*1024;
 		}
 		
 		static unsigned ProcessorCount()
 		{
-			unsigned cpus = casa::HostInfo::numCPUs();
+			unsigned cpus = casacore::HostInfo::numCPUs();
 			if(cpus == 0) cpus = 1;
 			return cpus;
 		}

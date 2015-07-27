@@ -1,7 +1,7 @@
 #include "sortedtimestepaccessor.h"
 
-#include <ms/MeasurementSets/MeasurementSet.h>
-#include <ms/MeasurementSets/MSColumns.h>
+#include <casacore/ms/MeasurementSets/MeasurementSet.h>
+#include <casacore/ms/MeasurementSets/MSColumns.h>
 
 void SortedTimestepAccessor::Open()
 {
@@ -15,22 +15,22 @@ void SortedTimestepAccessor::Open()
 	{
 		SetInfo &set = *i;
 
-		casa::MeasurementSet ms(set.path);
-		casa::Table mainTable(set.path, casa::Table::Update);
+		casacore::MeasurementSet ms(set.path);
+		casacore::Table mainTable(set.path, casacore::Table::Update);
 
 		// Create the sorted table and iterator
-		casa::Block<casa::String> names(4);
+		casacore::Block<casacore::String> names(4);
 		names[0] = "TIME";
 		names[1] = "ANTENNA1";
 		names[2] = "ANTENNA2";
 		names[3] = "DATA_DESC_ID";
-		casa::Table sortab = mainTable.sort(names);
+		casacore::Table sortab = mainTable.sort(names);
 		names.resize(3, true, true);
-		set.tableIter = new casa::TableIterator(sortab, names, casa::TableIterator::Ascending, casa::TableIterator::NoSort);
+		set.tableIter = new casacore::TableIterator(sortab, names, casacore::TableIterator::Ascending, casacore::TableIterator::NoSort);
 
 		// Check number of polarizations
-		casa::Table polTable = ms.polarization();
-		casa::ROArrayColumn<int> corTypeColumn(polTable, "CORR_TYPE");
+		casacore::Table polTable = ms.polarization();
+		casacore::ROArrayColumn<int> corTypeColumn(polTable, "CORR_TYPE");
 		if(_polarizationCount==0 && i==_sets.begin())
 			_polarizationCount = corTypeColumn(0).shape()[0];
 		else if(_polarizationCount != corTypeColumn(0).shape()[0])
@@ -39,12 +39,12 @@ void SortedTimestepAccessor::Open()
 		// Find lowest and highest frequency and check order
 		set.lowestFrequency = 0.0;
 		set.highestFrequency = 0.0;
-		casa::Table spectralWindowTable = ms.spectralWindow();
-		casa::ROArrayColumn<double> frequencyCol(spectralWindowTable, "CHAN_FREQ");
+		casacore::Table spectralWindowTable = ms.spectralWindow();
+		casacore::ROArrayColumn<double> frequencyCol(spectralWindowTable, "CHAN_FREQ");
 		for(unsigned b=0;b<spectralWindowTable.nrow();++b)
 		{
-			casa::Array<double> frequencyArray = frequencyCol(b);
-			casa::Array<double>::const_iterator frequencyIterator = frequencyArray.begin();
+			casacore::Array<double> frequencyArray = frequencyCol(b);
+			casacore::Array<double>::const_iterator frequencyIterator = frequencyArray.begin();
 			while(frequencyIterator != frequencyArray.end())
 			{
 				double frequency = *frequencyIterator;
@@ -61,7 +61,7 @@ void SortedTimestepAccessor::Open()
 		_highestFrequency = set.highestFrequency;
 
 		set.bandCount = spectralWindowTable.nrow();
-		set.channelsPerBand = casa::ROArrayColumn<casa::Complex>(mainTable, "DATA")(0).shape()[1];
+		set.channelsPerBand = casacore::ROArrayColumn<casacore::Complex>(mainTable, "DATA")(0).shape()[1];
 		_totalChannelCount += set.bandCount * set.channelsPerBand;
 	}
 	_isOpen = true;
@@ -86,7 +86,7 @@ bool SortedTimestepAccessor::ReadNext(SortedTimestepAccessor::TimestepIndex &ind
 
 	double timeStep = 0.0;
 	unsigned valIndex = 0;
-	casa::Table **tablePtr = index.tables;
+	casacore::Table **tablePtr = index.tables;
 
 	for(SetInfoVector::iterator i=_sets.begin(); i!=_sets.end(); ++i)
 	{
@@ -94,22 +94,22 @@ bool SortedTimestepAccessor::ReadNext(SortedTimestepAccessor::TimestepIndex &ind
 
 		if(set.tableIter->pastEnd())
 			return false;
-		*tablePtr = new casa::Table(set.tableIter->table());
-		casa::Table &table(**tablePtr);
+		*tablePtr = new casacore::Table(set.tableIter->table());
+		casacore::Table &table(**tablePtr);
 
 		// Check timestep & read u,v coordinates & antenna's
-		casa::ROScalarColumn<double> timeColumn = casa::ROScalarColumn<double>(table, "TIME");
+		casacore::ROScalarColumn<double> timeColumn = casacore::ROScalarColumn<double>(table, "TIME");
 		if(timeStep == 0.0) {
-			casa::ROArrayColumn<double> uvwColumn = casa::ROArrayColumn<double>(table, "UVW");
+			casacore::ROArrayColumn<double> uvwColumn = casacore::ROArrayColumn<double>(table, "UVW");
 			timeStep = timeColumn(0);
-			casa::Array<double> uvwArray = uvwColumn(0);
-			casa::Array<double>::const_iterator uvwIterator = uvwArray.begin();
+			casacore::Array<double> uvwArray = uvwColumn(0);
+			casacore::Array<double>::const_iterator uvwIterator = uvwArray.begin();
 			data.u = *uvwIterator;
 			++uvwIterator;
 			data.v = *uvwIterator;
-			casa::ROScalarColumn<int>
-				antenna1Column = casa::ROScalarColumn<int>(table, "ANTENNA1"),
-				antenna2Column = casa::ROScalarColumn<int>(table, "ANTENNA2");
+			casacore::ROScalarColumn<int>
+				antenna1Column = casacore::ROScalarColumn<int>(table, "ANTENNA1"),
+				antenna2Column = casacore::ROScalarColumn<int>(table, "ANTENNA2");
 			data.antenna1 = antenna1Column(0);
 			data.antenna2 = antenna2Column(0);
 		}
@@ -117,11 +117,11 @@ bool SortedTimestepAccessor::ReadNext(SortedTimestepAccessor::TimestepIndex &ind
 			throw TimestepAccessorException("Sets do not have same time steps");
 
 		// Copy data from tables in arrays
-		casa::ROArrayColumn<casa::Complex> dataColumn(table, "DATA");
+		casacore::ROArrayColumn<casacore::Complex> dataColumn(table, "DATA");
 		for(unsigned band=0;band<set.bandCount;++band)
 		{
-			casa::Array<casa::Complex> dataArray = dataColumn(band);
-			casa::Array<casa::Complex>::const_iterator dataIterator = dataArray.begin();
+			casacore::Array<casacore::Complex> dataArray = dataColumn(band);
+			casacore::Array<casacore::Complex>::const_iterator dataIterator = dataArray.begin();
 			for(unsigned f=0;f<set.channelsPerBand;++f)
 			{
 				for(unsigned p=0;p<_polarizationCount;++p)
@@ -144,21 +144,21 @@ void SortedTimestepAccessor::Write(SortedTimestepAccessor::TimestepIndex &index,
 {
 	assertOpen();
 
-	casa::Table **tablePtr = index.tables;
+	casacore::Table **tablePtr = index.tables;
 	unsigned valIndex = 0;
 
 	for(SetInfoVector::iterator i=_sets.begin(); i!=_sets.end(); ++i)
 	{
 		const SetInfo &set = *i;
 
-		casa::Table &table = **tablePtr;
+		casacore::Table &table = **tablePtr;
 
 		// Copy data from arrays in tables
-		casa::ArrayColumn<casa::Complex> dataColumn(table, "DATA");
+		casacore::ArrayColumn<casacore::Complex> dataColumn(table, "DATA");
 		for(unsigned band=0;band<set.bandCount;++band)
 		{
-			casa::Array<casa::Complex> dataArray = dataColumn(band);
-			casa::Array<casa::Complex>::iterator dataIterator = dataArray.begin();
+			casacore::Array<casacore::Complex> dataArray = dataColumn(band);
+			casacore::Array<casacore::Complex>::iterator dataIterator = dataArray.begin();
 			for(unsigned f=0;f<set.channelsPerBand;++f)
 			{
 				for(unsigned p=0;p<_polarizationCount;++p)

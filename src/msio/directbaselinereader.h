@@ -112,9 +112,9 @@ class DirectBaselineReader : public BaselineReader {
 		void addRowToBaselineCache(int antenna1, int antenna2, int spectralWindow, int sequenceId, size_t row);
 		void readUVWData();
 
-		void readTimeData(size_t requestIndex, size_t xOffset, int frequencyCount, const casa::Array<casa::Complex> data, const casa::Array<casa::Complex> *model);
-		void readTimeFlags(size_t requestIndex, size_t xOffset, int frequencyCount, const casa::Array<bool> flag);
-		void readWeights(size_t requestIndex, size_t xOffset, int frequencyCount, const casa::Array<float> weight);
+		void readTimeData(size_t requestIndex, size_t xOffset, int frequencyCount, const casacore::Array<casacore::Complex> data, const casacore::Array<casacore::Complex> *model);
+		void readTimeFlags(size_t requestIndex, size_t xOffset, int frequencyCount, const casacore::Array<bool> flag);
+		void readWeights(size_t requestIndex, size_t xOffset, int frequencyCount, const casacore::Array<float> weight);
 
 		std::map<BaselineCacheIndex, BaselineCacheValue> _baselineCache;
 };

@@ -20,8 +20,8 @@
 #ifndef SCALARCOLUMNITERATOR_H
 #define SCALARCOLUMNITERATOR_H
 
-#include <ms/MeasurementSets/MSColumns.h>
-#include <tables/Tables/ScalarColumn.h>
+#include <casacore/ms/MeasurementSets/MSColumns.h>
+#include <casacore/tables/Tables/ScalarColumn.h>
 
 /**
 	@author A.R. Offringa <offringa@astro.rug.nl>
@@ -29,7 +29,7 @@
 template<typename T>
 class ScalarColumnIterator {
 	public:
-		ScalarColumnIterator(class casa::ScalarColumn<T> &column, unsigned row) :
+		ScalarColumnIterator(class casacore::ScalarColumn<T> &column, unsigned row) :
 			_column(&column), _row(row)
 		{
 		}
@@ -59,12 +59,12 @@ class ScalarColumnIterator {
 		bool operator==(const ScalarColumnIterator<T> &other) const {
 			return _row==other._row;
 		}
-		static ScalarColumnIterator First(casa::ScalarColumn<T> &column)
+		static ScalarColumnIterator First(casacore::ScalarColumn<T> &column)
 		{
 			return ScalarColumnIterator<T>(column, 0);
 		}
 	private:
-		casa::ScalarColumn<T> *_column;
+		casacore::ScalarColumn<T> *_column;
 		unsigned _row;
 };
 

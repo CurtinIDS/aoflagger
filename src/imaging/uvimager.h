@@ -27,7 +27,7 @@
 #include "../msio/timefrequencydata.h"
 
 struct SingleFrequencySingleBaselineData {
-	casa::Complex data;
+	casacore::Complex data;
 	bool flag;
 	bool available;
 	double time;

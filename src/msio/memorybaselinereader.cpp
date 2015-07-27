@@ -24,11 +24,11 @@
 #include "../util/aologger.h"
 #include "../util/stopwatch.h"
 
-#include <ms/MeasurementSets/MeasurementSet.h>
+#include <casacore/ms/MeasurementSets/MeasurementSet.h>
 
 #include <vector>
 
-using namespace casa;
+using namespace casacore;
 
 void MemoryBaselineReader::clear()
 {
@@ -79,21 +79,21 @@ void MemoryBaselineReader::readSet()
 		
 		initializeMeta();
 	
-		casa::Table &table = *Table();
+		casacore::Table &table = *Table();
 		
 		ROScalarColumn<int>
-			ant1Column(table, casa::MeasurementSet::columnName(MSMainEnums::ANTENNA1)),
-			ant2Column(table, casa::MeasurementSet::columnName(MSMainEnums::ANTENNA2)),
-			dataDescIdColumn(table, casa::MeasurementSet::columnName(MSMainEnums::DATA_DESC_ID)),
-			fieldIdColumn(table, casa::MeasurementSet::columnName(MSMainEnums::FIELD_ID));
+			ant1Column(table, casacore::MeasurementSet::columnName(MSMainEnums::ANTENNA1)),
+			ant2Column(table, casacore::MeasurementSet::columnName(MSMainEnums::ANTENNA2)),
+			dataDescIdColumn(table, casacore::MeasurementSet::columnName(MSMainEnums::DATA_DESC_ID)),
+			fieldIdColumn(table, casacore::MeasurementSet::columnName(MSMainEnums::FIELD_ID));
 		ROScalarColumn<double>
-			timeColumn(table, casa::MeasurementSet::columnName(MSMainEnums::TIME));
-		ROArrayColumn<casa::Complex>
+			timeColumn(table, casacore::MeasurementSet::columnName(MSMainEnums::TIME));
+		ROArrayColumn<casacore::Complex>
 			dataColumn(table, DataColumnName());
 		ROArrayColumn<bool>
-			flagColumn(table, casa::MeasurementSet::columnName(MSMainEnums::FLAG));
+			flagColumn(table, casacore::MeasurementSet::columnName(MSMainEnums::FLAG));
 		ROArrayColumn<double>
-			uvwColumn(table, casa::MeasurementSet::columnName(MSMainEnums::UVW));
+			uvwColumn(table, casacore::MeasurementSet::columnName(MSMainEnums::UVW));
 		
 		size_t
 			antennaCount = Set().AntennaCount(),
@@ -142,8 +142,8 @@ void MemoryBaselineReader::readSet()
 		size_t curTimeIndex = size_t(0);
 		unsigned rowCount = table.nrow();
 		
-		casa::Array<casa::Complex> dataArray;
-		casa::Array<bool> flagArray;
+		casacore::Array<casacore::Complex> dataArray;
+		casacore::Array<bool> flagArray;
 		size_t prevFieldId = size_t(-1), sequenceId = size_t(-1);
 		for(unsigned rowIndex = 0;rowIndex < rowCount;++rowIndex)
 		{
@@ -287,17 +287,17 @@ void MemoryBaselineReader::PerformFlagWriteRequests()
 
 void MemoryBaselineReader::writeFlags()
 {
-	casa::Table &table = *Table();
+	casacore::Table &table = *Table();
 	
 	ROScalarColumn<int>
-		ant1Column(table, casa::MeasurementSet::columnName(MSMainEnums::ANTENNA1)),
-		ant2Column(table, casa::MeasurementSet::columnName(MSMainEnums::ANTENNA2)),
-		dataDescIdColumn(table, casa::MeasurementSet::columnName(MSMainEnums::DATA_DESC_ID)),
-		fieldIdColumn(table, casa::MeasurementSet::columnName(MSMainEnums::FIELD_ID));
+		ant1Column(table, casacore::MeasurementSet::columnName(MSMainEnums::ANTENNA1)),
+		ant2Column(table, casacore::MeasurementSet::columnName(MSMainEnums::ANTENNA2)),
+		dataDescIdColumn(table, casacore::MeasurementSet::columnName(MSMainEnums::DATA_DESC_ID)),
+		fieldIdColumn(table, casacore::MeasurementSet::columnName(MSMainEnums::FIELD_ID));
 	ROScalarColumn<double>
-		timeColumn(table, casa::MeasurementSet::columnName(MSMainEnums::TIME));
+		timeColumn(table, casacore::MeasurementSet::columnName(MSMainEnums::TIME));
 	ArrayColumn<bool>
-		flagColumn(table, casa::MeasurementSet::columnName(MSMainEnums::FLAG));
+		flagColumn(table, casacore::MeasurementSet::columnName(MSMainEnums::FLAG));
 	std::vector<size_t> dataIdToSpw;
 	Set().GetDataDescToBandVector(dataIdToSpw);
 	
@@ -334,7 +334,7 @@ void MemoryBaselineReader::writeFlags()
 		IPosition flagShape = IPosition(2);
 		flagShape[0] = polarizationCount;
 		flagShape[1] = frequencyCount;
-		casa::Array<bool> flagArray(flagShape);
+		casacore::Array<bool> flagArray(flagShape);
 		
 		BaselineID baselineID;
 		baselineID.antenna1 = ant1;

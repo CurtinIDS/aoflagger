@@ -3,7 +3,7 @@
 
 #include <cstring>
 
-#include <tables/Tables/TableIter.h>
+#include <casacore/tables/Tables/TableIter.h>
 
 #include "timefrequencydata.h"
 #include "measurementset.h"
@@ -29,8 +29,8 @@ class BaselineMatrixLoader
 	private:
 		TimeFrequencyData LoadSummed(size_t timeIndex);
 
-		casa::Table *_sortedTable;
-		casa::TableIterator *_tableIter;
+		casacore::Table *_sortedTable;
+		casacore::TableIterator *_tableIter;
 		size_t _currentIterIndex;
 		MeasurementSet _measurementSet;
 		size_t _timeIndexCount;

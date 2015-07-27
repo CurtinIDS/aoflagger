@@ -22,9 +22,9 @@
 
 #include <libgen.h>
 
-#include <ms/MeasurementSets/MeasurementSet.h>
-#include <ms/MeasurementSets/MSTable.h>
-#include <ms/MeasurementSets/MSColumns.h>
+#include <casacore/ms/MeasurementSets/MeasurementSet.h>
+#include <casacore/ms/MeasurementSets/MSTable.h>
+#include <casacore/ms/MeasurementSets/MSColumns.h>
 
 #include "msio/date.h"
 
@@ -40,12 +40,12 @@ int main(int argc, char **argv)
 	{
 		std::ostream &stream(std::cout);
 
-		casa::MeasurementSet ms(argv[1]);
-		casa::Table histtab(ms.history());
-		casa::ROScalarColumn<double>       time        (histtab, "TIME");
-		casa::ROScalarColumn<casa::String> application (histtab, "APPLICATION");
-		casa::ROArrayColumn<casa::String>  cli         (histtab, "CLI_COMMAND");
-		casa::ROArrayColumn<casa::String>  parms       (histtab, "APP_PARAMS");
+		casacore::MeasurementSet ms(argv[1]);
+		casacore::Table histtab(ms.history());
+		casacore::ROScalarColumn<double>       time        (histtab, "TIME");
+		casacore::ROScalarColumn<casacore::String> application (histtab, "APPLICATION");
+		casacore::ROArrayColumn<casacore::String>  cli         (histtab, "CLI_COMMAND");
+		casacore::ROArrayColumn<casacore::String>  parms       (histtab, "APP_PARAMS");
 		for(unsigned i=0;i<histtab.nrow();++i)
 		{
 			if(application(i) == "AOFlagger")
@@ -55,8 +55,8 @@ int main(int argc, char **argv)
 					"Date: " << Date::AipsMJDToDateString(time(i)) << "\n"
 					"Time: " << Date::AipsMJDToTimeString(time(i)) << "\n"
 					"Strategy: \n     ----------     \n";
-				const casa::Vector<casa::String> appParamsVec = parms(i);
-				for(casa::Vector<casa::String>::const_iterator j=appParamsVec.begin();j!=appParamsVec.end();++j)
+				const casacore::Vector<casacore::String> appParamsVec = parms(i);
+				for(casacore::Vector<casacore::String>::const_iterator j=appParamsVec.begin();j!=appParamsVec.end();++j)
 				{
 					stream << *j << '\n';
 				}

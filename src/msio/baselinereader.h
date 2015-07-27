@@ -60,7 +60,7 @@ class BaselineReader {
 			return _polarizationCount;
 		}
 
-		class casa::MeasurementSet *Table() const { return _table; }
+		class casacore::MeasurementSet *Table() const { return _table; }
 
 		MeasurementSet &Set() { return _measurementSet; }
 
@@ -181,8 +181,8 @@ class BaselineReader {
 			initObservationTimes();
 			initializePolarizations();
 		}
-		//casa::ROArrayColumn<casa::Complex> *CreateDataColumn(const std::string &columnName, class casa::Table &table);
-		//casa::ArrayColumn<casa::Complex> *CreateDataColumnRW(const std::string &columnName, class casa::Table &table);
+		//casacore::ROArrayColumn<casacore::Complex> *CreateDataColumn(const std::string &columnName, class casacore::Table &table);
+		//casacore::ArrayColumn<casacore::Complex> *CreateDataColumnRW(const std::string &columnName, class casacore::Table &table);
 
 		std::vector<ReadRequest> _readRequests;
 		std::vector<FlagWriteRequest> _writeRequests;
@@ -204,7 +204,7 @@ class BaselineReader {
 		}
 
 		MeasurementSet _measurementSet;
-		class casa::MeasurementSet *_table;
+		class casacore::MeasurementSet *_table;
 		
 		std::string _dataColumnName;
 		bool _subtractModel;

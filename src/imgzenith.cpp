@@ -18,14 +18,14 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include <tables/Tables/Table.h>
+#include <casacore/tables/Tables/Table.h>
 
-#include <measures/Measures/UVWMachine.h>
-#include <measures/Measures/MEpoch.h>
-#include <measures/Measures/MBaseline.h>
-#include <measures/Measures/MCBaseline.h>
+#include <casacore/measures/Measures/UVWMachine.h>
+#include <casacore/measures/Measures/MEpoch.h>
+#include <casacore/measures/Measures/MBaseline.h>
+#include <casacore/measures/Measures/MCBaseline.h>
 
-#include <ms/MeasurementSets/MeasurementSet.h>
+#include <casacore/ms/MeasurementSets/MeasurementSet.h>
 
 #include "msio/antennainfo.h"
 #include "msio/measurementset.h"
@@ -35,34 +35,34 @@
 
 #include <vector>
 
-const casa::Unit radUnit("rad");
-const casa::Unit dayUnit("d");
-const casa::Unit degUnit("deg");
+const casacore::Unit radUnit("rad");
+const casacore::Unit dayUnit("d");
+const casacore::Unit degUnit("deg");
 
-void repoint(casa::MDirection &phaseDirection, casa::MPosition &position, const casa::MEpoch &obstime, double &u, double &v, double &w, double &phaseRotation, casa::MPosition &a1, casa::MPosition &a2, bool verbose)
+void repoint(casacore::MDirection &phaseDirection, casacore::MPosition &position, const casacore::MEpoch &obstime, double &u, double &v, double &w, double &phaseRotation, casacore::MPosition &a1, casacore::MPosition &a2, bool verbose)
 {
 	//MPosition location(MVPosition(Quantity(1, "km"), Quantity(150, "deg"), Quantity(20, "deg")), MPosition::WGS84);
 	
-	//casa::MEpoch obstime(casa::Quantity(t, dayUnit), casa::MEpoch::UTC);
+	//casacore::MEpoch obstime(casacore::Quantity(t, dayUnit), casacore::MEpoch::UTC);
 	//if(verbose)
 	//	std::cout << "Time=" << obstime.getValue() << '\n';
-	casa::MeasFrame timeAndLocation(obstime, position);
+	casacore::MeasFrame timeAndLocation(obstime, position);
 	
-	casa::MDirection::Ref refApparent(casa::MDirection::AZEL, timeAndLocation);
+	casacore::MDirection::Ref refApparent(casacore::MDirection::AZEL, timeAndLocation);
 	
 	// Calculate zenith
-	casa::MDirection outDirection(
-		casa::Quantity(0.0, radUnit),       // Az
-		casa::Quantity(0.5*M_PI, radUnit),  // El
+	casacore::MDirection outDirection(
+		casacore::Quantity(0.0, radUnit),       // Az
+		casacore::Quantity(0.5*M_PI, radUnit),  // El
 	refApparent);
-	casa::MDirection j2000Direction =
-		casa::MDirection::Convert(outDirection, casa::MDirection::J2000)();
+	casacore::MDirection j2000Direction =
+		casacore::MDirection::Convert(outDirection, casacore::MDirection::J2000)();
 	if(verbose)
 		std::cout << "Zenith=" << j2000Direction.getAngle().getValue(degUnit) << '\n';
 	
 	// Construct a CASA UVW converter
-	casa::UVWMachine uvwConverter(j2000Direction, phaseDirection);
-	casa::Vector<double> uvwVector(3);
+	casacore::UVWMachine uvwConverter(j2000Direction, phaseDirection);
+	casacore::Vector<double> uvwVector(3);
 	uvwVector[0] = u;
 	uvwVector[1] = v;
 	uvwVector[2] = w;
@@ -78,11 +78,11 @@ void repoint(casa::MDirection &phaseDirection, casa::MPosition &position, const 
 }
 
 
-void repoint(casa::MDirection &phaseDirection, casa::MDirection &newDirection, double &u, double &v, double &w, double &phaseRotation)
+void repoint(casacore::MDirection &phaseDirection, casacore::MDirection &newDirection, double &u, double &v, double &w, double &phaseRotation)
 {
 	// Construct a CASA UVW converter
-	casa::UVWMachine uvwConverter(newDirection, phaseDirection);
-	casa::Vector<double> uvwVector(3);
+	casacore::UVWMachine uvwConverter(newDirection, phaseDirection);
+	casacore::Vector<double> uvwVector(3);
 	uvwVector[0] = u;
 	uvwVector[1] = v;
 	uvwVector[2] = w;
@@ -122,30 +122,30 @@ int main(int argc, char *argv[])
 	
 	const unsigned antennaIndex = 0;
 	
-	casa::MeasurementSet table(argv[1]);
-	casa::MEpoch::ROScalarColumn timeColumn(table, "TIME");
-	casa::ROArrayColumn<double> uvwColumn(table, "UVW");
-	casa::ROScalarColumn<int> ant1Column(table, "ANTENNA1");
-	casa::ROScalarColumn<int> ant2Column(table, "ANTENNA2");
-	casa::ROArrayColumn<casa::Complex> dataColumn(table, "DATA");
-	casa::ROArrayColumn<bool> flagColumn(table, "FLAG");
+	casacore::MeasurementSet table(argv[1]);
+	casacore::MEpoch::ROScalarColumn timeColumn(table, "TIME");
+	casacore::ROArrayColumn<double> uvwColumn(table, "UVW");
+	casacore::ROScalarColumn<int> ant1Column(table, "ANTENNA1");
+	casacore::ROScalarColumn<int> ant2Column(table, "ANTENNA2");
+	casacore::ROArrayColumn<casacore::Complex> dataColumn(table, "DATA");
+	casacore::ROArrayColumn<bool> flagColumn(table, "FLAG");
 	
-	casa::Table antennaTable(table.antenna());
-	casa::MPosition::ROScalarColumn antPositionColumn(antennaTable, "POSITION");
-	casa::ROScalarColumn<casa::String> antNameColumn(antennaTable, "NAME");
-	std::vector<casa::MPosition> antennaPositions(antennaTable.nrow());
+	casacore::Table antennaTable(table.antenna());
+	casacore::MPosition::ROScalarColumn antPositionColumn(antennaTable, "POSITION");
+	casacore::ROScalarColumn<casacore::String> antNameColumn(antennaTable, "NAME");
+	std::vector<casacore::MPosition> antennaPositions(antennaTable.nrow());
 	for(unsigned i = 0;i<antennaTable.nrow();++i)
 	{
 		antennaPositions[i] = antPositionColumn(i);
 	}
-	casa::MPosition position = antennaPositions[0];
+	casacore::MPosition position = antennaPositions[0];
 	std::cout << "Frame of reference of antennae: " << position.getRefString() << '\n';
 	std::cout << "Imaging zenith of antenna " << antNameColumn(antennaIndex)
 		<< ", pos=" << position.getValue() << '\n';
 		
-	casa::Table fieldTable(table.field());
-	casa::MDirection::ROArrayColumn phaseDirColumn(fieldTable, "PHASE_DIR");
-	casa::MDirection phaseDirection = *phaseDirColumn(0).begin();
+	casacore::Table fieldTable(table.field());
+	casacore::MDirection::ROArrayColumn phaseDirColumn(fieldTable, "PHASE_DIR");
+	casacore::MDirection phaseDirection = *phaseDirColumn(0).begin();
 	std::cout << "Phase direction: " << phaseDirection.getAngle().getValue(degUnit) << '\n';
 
 	std::complex<float> *samples[polarizationCount];
@@ -162,7 +162,7 @@ int main(int argc, char *argv[])
 	size_t timeStep = 0;
 	bool directionIsSet = false;
 	
-	casa::MEpoch curT = timeColumn(0);
+	casacore::MEpoch curT = timeColumn(0);
 	while(row<table.nrow() && timeStep < startTimeIndex)
 	{
 		if(timeColumn(row).getValue() != curT.getValue())
@@ -175,20 +175,20 @@ int main(int argc, char *argv[])
 	
 	while(row<table.nrow())
 	{
-		const casa::MEpoch t = timeColumn(row);
-		casa::MDirection j2000Direction;
+		const casacore::MEpoch t = timeColumn(row);
+		casacore::MDirection j2000Direction;
 		
 		if(!directionIsSet)
 		{
 			// Calculate zenith for this time range
-			casa::MeasFrame timeAndLocation(t, position);
-			casa::MDirection::Ref refApparent(casa::MDirection::AZEL, timeAndLocation);
-			casa::MDirection outDirection(
-				casa::Quantity(0.0, radUnit),       // Az
-				casa::Quantity(0.5*M_PI, radUnit),  // El
+			casacore::MeasFrame timeAndLocation(t, position);
+			casacore::MDirection::Ref refApparent(casacore::MDirection::AZEL, timeAndLocation);
+			casacore::MDirection outDirection(
+				casacore::Quantity(0.0, radUnit),       // Az
+				casacore::Quantity(0.5*M_PI, radUnit),  // El
 			refApparent);
 			j2000Direction =
-				casa::MDirection::Convert(outDirection, casa::MDirection::J2000)();
+				casacore::MDirection::Convert(outDirection, casacore::MDirection::J2000)();
 			std::cout << "Zenith=" << j2000Direction.getAngle().getValue(degUnit) << '\n';
 			directionIsSet = true;
 		}
@@ -198,19 +198,19 @@ int main(int argc, char *argv[])
 			int a1 = ant1Column(row), a2 = ant2Column(row);
 			if(a1 != a2)
 			{
-				casa::Array<double> uvw = uvwColumn(row);
-				casa::Array<double>::const_iterator uvw_i = uvw.begin();
+				casacore::Array<double> uvw = uvwColumn(row);
+				casacore::Array<double>::const_iterator uvw_i = uvw.begin();
 				double u = *uvw_i; ++uvw_i;
 				double v = *uvw_i; ++uvw_i;
 				double w = *uvw_i;
 				double phaseRotation;
 				repoint(phaseDirection, j2000Direction, u, v, w, phaseRotation);
 				
-				const casa::Array<casa::Complex> dataArray = dataColumn(row);
-				const casa::Array<bool> flagArray = flagColumn(row);
+				const casacore::Array<casacore::Complex> dataArray = dataColumn(row);
+				const casacore::Array<bool> flagArray = flagColumn(row);
 				
-				casa::Array<casa::Complex>::const_iterator dataIter = dataArray.begin();
-				casa::Array<bool>::const_iterator flagIter = flagArray.begin();
+				casacore::Array<casacore::Complex>::const_iterator dataIter = dataArray.begin();
+				casacore::Array<bool>::const_iterator flagIter = flagArray.begin();
 				
 				for(unsigned channel = 0; channel<band.channels.size(); ++channel)
 				{

@@ -1,6 +1,6 @@
 #include "timestepaccessor.h"
 
-#include <ms/MeasurementSets/MeasurementSet.h>
+#include <casacore/ms/MeasurementSets/MeasurementSet.h>
 
 #include <sstream>
 
@@ -18,13 +18,13 @@ void TimestepAccessor::Open()
 	{
 		SetInfo &set = *i;
 
-		casa::MeasurementSet ms(set.path);
+		casacore::MeasurementSet ms(set.path);
 
 		openSet(set);
 
 		// Check number of polarizations
-		casa::Table polTable = ms.polarization();
-		casa::ROArrayColumn<int> corTypeColumn(polTable, "CORR_TYPE");
+		casacore::Table polTable = ms.polarization();
+		casacore::ROArrayColumn<int> corTypeColumn(polTable, "CORR_TYPE");
 		if(_polarizationCount==0 && i==_sets.begin())
 			_polarizationCount = corTypeColumn(0).shape()[0];
 		else if(_polarizationCount != corTypeColumn(0).shape()[0])
@@ -33,12 +33,12 @@ void TimestepAccessor::Open()
 		// Find lowest and highest frequency and check order
 		set.lowestFrequency = 0.0;
 		set.highestFrequency = 0.0;
-		casa::Table spectralWindowTable = ms.spectralWindow();
-		casa::ROArrayColumn<double> frequencyCol(spectralWindowTable, "CHAN_FREQ");
+		casacore::Table spectralWindowTable = ms.spectralWindow();
+		casacore::ROArrayColumn<double> frequencyCol(spectralWindowTable, "CHAN_FREQ");
 		for(unsigned b=0;b<spectralWindowTable.nrow();++b)
 		{
-			casa::Array<double> frequencyArray = frequencyCol(b);
-			casa::Array<double>::const_iterator frequencyIterator = frequencyArray.begin();
+			casacore::Array<double> frequencyArray = frequencyCol(b);
+			casacore::Array<double>::const_iterator frequencyIterator = frequencyArray.begin();
 			while(frequencyIterator != frequencyArray.end())
 			{
 				double frequency = *frequencyIterator;
@@ -128,9 +128,9 @@ void TimestepAccessor::openSet(TimestepAccessor::SetInfo &set, bool update)
 	do {
 		try {
 			if(update)
-				set.table = new casa::Table(set.path, casa::Table::Update);
+				set.table = new casacore::Table(set.path, casacore::Table::Update);
 			else
-				set.table = new casa::Table(set.path);
+				set.table = new casacore::Table(set.path);
 		} catch(std::exception &e) {
 			std::cout << "WARNING: exception was thrown:\n"
 				<< e.what() << '\n'
@@ -139,20 +139,20 @@ void TimestepAccessor::openSet(TimestepAccessor::SetInfo &set, bool update)
 			set.table = 0;
 		}
 	} while(set.table == 0);
-	set.antenna1Column = new casa::ROScalarColumn<int>(*set.table, "ANTENNA1");
-	set.antenna2Column = new casa::ROScalarColumn<int>(*set.table, "ANTENNA2");
-	set.timeColumn = new casa::ROScalarColumn<double>(*set.table, "TIME");
+	set.antenna1Column = new casacore::ROScalarColumn<int>(*set.table, "ANTENNA1");
+	set.antenna2Column = new casacore::ROScalarColumn<int>(*set.table, "ANTENNA2");
+	set.timeColumn = new casacore::ROScalarColumn<double>(*set.table, "TIME");
 	if(update)
 	{
 		set.dataColumn = 0;
-		set.updateDataColumn = new casa::ArrayColumn<casa::Complex>(*set.table, _columnName);
+		set.updateDataColumn = new casacore::ArrayColumn<casacore::Complex>(*set.table, _columnName);
 	}
 	else
 	{
-		set.dataColumn = new casa::ROArrayColumn<casa::Complex>(*set.table, _columnName);
+		set.dataColumn = new casacore::ROArrayColumn<casacore::Complex>(*set.table, _columnName);
 		set.updateDataColumn = 0;
 	}
-	set.uvwColumn = new casa::ROArrayColumn<double>(*set.table, "UVW");
+	set.uvwColumn = new casacore::ROArrayColumn<double>(*set.table, "UVW");
 }
 
 void TimestepAccessor::closeSet(TimestepAccessor::SetInfo &set)
@@ -198,8 +198,8 @@ bool TimestepAccessor::fillReadBuffer()
 			// Check timestep & read u,v coordinates & antenna's
 			if(data.timestep == 0.0) {
 				data.timestep = (*set.timeColumn)(row);
-				casa::Array<double> uvwArray = (*set.uvwColumn)(row);
-				casa::Array<double>::const_iterator uvwIterator = uvwArray.begin();
+				casacore::Array<double> uvwArray = (*set.uvwColumn)(row);
+				casacore::Array<double>::const_iterator uvwIterator = uvwArray.begin();
 				data.u = *uvwIterator;
 				++uvwIterator;
 				data.v = *uvwIterator;
@@ -230,8 +230,8 @@ bool TimestepAccessor::fillReadBuffer()
 			}
 
 			// Copy data from tables in arrays
-			casa::Array<casa::Complex> dataArray = (*set.dataColumn)(row);
-			casa::Array<casa::Complex>::const_iterator dataIterator = dataArray.begin();
+			casacore::Array<casacore::Complex> dataArray = (*set.dataColumn)(row);
+			casacore::Array<casacore::Complex>::const_iterator dataIterator = dataArray.begin();
 			unsigned currentIndex = valIndex;
 			for(unsigned f=0;f<set.channelsPerBand;++f)
 			{
@@ -285,8 +285,8 @@ void TimestepAccessor::emptyWriteBuffer()
 			const BufferItem &item = _writeBuffer[writeBufferIndex];
 
 			// Copy data from arrays in tables
-			casa::Array<casa::Complex> dataArray = (*set.updateDataColumn)(item.row);
-			casa::Array<casa::Complex>::iterator dataIterator = dataArray.begin();
+			casacore::Array<casacore::Complex> dataArray = (*set.updateDataColumn)(item.row);
+			casacore::Array<casacore::Complex>::iterator dataIterator = dataArray.begin();
 			unsigned currentIndex = valIndex;
 			for(unsigned f=0;f<set.channelsPerBand;++f)
 			{

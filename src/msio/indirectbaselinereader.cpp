@@ -19,7 +19,7 @@
  ***************************************************************************/
 #include "indirectbaselinereader.h"
 
-#include <ms/MeasurementSets/MeasurementSet.h>
+#include <casacore/ms/MeasurementSets/MeasurementSet.h>
 
 #include <fstream>
 #include <set>
@@ -219,20 +219,20 @@ void IndirectBaselineReader::reorderFull()
 {
 	Stopwatch watch(true);
 	
-	casa::Table &table = *Table();
+	casacore::Table &table = *Table();
 
-	casa::ROScalarColumn<double> timeColumn(*Table(), "TIME");
-	casa::ROArrayColumn<bool> flagColumn(table, "FLAG");
-	casa::ROScalarColumn<int> fieldIdColumn(table, "FIELD_ID"); 
-	casa::ROScalarColumn<int> dataDescIdColumn(table, "DATA_DESC_ID"); 
-	casa::ROScalarColumn<int> antenna1Column(table, "ANTENNA1"); 
-	casa::ROScalarColumn<int> antenna2Column(table, "ANTENNA2");
+	casacore::ROScalarColumn<double> timeColumn(*Table(), "TIME");
+	casacore::ROArrayColumn<bool> flagColumn(table, "FLAG");
+	casacore::ROScalarColumn<int> fieldIdColumn(table, "FIELD_ID"); 
+	casacore::ROScalarColumn<int> dataDescIdColumn(table, "DATA_DESC_ID"); 
+	casacore::ROScalarColumn<int> antenna1Column(table, "ANTENNA1"); 
+	casacore::ROScalarColumn<int> antenna2Column(table, "ANTENNA2");
 
 	size_t rowCount = table.nrow();
 	if(rowCount == 0)
 		throw std::runtime_error("Measurement set is empty (zero rows)");
 
-	casa::ROArrayColumn<casa::Complex> *dataColumn = new casa::ROArrayColumn<casa::Complex>(table, DataColumnName());
+	casacore::ROArrayColumn<casacore::Complex> *dataColumn = new casacore::ROArrayColumn<casacore::Complex>(table, DataColumnName());
 
 	std::vector<size_t> dataIdToSpw;
 	Set().GetDataDescToBandVector(dataIdToSpw);
@@ -284,8 +284,8 @@ void IndirectBaselineReader::reorderFull()
 		size_t &timePos = timePositions[arrayIndex];
 		size_t sampleCount = channelCount * polarizationCount;
 		
-		casa::Array<casa::Complex> data = (*dataColumn)(rowIndex);
-		casa::Array<bool> flag = flagColumn(rowIndex);
+		casacore::Array<casacore::Complex> data = (*dataColumn)(rowIndex);
+		casacore::Array<bool> flag = flagColumn(rowIndex);
 		
 		std::ofstream &dataFile = *reorderInfo.dataFile;
 		std::ofstream &flagFile = *reorderInfo.flagFile;
@@ -442,15 +442,15 @@ void IndirectBaselineReader::performFlagWriteTask(std::vector<Mask2DCPtr> flags,
 template<bool UpdateData, bool UpdateFlags>
 void IndirectBaselineReader::updateOriginalMS()
 {
-	casa::Table &table = *Table();
+	casacore::Table &table = *Table();
 
-	casa::ROScalarColumn<double> timeColumn(*Table(), "TIME");
-	casa::ROScalarColumn<int> antenna1Column(table, "ANTENNA1"); 
-	casa::ROScalarColumn<int> antenna2Column(table, "ANTENNA2");
-	casa::ROScalarColumn<int> fieldIdColumn(table, "FIELD_ID");
-	casa::ROScalarColumn<int> dataDescIdColumn(table, "DATA_DESC_ID");
-	casa::ArrayColumn<bool> flagColumn(table, "FLAG");
-	casa::ArrayColumn<casa::Complex> *dataColumn = new casa::ArrayColumn<casa::Complex>(table, DataColumnName());
+	casacore::ROScalarColumn<double> timeColumn(*Table(), "TIME");
+	casacore::ROScalarColumn<int> antenna1Column(table, "ANTENNA1"); 
+	casacore::ROScalarColumn<int> antenna2Column(table, "ANTENNA2");
+	casacore::ROScalarColumn<int> fieldIdColumn(table, "FIELD_ID");
+	casacore::ROScalarColumn<int> dataDescIdColumn(table, "DATA_DESC_ID");
+	casacore::ArrayColumn<bool> flagColumn(table, "FLAG");
+	casacore::ArrayColumn<casacore::Complex> *dataColumn = new casacore::ArrayColumn<casacore::Complex>(table, DataColumnName());
 
 	int rowCount = table.nrow();
 
@@ -505,7 +505,7 @@ void IndirectBaselineReader::updateOriginalMS()
 		size_t &filePos = updatedFilePos[arrayIndex];
 		size_t &timePos = timePositions[arrayIndex];
 		
-		casa::IPosition shape(2, polarizationCount, channelCount);
+		casacore::IPosition shape(2, polarizationCount, channelCount);
 		
 		// Skip over samples in the temporary files that are missing in the measurement set
 		++timePos;
@@ -517,7 +517,7 @@ void IndirectBaselineReader::updateOriginalMS()
 		
 		if(UpdateData)
 		{
-			casa::Array<casa::Complex> data(shape);
+			casacore::Array<casacore::Complex> data(shape);
 			
 			std::ifstream &dataFile = *updateInfo.dataFile;
 			dataFile.seekg(filePos*(sizeof(float)*2), std::ios_base::beg);
@@ -529,7 +529,7 @@ void IndirectBaselineReader::updateOriginalMS()
 		}
 		if(UpdateFlags)
 		{
-			casa::Array<bool> flagArray(shape);
+			casacore::Array<bool> flagArray(shape);
 			
 			std::ifstream &flagFile = *updateInfo.flagFile;
 			flagFile.seekg(filePos*sizeof(bool), std::ios_base::beg);

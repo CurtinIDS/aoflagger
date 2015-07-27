@@ -22,7 +22,7 @@
 #include <sstream>
 #include <vector>
 
-#include <ms/MeasurementSets/MeasurementSet.h>
+#include <casacore/ms/MeasurementSets/MeasurementSet.h>
 
 #include "msio/measurementset.h"
 #include "msio/antennainfo.h"
@@ -99,7 +99,7 @@ int main(int argc, char *argv[])
 			<< "Number of channels/band: " << set.FrequencyCount(0) << '\n'
 			<< "Number of fields: " << set.FieldCount() << '\n'
 			<< "Number of bands: " << set.BandCount() << '\n';
-		casa::Table *table = new casa::MeasurementSet(set.Path());
+		casacore::Table *table = new casacore::MeasurementSet(set.Path());
 		cout << "Has DATA column: " << BoolToStr(table->tableDesc().isColumn("DATA")) << "\n";
 		cout << "Has CORRECTED_DATA column: " << BoolToStr(table->tableDesc().isColumn("CORRECTED_DATA")) << "\n";
 		cout << "Has MODEL_DATA column: " << BoolToStr(table->tableDesc().isColumn("MODEL_DATA")) << "\n";

@@ -2,7 +2,7 @@
 
 #include <stdexcept>
 
-#include <tables/Tables/ExprNode.h>
+#include <casacore/tables/TaQL/ExprNode.h>
 
 #include "arraycolumniterator.h"
 #include "scalarcolumniterator.h"
@@ -11,19 +11,19 @@
 BaselineMatrixLoader::BaselineMatrixLoader(MeasurementSet &measurementSet)
 	: _sortedTable(0), _tableIter(0), _currentIterIndex(0), _measurementSet(measurementSet), _timeIndexCount(0), _metaData(0)
 {
-	casa::Table *rawTable = new casa::Table(_measurementSet.Path());
-	casa::Block<casa::String> names(4);
+	casacore::Table *rawTable = new casacore::Table(_measurementSet.Path());
+	casacore::Block<casacore::String> names(4);
 	names[0] = "DATA_DESC_ID";
 	names[1] = "TIME";
 	names[2] = "ANTENNA1";
 	names[3] = "ANTENNA2";
-	_sortedTable = new casa::Table(rawTable->sort(names));
+	_sortedTable = new casacore::Table(rawTable->sort(names));
 	delete rawTable;
 
-	casa::Block<casa::String> selectionNames(2);
+	casacore::Block<casacore::String> selectionNames(2);
 	selectionNames[0] = "DATA_DESC_ID";
 	selectionNames[1] = "TIME";
-	casa::TableIterator iter(*_sortedTable, selectionNames, casa::TableIterator::Ascending, casa::TableIterator::NoSort);
+	casacore::TableIterator iter(*_sortedTable, selectionNames, casacore::TableIterator::Ascending, casacore::TableIterator::NoSort);
 	while(!iter.pastEnd())
 	{
 		iter.next();
@@ -31,7 +31,7 @@ BaselineMatrixLoader::BaselineMatrixLoader(MeasurementSet &measurementSet)
 	}
 	_frequencyCount = _measurementSet.FrequencyCount(0);
 
-	_tableIter = new casa::TableIterator(*_sortedTable, selectionNames, casa::TableIterator::Ascending, casa::TableIterator::NoSort);
+	_tableIter = new casacore::TableIterator(*_sortedTable, selectionNames, casacore::TableIterator::Ascending, casacore::TableIterator::NoSort);
 }
 
 BaselineMatrixLoader::~BaselineMatrixLoader()
@@ -45,13 +45,13 @@ BaselineMatrixLoader::~BaselineMatrixLoader()
 
 TimeFrequencyData BaselineMatrixLoader::LoadSummed(size_t timeIndex)
 {
-	casa::Block<casa::String> selectionNames(2);
+	casacore::Block<casacore::String> selectionNames(2);
 	selectionNames[0] = "DATA_DESC_ID";
 	selectionNames[1] = "TIME";
 	if(timeIndex < _currentIterIndex)
 	{
 		delete _tableIter;
-		_tableIter = new casa::TableIterator(*_sortedTable, selectionNames, casa::TableIterator::Ascending, casa::TableIterator::NoSort);
+		_tableIter = new casacore::TableIterator(*_sortedTable, selectionNames, casacore::TableIterator::Ascending, casacore::TableIterator::NoSort);
 		_currentIterIndex = 0;
 	}
 	while(!_tableIter->pastEnd() && timeIndex-_currentIterIndex > 0)
@@ -64,9 +64,9 @@ TimeFrequencyData BaselineMatrixLoader::LoadSummed(size_t timeIndex)
 		throw std::runtime_error("Time index not found");
 	}
 
-	casa::Table table = _tableIter->table();
-	casa::ScalarColumn<int> antenna1Column(table, "ANTENNA1"); 
-	casa::ScalarColumn<int> antenna2Column(table, "ANTENNA2");
+	casacore::Table table = _tableIter->table();
+	casacore::ScalarColumn<int> antenna1Column(table, "ANTENNA1"); 
+	casacore::ScalarColumn<int> antenna2Column(table, "ANTENNA2");
 
 	ScalarColumnIterator<int> antenna1Iter = ScalarColumnIterator<int>::First(antenna1Column);
 	ScalarColumnIterator<int> antenna2Iter = ScalarColumnIterator<int>::First(antenna2Column);
@@ -93,14 +93,14 @@ TimeFrequencyData BaselineMatrixLoader::LoadSummed(size_t timeIndex)
 		delete _metaData;
 	_metaData = new SpatialMatrixMetaData(nrAntenna);
 
-	casa::ROArrayColumn<bool> flagColumn(table, "FLAG");
-	casa::ROArrayColumn<casa::Complex> dataColumn(table, "DATA");
-	casa::ROArrayColumn<double> uvwColumn(table, "UVW");
+	casacore::ROArrayColumn<bool> flagColumn(table, "FLAG");
+	casacore::ROArrayColumn<casacore::Complex> dataColumn(table, "DATA");
+	casacore::ROArrayColumn<double> uvwColumn(table, "UVW");
 
 	antenna1Iter = ScalarColumnIterator<int>::First(antenna1Column);
 	antenna2Iter = ScalarColumnIterator<int>::First(antenna2Column);
-	ROArrayColumnIterator<casa::Complex> dataIter =
-		ROArrayColumnIterator<casa::Complex>::First(dataColumn);
+	ROArrayColumnIterator<casacore::Complex> dataIter =
+		ROArrayColumnIterator<casacore::Complex>::First(dataColumn);
 	ROArrayColumnIterator<bool> flagIter =
 		ROArrayColumnIterator<bool>::First(flagColumn);
 	ROArrayColumnIterator<double> uvwIter =
@@ -126,25 +126,25 @@ TimeFrequencyData BaselineMatrixLoader::LoadSummed(size_t timeIndex)
 		int
 			a1 = *antenna1Iter,
 			a2 = *antenna2Iter;
-		casa::Array<casa::Complex> data =
+		casacore::Array<casacore::Complex> data =
 			*dataIter;
-		casa::Array<bool> flags =
+		casacore::Array<bool> flags =
 			*flagIter;
 
-		casa::Array<casa::Complex>::const_iterator i = data.begin();
-		casa::Array<bool>::const_iterator fI = flags.begin();
+		casacore::Array<casacore::Complex>::const_iterator i = data.begin();
+		casacore::Array<bool>::const_iterator fI = flags.begin();
 		num_t
 			xxr = 0.0, xxi = 0.0, xyr = 0.0, xyi = 0.0, yxr = 0.0, yxi = 0.0, yyr = 0.0, yyi = 0.0;
 		size_t
 			xxc = 0, xyc = 0, yxc = 0, yyc = 0;
 		for(size_t f=0;f<(size_t) _frequencyCount;++f) {
-			const casa::Complex &xx = *i;
+			const casacore::Complex &xx = *i;
 			++i;
-			const casa::Complex &xy = *i;
+			const casacore::Complex &xy = *i;
 			++i;
-			const casa::Complex &yx = *i;
+			const casacore::Complex &yx = *i;
 			++i;
-			const casa::Complex &yy = *i;
+			const casacore::Complex &yy = *i;
 			++i;
 			bool xxF = *fI;
 			++fI;
@@ -195,8 +195,8 @@ TimeFrequencyData BaselineMatrixLoader::LoadSummed(size_t timeIndex)
 		yyMask->SetValue(a1, a2, yyc == 0);
 
 		UVW uvw;
-		casa::Array<double> arr = *uvwIter;
-		casa::Array<double>::const_iterator uvwArrayIterator = arr.begin();
+		casacore::Array<double> arr = *uvwIter;
+		casacore::Array<double>::const_iterator uvwArrayIterator = arr.begin();
 		uvw.u = *uvwArrayIterator;
 		++uvwArrayIterator;
 		uvw.v = *uvwArrayIterator;
@@ -232,7 +232,7 @@ TimeFrequencyData BaselineMatrixLoader::LoadSummed(size_t timeIndex)
 		++uvwIter;
 		++flagIter;
 	}
-	casa::ROScalarColumn<int> bandColumn(table, "DATA_DESC_ID");
+	casacore::ROScalarColumn<int> bandColumn(table, "DATA_DESC_ID");
 	BandInfo band = _measurementSet.GetBandInfo(bandColumn(0));
 	_metaData->SetFrequency(band.CenterFrequencyHz());
 
@@ -243,13 +243,13 @@ TimeFrequencyData BaselineMatrixLoader::LoadSummed(size_t timeIndex)
 
 void BaselineMatrixLoader::LoadPerChannel(size_t timeIndex, std::vector<TimeFrequencyData> &data)
 {
-	casa::Block<casa::String> selectionNames(2);
+	casacore::Block<casacore::String> selectionNames(2);
 	selectionNames[0] = "DATA_DESC_ID";
 	selectionNames[1] = "TIME";
 	if(timeIndex < _currentIterIndex)
 	{
 		delete _tableIter;
-		_tableIter = new casa::TableIterator(*_sortedTable, selectionNames, casa::TableIterator::Ascending, casa::TableIterator::NoSort);
+		_tableIter = new casacore::TableIterator(*_sortedTable, selectionNames, casacore::TableIterator::Ascending, casacore::TableIterator::NoSort);
 		_currentIterIndex = 0;
 	}
 	while(!_tableIter->pastEnd() && timeIndex-_currentIterIndex > 0)
@@ -262,9 +262,9 @@ void BaselineMatrixLoader::LoadPerChannel(size_t timeIndex, std::vector<TimeFreq
 		throw std::runtime_error("Time index not found");
 	}
 
-	casa::Table table = _tableIter->table();
-	casa::ROScalarColumn<int> antenna1Column(table, "ANTENNA1"); 
-	casa::ROScalarColumn<int> antenna2Column(table, "ANTENNA2");
+	casacore::Table table = _tableIter->table();
+	casacore::ROScalarColumn<int> antenna1Column(table, "ANTENNA1"); 
+	casacore::ROScalarColumn<int> antenna2Column(table, "ANTENNA2");
 
 	// Find highest antenna index
 	int nrAntenna = 0;
@@ -285,9 +285,9 @@ void BaselineMatrixLoader::LoadPerChannel(size_t timeIndex, std::vector<TimeFreq
 		delete _metaData;
 	_metaData = new SpatialMatrixMetaData(nrAntenna);
 
-	casa::ROArrayColumn<bool> flagColumn(table, "FLAG");
-	casa::ROArrayColumn<casa::Complex> dataColumn(table, "DATA");
-	casa::ROArrayColumn<double> uvwColumn(table, "UVW");
+	casacore::ROArrayColumn<bool> flagColumn(table, "FLAG");
+	casacore::ROArrayColumn<casacore::Complex> dataColumn(table, "DATA");
+	casacore::ROArrayColumn<double> uvwColumn(table, "UVW");
 
 	std::vector<Image2DPtr>
 		xxRImage(_frequencyCount), xxIImage(_frequencyCount), xyRImage(_frequencyCount), xyIImage(_frequencyCount),
@@ -315,21 +315,21 @@ void BaselineMatrixLoader::LoadPerChannel(size_t timeIndex, std::vector<TimeFreq
 		int
 			a1 = antenna1Column(row),
 			a2 = antenna2Column(row);
-		casa::Array<casa::Complex> data =
+		casacore::Array<casacore::Complex> data =
 			dataColumn(row);
-		casa::Array<bool> flags =
+		casacore::Array<bool> flags =
 			flagColumn(row);
 
-		casa::Array<casa::Complex>::const_iterator i = data.begin();
-		casa::Array<bool>::const_iterator fI = flags.begin();
+		casacore::Array<casacore::Complex>::const_iterator i = data.begin();
+		casacore::Array<bool>::const_iterator fI = flags.begin();
 		for(size_t f=0;f<(size_t) _frequencyCount;++f) {
-			const casa::Complex xx = *i;
+			const casacore::Complex xx = *i;
 			++i;
-			const casa::Complex xy = *i;
+			const casacore::Complex xy = *i;
 			++i;
-			const casa::Complex yx = *i;
+			const casacore::Complex yx = *i;
 			++i;
-			const casa::Complex yy = *i;
+			const casacore::Complex yy = *i;
 			++i;
 			bool xxF = *fI;
 			++fI;
@@ -380,8 +380,8 @@ void BaselineMatrixLoader::LoadPerChannel(size_t timeIndex, std::vector<TimeFreq
 		}
 
 		UVW uvw;
-		casa::Array<double> arr = uvwColumn(row);
-		casa::Array<double>::const_iterator uvwArrayIterator = arr.begin();
+		casacore::Array<double> arr = uvwColumn(row);
+		casacore::Array<double>::const_iterator uvwArrayIterator = arr.begin();
 		uvw.u = *uvwArrayIterator;
 		++uvwArrayIterator;
 		uvw.v = *uvwArrayIterator;
@@ -397,7 +397,7 @@ void BaselineMatrixLoader::LoadPerChannel(size_t timeIndex, std::vector<TimeFreq
 			_metaData->SetUVW(a2, a1, uvw);
 		}
 	}
-	casa::ROScalarColumn<int> bandColumn(table, "DATA_DESC_ID");
+	casacore::ROScalarColumn<int> bandColumn(table, "DATA_DESC_ID");
 	BandInfo band = _measurementSet.GetBandInfo(bandColumn(0));
 	_metaData->SetFrequency(band.CenterFrequencyHz());
 
