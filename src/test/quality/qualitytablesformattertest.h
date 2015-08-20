@@ -26,9 +26,9 @@
 #include "../../quality/qualitytablesformatter.h"
 #include "../../quality/statisticalvalue.h"
 
-#include <tables/Tables/Table.h>
-#include <tables/Tables/SetupNewTab.h>
-#include <tables/Tables/ScaColDesc.h>
+#include <casacore/tables/Tables/Table.h>
+#include <casacore/tables/Tables/SetupNewTab.h>
+#include <casacore/tables/Tables/ScaColDesc.h>
 
 class QualityTablesFormatterTest : public UnitTest {
 	public:
@@ -49,14 +49,14 @@ class QualityTablesFormatterTest : public UnitTest {
 	private:
 		void createTable()
 		{
-			casa::TableDesc tableDesc("MAIN_TABLE", "1.0", casa::TableDesc::Scratch);
-			tableDesc.addColumn(casa::ScalarColumnDesc<int>("TEST"));
-			casa::SetupNewTable mainTableSetup("QualityTest.MS", tableDesc, casa::Table::New);
-			casa::Table mainOutputTable(mainTableSetup);
+			casacore::TableDesc tableDesc("MAIN_TABLE", "1.0", casacore::TableDesc::Scratch);
+			tableDesc.addColumn(casacore::ScalarColumnDesc<int>("TEST"));
+			casacore::SetupNewTable mainTableSetup("QualityTest.MS", tableDesc, casacore::Table::New);
+			casacore::Table mainOutputTable(mainTableSetup);
 		}
 		void removeTable()
 		{
-			casa::Table::deleteTable("QualityTest.MS");
+			casacore::Table::deleteTable("QualityTest.MS");
 		}
 		struct TestConstructor : public Asserter
 		{

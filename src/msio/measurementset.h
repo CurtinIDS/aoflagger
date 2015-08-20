@@ -25,9 +25,9 @@
 #include <utility>
 #include <set>
 
-#include <ms/MeasurementSets/MSColumns.h>
+#include <casacore/ms/MeasurementSets/MSColumns.h>
 
-#include <tables/Tables/DataManager.h>
+#include <casacore/tables/DataMan/DataManager.h>
 
 #include "../strategy/control/types.h"
 
@@ -44,23 +44,23 @@ class MSIterator {
 		MSIterator &operator++() { _row++; return *this; }
 		//size_t TotalRows() { return _table->nrow(); }
 
-		casa::Complex Data(unsigned frequencyIndex, unsigned polarisation)
+		casacore::Complex Data(unsigned frequencyIndex, unsigned polarisation)
 		{
-			return (*_dataCol)(_row)(casa::IPosition(2, frequencyIndex, polarisation));
+			return (*_dataCol)(_row)(casacore::IPosition(2, frequencyIndex, polarisation));
 		}
 
-		bool Flag(unsigned frequencyIndex, unsigned polarisation) { return (*_flagCol)(_row)(casa::IPosition(2, frequencyIndex, polarisation)); }
-		casa::Array<bool>::const_iterator FlagIterator()
+		bool Flag(unsigned frequencyIndex, unsigned polarisation) { return (*_flagCol)(_row)(casacore::IPosition(2, frequencyIndex, polarisation)); }
+		casacore::Array<bool>::const_iterator FlagIterator()
 		{
 			return (*_flagCol)(_row).begin();
 		}
 
-		casa::Complex CorrectedData(unsigned frequencyIndex, unsigned polarisation)
+		casacore::Complex CorrectedData(unsigned frequencyIndex, unsigned polarisation)
 		{
-			return (*_correctedDataCol)(_row)(casa::IPosition(2, frequencyIndex, polarisation));
+			return (*_correctedDataCol)(_row)(casacore::IPosition(2, frequencyIndex, polarisation));
 		}
 
-		casa::Array<casa::Complex>::const_iterator CorrectedDataIterator()
+		casacore::Array<casacore::Complex>::const_iterator CorrectedDataIterator()
 		{
 			return (*_correctedDataCol)(_row).begin();
 		}
@@ -72,8 +72,8 @@ class MSIterator {
 		unsigned ScanNumber() { return (*_scanNumberCol)(_row); }
 		class UVW UVW() {
 			class UVW uvw;
-			casa::Array<double> arr = (*_uvwCol)(_row);
-			casa::Array<double>::const_iterator i = arr.begin();
+			casacore::Array<double> arr = (*_uvwCol)(_row);
+			casacore::Array<double>::const_iterator i = arr.begin();
 			uvw.u = *i; ++i;
 			uvw.v = *i; ++i;
 			uvw.w = *i;
@@ -82,17 +82,17 @@ class MSIterator {
 		unsigned Window() { return (*_windowCol)(_row); }
 	private:
 		unsigned long _row;
-		casa::ROScalarColumn<int> *_antenna1Col;
-		casa::ROScalarColumn<int> *_antenna2Col;
-		casa::ROArrayColumn<casa::Complex> *_dataCol;
-		casa::ROArrayColumn<bool> *_flagCol;
-		casa::ROArrayColumn<casa::Complex> *_correctedDataCol;
-		casa::ROScalarColumn<double> *_timeCol;
-		casa::ROScalarColumn<int> *_fieldCol;
-		casa::ROScalarColumn<int> *_scanNumberCol;
-		casa::ROArrayColumn<double> *_uvwCol;
-		casa::ROScalarColumn<int> *_windowCol;
-		casa::MeasurementSet *_table;
+		casacore::ROScalarColumn<int> *_antenna1Col;
+		casacore::ROScalarColumn<int> *_antenna2Col;
+		casacore::ROArrayColumn<casacore::Complex> *_dataCol;
+		casacore::ROArrayColumn<bool> *_flagCol;
+		casacore::ROArrayColumn<casacore::Complex> *_correctedDataCol;
+		casacore::ROScalarColumn<double> *_timeCol;
+		casacore::ROScalarColumn<int> *_fieldCol;
+		casacore::ROScalarColumn<int> *_scanNumberCol;
+		casacore::ROArrayColumn<double> *_uvwCol;
+		casacore::ROScalarColumn<int> *_windowCol;
+		casacore::MeasurementSet *_table;
 };
 
 class MeasurementSet {
@@ -267,10 +267,10 @@ class MeasurementSet {
 		
 		void initializeOtherData();
 		
-		void initializeAntennas(casa::MeasurementSet &ms);
-		void initializeBands(casa::MeasurementSet &ms);
-		void initializeFields(casa::MeasurementSet &ms);
-		void initializeObservation(casa::MeasurementSet &ms);
+		void initializeAntennas(casacore::MeasurementSet &ms);
+		void initializeBands(casacore::MeasurementSet &ms);
+		void initializeFields(casacore::MeasurementSet &ms);
+		void initializeObservation(casacore::MeasurementSet &ms);
 
 		const std::string _path;
 		

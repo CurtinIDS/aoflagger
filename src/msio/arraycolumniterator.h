@@ -22,8 +22,8 @@
 
 //#define AIPS_NO_TEMPLATE_SRC
 //#define CASACORE_NO_AUTO_TEMPLATES
-#include <ms/MeasurementSets/MSColumns.h>
-#include <tables/Tables/RefRows.h>
+#include <casacore/ms/MeasurementSets/MSColumns.h>
+#include <casacore/tables/Tables/RefRows.h>
 
 /**
 	@author A.R. Offringa <offringa@astro.rug.nl>
@@ -31,7 +31,7 @@
 template<typename T>
 class ROArrayColumnIterator {
 	public:
-		ROArrayColumnIterator(class casa::ROArrayColumn<T> &column, unsigned row) throw() :
+		ROArrayColumnIterator(class casacore::ROArrayColumn<T> &column, unsigned row) throw() :
 			_column(column), _row(row)
 		{
 		}
@@ -46,14 +46,14 @@ class ROArrayColumnIterator {
 			_row++;
 			return *this;
 		}
-		casa::Array<T> *operator->() const throw() {
+		casacore::Array<T> *operator->() const throw() {
 			return &_column(_row);
 		}
-		casa::Array<T> operator*() const throw() {
+		casacore::Array<T> operator*() const throw() {
 			return _column(_row);
 		}
-		void Set(const casa::Array<T> &values) throw() {
-			_column.putColumnCells(casa::RefRows(_row, _row), values);
+		void Set(const casacore::Array<T> &values) throw() {
+			_column.putColumnCells(casacore::RefRows(_row, _row), values);
 		}
 		bool operator!=(const ROArrayColumnIterator<T> &other) const throw() {
 			return _row!=other._row;
@@ -61,19 +61,19 @@ class ROArrayColumnIterator {
 		bool operator==(const ROArrayColumnIterator<T> &other) const throw() {
 			return _row==other._row;
 		}
-		static ROArrayColumnIterator First(casa::ROArrayColumn<T> &column)
+		static ROArrayColumnIterator First(casacore::ROArrayColumn<T> &column)
 		{
 			return ROArrayColumnIterator<T>(column, 0);
 		}
 	protected:
-		casa::ROArrayColumn<T> &_column;
+		casacore::ROArrayColumn<T> &_column;
 		unsigned _row;
 };
 
 template<typename T>
 class ArrayColumnIterator : public ROArrayColumnIterator<T> {
 	public:
-		ArrayColumnIterator(class casa::ArrayColumn<T> &column, unsigned row) throw() :
+		ArrayColumnIterator(class casacore::ArrayColumn<T> &column, unsigned row) throw() :
 			ROArrayColumnIterator<T>(column, row)
 		{
 		}
@@ -84,11 +84,11 @@ class ArrayColumnIterator : public ROArrayColumnIterator<T> {
 		~ArrayColumnIterator() throw()
 		{
 		}
-		void Set(const casa::Array<T> &values) throw() {
-			casa::ArrayColumn<T> *col = static_cast<casa::ArrayColumn<T>* >(&this->_column);
+		void Set(const casacore::Array<T> &values) throw() {
+			casacore::ArrayColumn<T> *col = static_cast<casacore::ArrayColumn<T>* >(&this->_column);
 			col->basePut(this->_row, values);
 		}
-		static ArrayColumnIterator First(casa::ArrayColumn<T> &column)
+		static ArrayColumnIterator First(casacore::ArrayColumn<T> &column)
 		{
 			return ArrayColumnIterator<T>(column, 0);
 		}
@@ -101,7 +101,7 @@ class ArrayColumnIterator : public ROArrayColumnIterator<T> {
 // makes the following two definitions necessary. 
 
 /*
-namespace casa {//#Begin casa namespace
+namespace casacore {//#Begin casa namespace
 template<class T>
 Array<T>::ConstIteratorSTL::ConstIteratorSTL (const Array<T>& arr)
 : itsLineIncr (0),

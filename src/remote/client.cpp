@@ -25,7 +25,7 @@
 #include <boost/asio/read.hpp>
 #include <boost/asio/write.hpp>
 
-#include <ms/MeasurementSets/MSColumns.h>
+#include <casacore/ms/MeasurementSets/MSColumns.h>
 
 #include "../quality/histogramcollection.h"
 #include "../quality/histogramtablesformatter.h"
@@ -272,16 +272,16 @@ void Client::handleReadDataRows(unsigned dataSize)
 		Serializable::SerializeToUInt64(buffer, options.rowCount);
 		
 		// Read meta data from the MS
-		casa::Table table(options.msFilename);
+		casacore::Table table(options.msFilename);
 		if(options.rowCount == 0)
 			Serializable::SerializeToUInt64(buffer, table.nrow());
 		else {
-			casa::ROArrayColumn<casa::Complex> dataCol(table, "DATA");
-			casa::ROArrayColumn<double> uvwColumn(table, "UVW");
-			casa::ROScalarColumn<int> a1Column(table, "ANTENNA1");
-			casa::ROScalarColumn<int> a2Column(table, "ANTENNA2");
-			casa::ROScalarColumn<double> timeColumn(table, "TIME");
-			const casa::IPosition &shape = dataCol.shape(0);
+			casacore::ROArrayColumn<casacore::Complex> dataCol(table, "DATA");
+			casacore::ROArrayColumn<double> uvwColumn(table, "UVW");
+			casacore::ROScalarColumn<int> a1Column(table, "ANTENNA1");
+			casacore::ROScalarColumn<int> a2Column(table, "ANTENNA2");
+			casacore::ROScalarColumn<double> timeColumn(table, "TIME");
+			const casacore::IPosition &shape = dataCol.shape(0);
 			size_t channelCount, polarizationCount;
 			if(shape.nelements() > 1)
 			{
@@ -297,8 +297,8 @@ void Client::handleReadDataRows(unsigned dataSize)
 			for(size_t rowIndex=options.startRow; rowIndex != endRow; ++rowIndex)
 			{
 				// DATA
-				const casa::Array<casa::Complex> cellData = dataCol(rowIndex);
-				casa::Array<casa::Complex>::const_iterator cellIter = cellData.begin();
+				const casacore::Array<casacore::Complex> cellData = dataCol(rowIndex);
+				casacore::Array<casacore::Complex>::const_iterator cellIter = cellData.begin();
 				
 				MSRowDataExt dataExt(polarizationCount, channelCount);
 				MSRowData &data = dataExt.Data();
@@ -313,8 +313,8 @@ void Client::handleReadDataRows(unsigned dataSize)
 				}
 				
 				// UVW
-				casa::Array<double> uvwArr = uvwColumn(rowIndex);
-				casa::Array<double>::const_iterator uvwIter = uvwArr.begin();
+				casacore::Array<double> uvwArr = uvwColumn(rowIndex);
+				casacore::Array<double>::const_iterator uvwIter = uvwArr.begin();
 				dataExt.SetU(*uvwIter);
 				++uvwIter;
 				dataExt.SetV(*uvwIter);
@@ -357,11 +357,11 @@ void Client::handleWriteDataRows(unsigned dataSize)
 			throw std::runtime_error("Could not set string buffer");
 		
 		// Write the received data to the MS
-		casa::Table table(options.msFilename, casa::Table::Update);
-		casa::ArrayColumn<casa::Complex> dataCol(table, "DATA");
-		//casa::ROScalarColumn<int> a1Column(table, "ANTENNA1");
-		//casa::ROScalarColumn<int> a2Column(table, "ANTENNA2");
-		const casa::IPosition shape = dataCol.shape(0);
+		casacore::Table table(options.msFilename, casacore::Table::Update);
+		casacore::ArrayColumn<casacore::Complex> dataCol(table, "DATA");
+		//casacore::ROScalarColumn<int> a1Column(table, "ANTENNA1");
+		//casacore::ROScalarColumn<int> a2Column(table, "ANTENNA2");
+		const casacore::IPosition shape = dataCol.shape(0);
 		size_t channelCount, polarizationCount;
 		if(shape.nelements() > 1)
 		{
@@ -373,7 +373,7 @@ void Client::handleWriteDataRows(unsigned dataSize)
 		const size_t samplesPerRow = polarizationCount * channelCount;
 		
 		// Unserialize and write the rows
-		casa::Array<casa::Complex> cellData(shape);
+		casacore::Array<casacore::Complex> cellData(shape);
 		const size_t endRow = options.startRow + options.rowCount;
 		for(size_t rowIndex=options.startRow; rowIndex != endRow; ++rowIndex)
 		{
@@ -381,12 +381,12 @@ void Client::handleWriteDataRows(unsigned dataSize)
 			dataExt.Unserialize(stream);
 			MSRowData &data = dataExt.Data();
 			
-			casa::Array<casa::Complex>::iterator cellIter = cellData.begin();
+			casacore::Array<casacore::Complex>::iterator cellIter = cellData.begin();
 			
 			num_t *realPtr = data.RealPtr();
 			num_t *imagPtr = data.ImagPtr();
 			for(size_t i=0;i<samplesPerRow;++i) {
-				*cellIter = casa::Complex(*realPtr, *imagPtr);
+				*cellIter = casacore::Complex(*realPtr, *imagPtr);
 				++realPtr;
 				++imagPtr;
 				++cellIter;

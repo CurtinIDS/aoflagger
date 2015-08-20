@@ -3,7 +3,7 @@
 #include <stdexcept>
 #include <vector>
 
-#include <tables/Tables/ExprNode.h>
+#include <casacore/tables/TaQL/ExprNode.h>
 
 #include "arraycolumniterator.h"
 #include "scalarcolumniterator.h"
@@ -13,13 +13,13 @@
 SpatialTimeLoader::SpatialTimeLoader(MeasurementSet &measurementSet)
 	:  _measurementSet(measurementSet), _sortedTable(0), _tableIter(0)
 {
-	casa::Table *rawTable = new casa::Table(_measurementSet.Path());
-	casa::Block<casa::String> names(4);
+	casacore::Table *rawTable = new casacore::Table(_measurementSet.Path());
+	casacore::Block<casacore::String> names(4);
 	names[0] = "DATA_DESC_ID";
 	names[1] = "TIME";
 	names[2] = "ANTENNA1";
 	names[3] = "ANTENNA2";
-	_sortedTable = new casa::Table(rawTable->sort(names));
+	_sortedTable = new casacore::Table(rawTable->sort(names));
 	delete rawTable;
 
 	_channelCount = _measurementSet.FrequencyCount(0);
@@ -27,9 +27,9 @@ SpatialTimeLoader::SpatialTimeLoader(MeasurementSet &measurementSet)
 	_antennaCount = _measurementSet.AntennaCount();
 	_polarizationCount = _measurementSet.PolarizationCount();
 
-	casa::Block<casa::String> selectionNames(1);
+	casacore::Block<casacore::String> selectionNames(1);
 	selectionNames[0] = "DATA_DESC_ID";
-	_tableIter = new casa::TableIterator(*_sortedTable, selectionNames, casa::TableIterator::Ascending, casa::TableIterator::NoSort);
+	_tableIter = new casacore::TableIterator(*_sortedTable, selectionNames, casacore::TableIterator::Ascending, casacore::TableIterator::NoSort);
 }
 
 SpatialTimeLoader::~SpatialTimeLoader()
@@ -43,13 +43,13 @@ TimeFrequencyData SpatialTimeLoader::Load(unsigned channelIndex, bool fringeStop
 {
 	const unsigned baselineCount = _antennaCount * (_antennaCount-1) / 2;
 	
-	casa::Table table = _tableIter->table();
-	casa::ROScalarColumn<int> antenna1Column(table, "ANTENNA1"); 
-	casa::ROScalarColumn<int> antenna2Column(table, "ANTENNA2");
-	casa::ROScalarColumn<double> timeColumn(table, "TIME");
-	casa::ROArrayColumn<double> uvwColumn(table, "UVW");
-	casa::ROArrayColumn<bool> flagColumn(table, "FLAG");
-	casa::ROArrayColumn<casa::Complex> dataColumn(table, "DATA");
+	casacore::Table table = _tableIter->table();
+	casacore::ROScalarColumn<int> antenna1Column(table, "ANTENNA1"); 
+	casacore::ROScalarColumn<int> antenna2Column(table, "ANTENNA2");
+	casacore::ROScalarColumn<double> timeColumn(table, "TIME");
+	casacore::ROArrayColumn<double> uvwColumn(table, "UVW");
+	casacore::ROArrayColumn<bool> flagColumn(table, "FLAG");
+	casacore::ROArrayColumn<casacore::Complex> dataColumn(table, "DATA");
 
 	std::vector<Image2DPtr>
 		realImages(_polarizationCount),
@@ -82,13 +82,13 @@ TimeFrequencyData SpatialTimeLoader::Load(unsigned channelIndex, bool fringeStop
 		
 		if(a1 != a2)
 		{
-			const casa::Array<casa::Complex> data = dataColumn(row);
-			const casa::Array<bool> flags = flagColumn(row);
-			const casa::Array<double> uvws = uvwColumn(row);
+			const casacore::Array<casacore::Complex> data = dataColumn(row);
+			const casacore::Array<bool> flags = flagColumn(row);
+			const casacore::Array<double> uvws = uvwColumn(row);
 
-			casa::Array<casa::Complex>::const_iterator i = data.begin();
-			casa::Array<bool>::const_iterator fI = flags.begin();
-			casa::Array<double>::const_iterator uvwIter = uvws.begin();
+			casacore::Array<casacore::Complex>::const_iterator i = data.begin();
+			casacore::Array<bool>::const_iterator fI = flags.begin();
+			casacore::Array<double>::const_iterator uvwIter = uvws.begin();
 			++uvwIter; ++uvwIter;
 			const double wRotation = -channelInfo.MetersToLambda(*uvwIter) * M_PI * 2.0;
 			
@@ -122,7 +122,7 @@ TimeFrequencyData SpatialTimeLoader::Load(unsigned channelIndex, bool fringeStop
 			}
 		}
 	}
-	casa::ROScalarColumn<int> bandColumn(table, "DATA_DESC_ID");
+	casacore::ROScalarColumn<int> bandColumn(table, "DATA_DESC_ID");
 	const BandInfo band = _measurementSet.GetBandInfo(bandColumn(0));
 
 	TimeFrequencyData data;

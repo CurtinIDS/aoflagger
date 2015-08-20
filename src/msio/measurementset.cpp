@@ -17,11 +17,11 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#include <ms/MeasurementSets/MeasurementSet.h>
-#include <ms/MeasurementSets/MSTable.h>
-#include <tables/Tables/TableDesc.h>
-#include <tables/Tables/TableRow.h>
-#include <tables/Tables/ExprNode.h>
+#include <casacore/ms/MeasurementSets/MeasurementSet.h>
+#include <casacore/ms/MeasurementSets/MSTable.h>
+#include <casacore/tables/Tables/TableDesc.h>
+#include <casacore/tables/Tables/TableRow.h>
+#include <casacore/tables/TaQL/ExprNode.h>
 
 #include "measurementset.h"
 #include "arraycolumniterator.h"
@@ -38,13 +38,13 @@ MeasurementSet::~MeasurementSet()
 
 size_t MeasurementSet::BandCount(const std::string &location)
 {
-	casa::MeasurementSet ms(location);
+	casacore::MeasurementSet ms(location);
 	return ms.spectralWindow().nrow();
 }
 
 void MeasurementSet::initializeOtherData()
 {
-	casa::MeasurementSet ms(_path);
+	casacore::MeasurementSet ms(_path);
 	_rowCount = ms.nrow();
 	initializeAntennas(ms);
 	initializeBands(ms);
@@ -52,15 +52,15 @@ void MeasurementSet::initializeOtherData()
 	initializeObservation(ms);
 }
 
-void MeasurementSet::initializeAntennas(casa::MeasurementSet &ms)
+void MeasurementSet::initializeAntennas(casacore::MeasurementSet &ms)
 {
-	casa::MSAntenna antennaTable = ms.antenna();
+	casacore::MSAntenna antennaTable = ms.antenna();
 	size_t count = antennaTable.nrow();
-	casa::ROArrayColumn<double> positionCol(antennaTable, "POSITION"); 
-	casa::ROScalarColumn<casa::String> nameCol(antennaTable, "NAME");
-	casa::ROScalarColumn<double> diameterCol(antennaTable, "DISH_DIAMETER");
-	casa::ROScalarColumn<casa::String> mountCol(antennaTable, "MOUNT");
-	casa::ROScalarColumn<casa::String> stationCol(antennaTable, "STATION");
+	casacore::ROArrayColumn<double> positionCol(antennaTable, "POSITION"); 
+	casacore::ROScalarColumn<casacore::String> nameCol(antennaTable, "NAME");
+	casacore::ROScalarColumn<double> diameterCol(antennaTable, "DISH_DIAMETER");
+	casacore::ROScalarColumn<casacore::String> mountCol(antennaTable, "MOUNT");
+	casacore::ROScalarColumn<casacore::String> stationCol(antennaTable, "STATION");
 
 	_antennas.resize(count);
 	for(size_t row=0; row!=count; ++row)
@@ -69,8 +69,8 @@ void MeasurementSet::initializeAntennas(casa::MeasurementSet &ms)
 		info.diameter = diameterCol(row);
 		info.id = row;
 		info.name = nameCol(row);
-		casa::Array<double> position = positionCol(row);
-		casa::Array<double>::iterator i = position.begin();
+		casacore::Array<double> position = positionCol(row);
+		casacore::Array<double>::iterator i = position.begin();
 		info.position.x = *i;
 		++i;
 		info.position.y = *i;
@@ -82,11 +82,11 @@ void MeasurementSet::initializeAntennas(casa::MeasurementSet &ms)
 	}
 }
 
-void MeasurementSet::initializeBands(casa::MeasurementSet &ms)
+void MeasurementSet::initializeBands(casacore::MeasurementSet &ms)
 {
-	casa::MSSpectralWindow spectralWindowTable = ms.spectralWindow();
-	casa::ROScalarColumn<int> numChanCol(spectralWindowTable, "NUM_CHAN");
-	casa::ROArrayColumn<double> frequencyCol(spectralWindowTable, "CHAN_FREQ");
+	casacore::MSSpectralWindow spectralWindowTable = ms.spectralWindow();
+	casacore::ROScalarColumn<int> numChanCol(spectralWindowTable, "NUM_CHAN");
+	casacore::ROArrayColumn<double> frequencyCol(spectralWindowTable, "CHAN_FREQ");
 
 	_bands.resize(spectralWindowTable.nrow());
 	for(size_t bandIndex=0; bandIndex!=spectralWindowTable.nrow(); ++bandIndex)
@@ -95,13 +95,13 @@ void MeasurementSet::initializeBands(casa::MeasurementSet &ms)
 		band.windowIndex = bandIndex;
 		size_t channelCount = numChanCol(bandIndex);
 
-		const casa::Array<double> &frequencies = frequencyCol(bandIndex);
-		casa::Array<double>::const_iterator frequencyIterator = frequencies.begin();
+		const casacore::Array<double> &frequencies = frequencyCol(bandIndex);
+		casacore::Array<double>::const_iterator frequencyIterator = frequencies.begin();
 
 		for(unsigned channel=0;channel<channelCount;++channel) {
 			ChannelInfo channelInfo;
 			channelInfo.frequencyIndex = channel;
-			channelInfo.frequencyHz = frequencies(casa::IPosition(1, channel));
+			channelInfo.frequencyHz = frequencies(casacore::IPosition(1, channel));
 			channelInfo.channelWidthHz = 0.0;
 			channelInfo.effectiveBandWidthHz = 0.0;
 			channelInfo.resolutionHz = 0.0;
@@ -114,17 +114,17 @@ void MeasurementSet::initializeBands(casa::MeasurementSet &ms)
 	}
 }
 
-void MeasurementSet::initializeFields(casa::MeasurementSet &ms)
+void MeasurementSet::initializeFields(casacore::MeasurementSet &ms)
 {
-	casa::MSField fieldTable = ms.field();
-	casa::ROArrayColumn<double> delayDirectionCol(fieldTable, fieldTable.columnName(casa::MSFieldEnums::DELAY_DIR) );
-	casa::ROScalarColumn<casa::String> nameCol(fieldTable, fieldTable.columnName(casa::MSFieldEnums::NAME) );
+	casacore::MSField fieldTable = ms.field();
+	casacore::ROArrayColumn<double> delayDirectionCol(fieldTable, fieldTable.columnName(casacore::MSFieldEnums::DELAY_DIR) );
+	casacore::ROScalarColumn<casacore::String> nameCol(fieldTable, fieldTable.columnName(casacore::MSFieldEnums::NAME) );
 
 	_fields.resize(fieldTable.nrow());
 	for(size_t row=0; row!=fieldTable.nrow(); ++row)
 	{
-		const casa::Array<double> &delayDirection = delayDirectionCol(row);
-		casa::Array<double>::const_iterator delayDirectionIterator = delayDirection.begin();
+		const casacore::Array<double> &delayDirection = delayDirectionCol(row);
+		casacore::Array<double>::const_iterator delayDirectionIterator = delayDirection.begin();
 	
 		FieldInfo field;
 		field.fieldId = row;
@@ -137,10 +137,10 @@ void MeasurementSet::initializeFields(casa::MeasurementSet &ms)
 	}
 }
 
-void MeasurementSet::initializeObservation(casa::MeasurementSet& ms)
+void MeasurementSet::initializeObservation(casacore::MeasurementSet& ms)
 {
-	casa::MSObservation obsTable = ms.observation();
-	casa::ROScalarColumn<casa::String> telescopeNameCol(obsTable, obsTable.columnName(casa::MSObservationEnums::TELESCOPE_NAME));
+	casacore::MSObservation obsTable = ms.observation();
+	casacore::ROScalarColumn<casacore::String> telescopeNameCol(obsTable, obsTable.columnName(casacore::MSObservationEnums::TELESCOPE_NAME));
 	if(obsTable.nrow() != 0)
 	{
 		_telescopeName = telescopeNameCol(0);
@@ -154,10 +154,10 @@ void MeasurementSet::initializeObservation(casa::MeasurementSet& ms)
 
 void MeasurementSet::GetDataDescToBandVector(std::vector<size_t>& dataDescToBand)
 {
-	casa::MeasurementSet ms(_path);
-	casa::MSDataDescription dataDescTable = ms.dataDescription();
-	casa::ScalarColumn<int>
-		spwIdCol(dataDescTable, dataDescTable.columnName(casa::MSDataDescriptionEnums::SPECTRAL_WINDOW_ID));
+	casacore::MeasurementSet ms(_path);
+	casacore::MSDataDescription dataDescTable = ms.dataDescription();
+	casacore::ScalarColumn<int>
+		spwIdCol(dataDescTable, dataDescTable.columnName(casacore::MSDataDescriptionEnums::SPECTRAL_WINDOW_ID));
 	dataDescToBand.resize(dataDescTable.nrow());
 	for(size_t dataDescId=0;dataDescId!=dataDescTable.nrow();++dataDescId)
 	{
@@ -167,20 +167,20 @@ void MeasurementSet::GetDataDescToBandVector(std::vector<size_t>& dataDescToBand
 
 MSIterator::MSIterator(class MeasurementSet &ms, bool hasCorrectedData) : _row(0)
 {
-	_table = new casa::MeasurementSet(ms.Path());
-	_antenna1Col = new casa::ROScalarColumn<int>(*_table, "ANTENNA1");
-	_antenna2Col = new casa::ROScalarColumn<int>(*_table, "ANTENNA2");
-	_dataCol = new casa::ROArrayColumn<casa::Complex>(*_table, "DATA");
-	_flagCol = new casa::ROArrayColumn<bool>(*_table, "FLAG");
+	_table = new casacore::MeasurementSet(ms.Path());
+	_antenna1Col = new casacore::ROScalarColumn<int>(*_table, "ANTENNA1");
+	_antenna2Col = new casacore::ROScalarColumn<int>(*_table, "ANTENNA2");
+	_dataCol = new casacore::ROArrayColumn<casacore::Complex>(*_table, "DATA");
+	_flagCol = new casacore::ROArrayColumn<bool>(*_table, "FLAG");
 	if(hasCorrectedData)
-		_correctedDataCol = new casa::ROArrayColumn<casa::Complex>(*_table, "CORRECTED_DATA");
+		_correctedDataCol = new casacore::ROArrayColumn<casacore::Complex>(*_table, "CORRECTED_DATA");
 	else
 		_correctedDataCol = 0;
-	_fieldCol = new casa::ROScalarColumn<int>(*_table, "FIELD_ID");
-	_timeCol = new casa::ROScalarColumn<double>(*_table, "TIME");
-	_scanNumberCol = new casa::ROScalarColumn<int>(*_table, "SCAN_NUMBER");
-	_uvwCol = new casa::ROArrayColumn<double>(*_table, "UVW");
-	_windowCol = new casa::ROScalarColumn<int>(*_table, "DATA_DESC_ID");
+	_fieldCol = new casacore::ROScalarColumn<int>(*_table, "FIELD_ID");
+	_timeCol = new casacore::ROScalarColumn<double>(*_table, "TIME");
+	_scanNumberCol = new casacore::ROScalarColumn<int>(*_table, "SCAN_NUMBER");
+	_uvwCol = new casacore::ROArrayColumn<double>(*_table, "UVW");
+	_windowCol = new casacore::ROScalarColumn<int>(*_table, "DATA_DESC_ID");
 }
 
 MSIterator::~MSIterator()
@@ -252,13 +252,13 @@ size_t MeasurementSet::PolarizationCount()
 
 size_t MeasurementSet::PolarizationCount(const std::string &filename)
 {
-	casa::MeasurementSet ms(filename);
-	casa::Table polTable = ms.polarization();
-	casa::ROArrayColumn<int> corTypeColumn(polTable, "CORR_TYPE"); 
-	casa::Array<int> corType = corTypeColumn(0);
-	casa::Array<int>::iterator iterend(corType.end());
+	casacore::MeasurementSet ms(filename);
+	casacore::Table polTable = ms.polarization();
+	casacore::ROArrayColumn<int> corTypeColumn(polTable, "CORR_TYPE"); 
+	casacore::Array<int> corType = corTypeColumn(0);
+	casacore::Array<int>::iterator iterend(corType.end());
 	size_t polarizationCount = 0;
-	for (casa::Array<int>::iterator iter=corType.begin(); iter!=iterend; ++iter)
+	for (casacore::Array<int>::iterator iter=corType.begin(); iter!=iterend; ++iter)
 	{
 		++polarizationCount;
 	}
@@ -267,9 +267,9 @@ size_t MeasurementSet::PolarizationCount(const std::string &filename)
 
 bool MeasurementSet::HasRFIConsoleHistory()
 {
-	casa::MeasurementSet ms(_path);
-	casa::Table histtab(ms.history());
-	casa::ROScalarColumn<casa::String> application (histtab, "APPLICATION");
+	casacore::MeasurementSet ms(_path);
+	casacore::Table histtab(ms.history());
+	casacore::ROScalarColumn<casacore::String> application (histtab, "APPLICATION");
 	for(unsigned i=0;i<histtab.nrow();++i)
 	{
 		if(application(i) == "AOFlagger")
@@ -280,12 +280,12 @@ bool MeasurementSet::HasRFIConsoleHistory()
 
 void MeasurementSet::GetAOFlaggerHistory(std::ostream &stream)
 {
-	casa::MeasurementSet ms(_path);
-	casa::MSHistory histtab(ms.history());
-	casa::ROScalarColumn<double>       time        (histtab, "TIME");
-	casa::ROScalarColumn<casa::String> application (histtab, "APPLICATION");
-	casa::ROArrayColumn<casa::String>  cli         (histtab, "CLI_COMMAND");
-	casa::ROArrayColumn<casa::String>  parms       (histtab, "APP_PARAMS");
+	casacore::MeasurementSet ms(_path);
+	casacore::MSHistory histtab(ms.history());
+	casacore::ROScalarColumn<double>       time        (histtab, "TIME");
+	casacore::ROScalarColumn<casacore::String> application (histtab, "APPLICATION");
+	casacore::ROArrayColumn<casacore::String>  cli         (histtab, "CLI_COMMAND");
+	casacore::ROArrayColumn<casacore::String>  parms       (histtab, "APP_PARAMS");
 	for(unsigned i=0;i<histtab.nrow();++i)
 	{
 		if(application(i) == "AOFlagger")
@@ -295,8 +295,8 @@ void MeasurementSet::GetAOFlaggerHistory(std::ostream &stream)
 				"Date: " << Date::AipsMJDToDateString(time(i)) << "\n"
 				"Time: " << Date::AipsMJDToTimeString(time(i)) << "\n"
 				"Strategy: \n     ----------     \n";
-			const casa::Vector<casa::String> appParamsVec = parms(i);
-			for(casa::Vector<casa::String>::const_iterator j=appParamsVec.begin();j!=appParamsVec.end();++j)
+			const casacore::Vector<casacore::String> appParamsVec = parms(i);
+			for(casacore::Vector<casacore::String>::const_iterator j=appParamsVec.begin();j!=appParamsVec.end();++j)
 			{
 				stream << *j << '\n';
 			}
@@ -308,29 +308,29 @@ void MeasurementSet::GetAOFlaggerHistory(std::ostream &stream)
 void MeasurementSet::AddAOFlaggerHistory(const rfiStrategy::Strategy &strategy, const std::string &commandline)
 {
 	// This has been copied from MSWriter.cc of NDPPP and altered (thanks, Ger!)
-	casa::MeasurementSet ms(_path);
-	casa::Table histtab(ms.keywordSet().asTable("HISTORY"));
+	casacore::MeasurementSet ms(_path);
+	casacore::Table histtab(ms.keywordSet().asTable("HISTORY"));
 	histtab.reopenRW();
-	casa::ScalarColumn<double>       time        (histtab, "TIME");
-	casa::ScalarColumn<int>          obsId       (histtab, "OBSERVATION_ID");
-	casa::ScalarColumn<casa::String> message     (histtab, "MESSAGE");
-	casa::ScalarColumn<casa::String> application (histtab, "APPLICATION");
-	casa::ScalarColumn<casa::String> priority    (histtab, "PRIORITY");
-	casa::ScalarColumn<casa::String> origin      (histtab, "ORIGIN");
-	casa::ArrayColumn<casa::String>  parms       (histtab, "APP_PARAMS");
-	casa::ArrayColumn<casa::String>  cli         (histtab, "CLI_COMMAND");
+	casacore::ScalarColumn<double>       time        (histtab, "TIME");
+	casacore::ScalarColumn<int>          obsId       (histtab, "OBSERVATION_ID");
+	casacore::ScalarColumn<casacore::String> message     (histtab, "MESSAGE");
+	casacore::ScalarColumn<casacore::String> application (histtab, "APPLICATION");
+	casacore::ScalarColumn<casacore::String> priority    (histtab, "PRIORITY");
+	casacore::ScalarColumn<casacore::String> origin      (histtab, "ORIGIN");
+	casacore::ArrayColumn<casacore::String>  parms       (histtab, "APP_PARAMS");
+	casacore::ArrayColumn<casacore::String>  cli         (histtab, "CLI_COMMAND");
 	// Put all parset entries in a Vector<String>.
 	// Some WSRT MSs have a FixedShape APP_PARAMS and CLI_COMMAND column.
 	// For them, put the xml file in a single vector element (with newlines).
 	bool fixedShaped =
-		(parms.columnDesc().options() & casa::ColumnDesc::FixedShape) != 0;
+		(parms.columnDesc().options() & casacore::ColumnDesc::FixedShape) != 0;
 
 	std::ostringstream ostr;
 	rfiStrategy::StrategyWriter writer;
 	writer.WriteToStream(strategy, ostr);
 
-	casa::Vector<casa::String> appParamsVec;
-	casa::Vector<casa::String> clivec;
+	casacore::Vector<casacore::String> appParamsVec;
+	casacore::Vector<casacore::String> clivec;
 	clivec.resize(1);
 	clivec[0] = commandline;
 	if (fixedShaped) {
@@ -341,7 +341,7 @@ void MeasurementSet::AddAOFlaggerHistory(const rfiStrategy::Strategy &strategy, 
 		const std::string str = ostr.str();
 		size_t lineCount = std::count(str.begin(), str.end(), '\n');
 		appParamsVec.resize(lineCount+1);
-		casa::Array<casa::String>::contiter viter = appParamsVec.cbegin();
+		casacore::Array<casacore::String>::contiter viter = appParamsVec.cbegin();
 		size_t curStringPos = 0;
 		for(size_t i=0;i<lineCount;++i)
 		{
@@ -357,7 +357,7 @@ void MeasurementSet::AddAOFlaggerHistory(const rfiStrategy::Strategy &strategy, 
 	}
 	uint rownr = histtab.nrow();
 	histtab.addRow();
-	time.put        (rownr, casa::Time().modifiedJulianDay()*24.0*3600.0);
+	time.put        (rownr, casacore::Time().modifiedJulianDay()*24.0*3600.0);
 	obsId.put       (rownr, 0);
 	message.put     (rownr, "parameters");
 	application.put (rownr, "AOFlagger");
@@ -369,11 +369,11 @@ void MeasurementSet::AddAOFlaggerHistory(const rfiStrategy::Strategy &strategy, 
 
 std::string MeasurementSet::GetStationName() const
 {
-	casa::MeasurementSet ms(_path);
-	casa::Table antennaTable(ms.antenna());
+	casacore::MeasurementSet ms(_path);
+	casacore::Table antennaTable(ms.antenna());
 	if(antennaTable.nrow() == 0)
 		throw std::runtime_error("GetStationName() : no rows in Antenna table");
-	casa::ROScalarColumn<casa::String> stationColumn(antennaTable, "STATION");
+	casacore::ROScalarColumn<casacore::String> stationColumn(antennaTable, "STATION");
 	return stationColumn(0);
 }
 

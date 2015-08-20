@@ -3,7 +3,7 @@
 
 #include <cstring>
 
-#include <tables/Tables/TableIter.h>
+#include <casacore/tables/Tables/TableIter.h>
 
 #include "timefrequencydata.h"
 #include "measurementset.h"
@@ -21,8 +21,8 @@ class SpatialTimeLoader
 		unsigned TimestepsCount() const { return _timestepsCount; }
 	private:
 		MeasurementSet &_measurementSet;
-		casa::Table *_sortedTable;
-		casa::TableIterator *_tableIter;
+		casacore::Table *_sortedTable;
+		casacore::TableIterator *_tableIter;
 		unsigned _channelCount;
 		unsigned _timestepsCount;
 		unsigned _antennaCount;

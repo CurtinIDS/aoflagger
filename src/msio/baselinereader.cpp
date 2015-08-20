@@ -22,13 +22,13 @@
 #include <set>
 #include <stdexcept>
 
-#include <ms/MeasurementSets/MeasurementSet.h>
+#include <casacore/ms/MeasurementSets/MeasurementSet.h>
 
-#include <tables/Tables/ExprNode.h>
-#include <tables/Tables/IncrStManAccessor.h>
-#include <tables/Tables/StandardStManAccessor.h>
-#include <tables/Tables/TableIter.h>
-#include <tables/Tables/TiledStManAccessor.h>
+#include <casacore/tables/DataMan/IncrStManAccessor.h>
+#include <casacore/tables/DataMan/StandardStManAccessor.h>
+#include <casacore/tables/DataMan/TiledStManAccessor.h>
+#include <casacore/tables/Tables/TableIter.h>
+#include <casacore/tables/TaQL/ExprNode.h>
 
 #include "timefrequencydata.h"
 
@@ -39,11 +39,11 @@ BaselineReader::BaselineReader(const std::string &msFile)
 	_polarizationCount(0)
 {
 	try {
-		_table = new casa::MeasurementSet(_measurementSet.Path(), casa::MeasurementSet::Update);
+		_table = new casacore::MeasurementSet(_measurementSet.Path(), casacore::MeasurementSet::Update);
 	} catch(std::exception &e)
 	{
 		AOLogger::Warn << "Read-write opening of file " << msFile << " failed, trying read-only...\n";
-		_table = new casa::MeasurementSet(_measurementSet.Path());
+		_table = new casacore::MeasurementSet(_measurementSet.Path());
 		AOLogger::Warn << "Table opened in read-only: writing not possible.\n";
 	}
 }
@@ -123,13 +123,13 @@ void BaselineReader::initializePolarizations()
 {
 	if(_polarizationCount == 0)
 	{
-		casa::MeasurementSet ms(_measurementSet.Path());
-		casa::Table polTable = ms.polarization();
-		casa::ROArrayColumn<int> corTypeColumn(polTable, "CORR_TYPE"); 
-		casa::Array<int> corType = corTypeColumn(0);
-		casa::Array<int>::iterator iterend(corType.end());
+		casacore::MeasurementSet ms(_measurementSet.Path());
+		casacore::Table polTable = ms.polarization();
+		casacore::ROArrayColumn<int> corTypeColumn(polTable, "CORR_TYPE"); 
+		casacore::Array<int> corType = corTypeColumn(0);
+		casacore::Array<int>::iterator iterend(corType.end());
 		int polarizationCount = 0;
-		for (casa::Array<int>::iterator iter=corType.begin(); iter!=iterend; ++iter)
+		for (casacore::Array<int>::iterator iter=corType.begin(); iter!=iterend; ++iter)
 		{
 			switch(*iter) {
 				case 1: //_stokesIIndex = polarizationCount; break;
@@ -157,22 +157,22 @@ void BaselineReader::initializePolarizations()
 
 uint64_t BaselineReader::MeasurementSetDataSize(const string& filename)
 {
-	casa::MeasurementSet ms(filename);
+	casacore::MeasurementSet ms(filename);
 	
-	casa::MSSpectralWindow spwTable = ms.spectralWindow();
+	casacore::MSSpectralWindow spwTable = ms.spectralWindow();
 	
-	casa::ROScalarColumn<int> numChanCol(spwTable, casa::MSSpectralWindow::columnName(casa::MSSpectralWindowEnums::NUM_CHAN));
+	casacore::ROScalarColumn<int> numChanCol(spwTable, casacore::MSSpectralWindow::columnName(casacore::MSSpectralWindowEnums::NUM_CHAN));
 	size_t channelCount = numChanCol.get(0);
 	if(channelCount == 0) throw std::runtime_error("No channels in set");
 	if(ms.nrow() == 0) throw std::runtime_error("Table has no rows (no data)");
 	
 	typedef float num_t;
 	typedef std::complex<num_t> complex_t;
-	casa::ROScalarColumn<int> ant1Column(ms, ms.columnName(casa::MSMainEnums::ANTENNA1));
-	casa::ROScalarColumn<int> ant2Column(ms, ms.columnName(casa::MSMainEnums::ANTENNA2));
-	casa::ROArrayColumn<complex_t> dataColumn(ms, ms.columnName(casa::MSMainEnums::DATA));
+	casacore::ROScalarColumn<int> ant1Column(ms, ms.columnName(casacore::MSMainEnums::ANTENNA1));
+	casacore::ROScalarColumn<int> ant2Column(ms, ms.columnName(casacore::MSMainEnums::ANTENNA2));
+	casacore::ROArrayColumn<complex_t> dataColumn(ms, ms.columnName(casacore::MSMainEnums::DATA));
 	
-	casa::IPosition dataShape = dataColumn.shape(0);
+	casacore::IPosition dataShape = dataColumn.shape(0);
 	unsigned polarizationCount = dataShape[0];
 	
 	return

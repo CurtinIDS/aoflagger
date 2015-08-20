@@ -22,14 +22,14 @@
 
 #include <stdexcept>
 
-#include <ms/MeasurementSets/MSColumns.h>
+#include <casacore/ms/MeasurementSets/MSColumns.h>
 
-#include <tables/Tables/ScaColDesc.h>
-#include <tables/Tables/SetupNewTab.h>
+#include <casacore/tables/Tables/ScaColDesc.h>
+#include <casacore/tables/Tables/SetupNewTab.h>
 
-#include <measures/TableMeasures/TableMeasDesc.h>
+#include <casacore/measures/TableMeasures/TableMeasDesc.h>
 
-#include <measures/Measures/MEpoch.h>
+#include <casacore/measures/Measures/MEpoch.h>
 
 #include "statisticalvalue.h"
 
@@ -51,10 +51,10 @@ unsigned HistogramTablesFormatter::QueryTypeIndex(enum HistogramType type, unsig
 bool HistogramTablesFormatter::QueryTypeIndex(enum HistogramType type, unsigned polarizationIndex, unsigned &destTypeIndex)
 {
 	openTypeTable(false);
-	casa::ROScalarColumn<int> typeColumn(*_typeTable, ColumnNameType);
-	casa::ROScalarColumn<int> polarizationColumn(*_typeTable, ColumnNamePolarization);
-	casa::ROScalarColumn<casa::String> nameColumn(*_typeTable, ColumnNameName);
-	const casa::String nameToFind(TypeToName(type));
+	casacore::ROScalarColumn<int> typeColumn(*_typeTable, ColumnNameType);
+	casacore::ROScalarColumn<int> polarizationColumn(*_typeTable, ColumnNamePolarization);
+	casacore::ROScalarColumn<casacore::String> nameColumn(*_typeTable, ColumnNameName);
+	const casacore::String nameToFind(TypeToName(type));
 	
 	const unsigned nrRow = _typeTable->nrow();
 	
@@ -71,8 +71,8 @@ bool HistogramTablesFormatter::QueryTypeIndex(enum HistogramType type, unsigned 
 
 bool HistogramTablesFormatter::hasOneEntry(unsigned typeIndex)
 {
-	casa::Table &casaTable = getTable(HistogramCountTable, false);
-	casa::ROScalarColumn<int> typeColumn(casaTable, ColumnNameType);
+	casacore::Table &casaTable = getTable(HistogramCountTable, false);
+	casacore::ROScalarColumn<int> typeColumn(casaTable, ColumnNameType);
 	
 	const unsigned nrRow = casaTable.nrow();
 	
@@ -86,29 +86,29 @@ bool HistogramTablesFormatter::hasOneEntry(unsigned typeIndex)
 
 void HistogramTablesFormatter::createTypeTable()
 {
-	casa::TableDesc tableDesc(TypeTableName() + "_TYPE", "1.0", casa::TableDesc::Scratch);
+	casacore::TableDesc tableDesc(TypeTableName() + "_TYPE", "1.0", casacore::TableDesc::Scratch);
 	tableDesc.comment() = "Couples the TYPE column in the QUALITY_HISTOGRAM_COUNT table to the name and polarization of the histogram";
-	tableDesc.addColumn(casa::ScalarColumnDesc<int>(ColumnNameType, "Index of the statistic kind"));
-	tableDesc.addColumn(casa::ScalarColumnDesc<int>(ColumnNamePolarization, "Index of the polarization corresponding to the main table"));
-	tableDesc.addColumn(casa::ScalarColumnDesc<casa::String>(ColumnNameName, "Name of the statistic"));
+	tableDesc.addColumn(casacore::ScalarColumnDesc<int>(ColumnNameType, "Index of the statistic kind"));
+	tableDesc.addColumn(casacore::ScalarColumnDesc<int>(ColumnNamePolarization, "Index of the polarization corresponding to the main table"));
+	tableDesc.addColumn(casacore::ScalarColumnDesc<casacore::String>(ColumnNameName, "Name of the statistic"));
 
-	casa::SetupNewTable newTableSetup(TableFilename(HistogramTypeTable), tableDesc, casa::Table::New);
-	casa::Table newTable(newTableSetup);
+	casacore::SetupNewTable newTableSetup(TableFilename(HistogramTypeTable), tableDesc, casacore::Table::New);
+	casacore::Table newTable(newTableSetup);
 	openMainTable(true);
 	_measurementSet->rwKeywordSet().defineTable(TypeTableName(), newTable);
 }
 
 void HistogramTablesFormatter::createCountTable()
 {
-	casa::TableDesc tableDesc(CountTableName() + "_TYPE", "1.0", casa::TableDesc::Scratch);
+	casacore::TableDesc tableDesc(CountTableName() + "_TYPE", "1.0", casacore::TableDesc::Scratch);
 	tableDesc.comment() = "Histograms of the data in the main table";
-	tableDesc.addColumn(casa::ScalarColumnDesc<int>(ColumnNameType, "Index of the statistic kind"));
-	tableDesc.addColumn(casa::ScalarColumnDesc<double>(ColumnNameBinStart, "Lower start value of the bin corresponding to the count"));
-	tableDesc.addColumn(casa::ScalarColumnDesc<double>(ColumnNameBinEnd, "Higher end value of the bin corresponding to the count"));
-	tableDesc.addColumn(casa::ScalarColumnDesc<double>(ColumnNameCount, "Histogram y-value"));
+	tableDesc.addColumn(casacore::ScalarColumnDesc<int>(ColumnNameType, "Index of the statistic kind"));
+	tableDesc.addColumn(casacore::ScalarColumnDesc<double>(ColumnNameBinStart, "Lower start value of the bin corresponding to the count"));
+	tableDesc.addColumn(casacore::ScalarColumnDesc<double>(ColumnNameBinEnd, "Higher end value of the bin corresponding to the count"));
+	tableDesc.addColumn(casacore::ScalarColumnDesc<double>(ColumnNameCount, "Histogram y-value"));
 
-	casa::SetupNewTable newTableSetup(TableFilename(HistogramCountTable), tableDesc, casa::Table::New);
-	casa::Table newTable(newTableSetup);
+	casacore::SetupNewTable newTableSetup(TableFilename(HistogramCountTable), tableDesc, casacore::Table::New);
+	casacore::Table newTable(newTableSetup);
 	openMainTable(true);
 	_measurementSet->rwKeywordSet().defineTable(CountTableName(), newTable);
 }
@@ -121,20 +121,20 @@ unsigned HistogramTablesFormatter::StoreType(enum HistogramType type, unsigned p
 	
 	unsigned newRow = _typeTable->nrow();
 	_typeTable->addRow();
-	casa::ScalarColumn<int> typeColumn(*_typeTable, ColumnNameType);
-	casa::ScalarColumn<int> polarizationColumn(*_typeTable, ColumnNamePolarization);
-	casa::ScalarColumn<casa::String> nameColumn(*_typeTable, ColumnNameName);
+	casacore::ScalarColumn<int> typeColumn(*_typeTable, ColumnNameType);
+	casacore::ScalarColumn<int> polarizationColumn(*_typeTable, ColumnNamePolarization);
+	casacore::ScalarColumn<casacore::String> nameColumn(*_typeTable, ColumnNameName);
 	typeColumn.put(newRow, typeIndex);
 	polarizationColumn.put(newRow, polarizationIndex);
 	nameColumn.put(newRow, TypeToName(type));
 	return typeIndex;
 }
 
-unsigned HistogramTablesFormatter::findFreeTypeIndex(casa::Table &typeTable)
+unsigned HistogramTablesFormatter::findFreeTypeIndex(casacore::Table &typeTable)
 {
 	int maxIndex = 0;
 	
-	casa::ROScalarColumn<int> typeColumn(typeTable, ColumnNameType);
+	casacore::ROScalarColumn<int> typeColumn(typeTable, ColumnNameType);
 	
 	const unsigned nrRow = typeTable.nrow();
 	
@@ -146,12 +146,12 @@ unsigned HistogramTablesFormatter::findFreeTypeIndex(casa::Table &typeTable)
 	return maxIndex + 1;
 }
 
-void HistogramTablesFormatter::openTable(enum TableKind table, bool needWrite, casa::Table **tablePtr)
+void HistogramTablesFormatter::openTable(enum TableKind table, bool needWrite, casacore::Table **tablePtr)
 {
 	if(*tablePtr == 0)
 	{
 		openMainTable(false);
-		*tablePtr = new casa::Table(_measurementSet->keywordSet().asTable(TableName(table)));
+		*tablePtr = new casacore::Table(_measurementSet->keywordSet().asTable(TableName(table)));
 		if(needWrite)
 			(*tablePtr)->reopenRW();
 	} else {
@@ -167,10 +167,10 @@ void HistogramTablesFormatter::StoreValue(unsigned typeIndex, double binStart, d
 	unsigned newRow = _countTable->nrow();
 	_countTable->addRow();
 	
-	casa::ScalarColumn<int> typeColumn(*_countTable, ColumnNameType);
-	casa::ScalarColumn<double> binStartColumn(*_countTable, ColumnNameBinStart);
-	casa::ScalarColumn<double> binEndColumn(*_countTable, ColumnNameBinEnd);
-	casa::ScalarColumn<double> countColumn(*_countTable, ColumnNameCount);
+	casacore::ScalarColumn<int> typeColumn(*_countTable, ColumnNameType);
+	casacore::ScalarColumn<double> binStartColumn(*_countTable, ColumnNameBinStart);
+	casacore::ScalarColumn<double> binEndColumn(*_countTable, ColumnNameBinEnd);
+	casacore::ScalarColumn<double> countColumn(*_countTable, ColumnNameCount);
 	
 	typeColumn.put(newRow, typeIndex);
 	binStartColumn.put(newRow, binStart);
@@ -181,11 +181,11 @@ void HistogramTablesFormatter::StoreValue(unsigned typeIndex, double binStart, d
 void HistogramTablesFormatter::removeTypeEntry(enum HistogramType type, unsigned polarizationIndex)
 {
 	openTypeTable(true);
-	casa::ScalarColumn<int> polarizationColumn(*_typeTable, ColumnNamePolarization);
-	casa::ScalarColumn<casa::String> nameColumn(*_typeTable, ColumnNameName);
+	casacore::ScalarColumn<int> polarizationColumn(*_typeTable, ColumnNamePolarization);
+	casacore::ScalarColumn<casacore::String> nameColumn(*_typeTable, ColumnNameName);
 	
 	const unsigned nrRow = _typeTable->nrow();
-	const casa::String typeName(TypeToName(type));
+	const casacore::String typeName(TypeToName(type));
 	
 	for(unsigned i=0;i<nrRow;++i)
 	{
@@ -199,7 +199,7 @@ void HistogramTablesFormatter::removeTypeEntry(enum HistogramType type, unsigned
 
 void HistogramTablesFormatter::removeEntries(enum TableKind table)
 {
-	casa::Table &casaTable = getTable(table, true);
+	casacore::Table &casaTable = getTable(table, true);
 	const unsigned nrRow = casaTable.nrow();
 	for(int i=nrRow-1;i>=0;--i)
 	{
@@ -209,13 +209,13 @@ void HistogramTablesFormatter::removeEntries(enum TableKind table)
 
 void HistogramTablesFormatter::QueryHistogram(unsigned typeIndex, std::vector<HistogramItem> &histogram)
 {
-	casa::Table &table(getTable(HistogramCountTable, false));
+	casacore::Table &table(getTable(HistogramCountTable, false));
 	const unsigned nrRow = table.nrow();
 	
-	casa::ROScalarColumn<int> typeColumn(table, ColumnNameType);
-	casa::ROScalarColumn<double> binStartColumn(table, ColumnNameBinStart);
-	casa::ROScalarColumn<double> binEndColumn(table, ColumnNameBinEnd);
-	casa::ROScalarColumn<double> countColumn(table, ColumnNameCount);
+	casacore::ROScalarColumn<int> typeColumn(table, ColumnNameType);
+	casacore::ROScalarColumn<double> binStartColumn(table, ColumnNameBinStart);
+	casacore::ROScalarColumn<double> binEndColumn(table, ColumnNameBinEnd);
+	casacore::ROScalarColumn<double> countColumn(table, ColumnNameCount);
 	
 	for(unsigned i=0;i<nrRow;++i)
 	{
@@ -235,9 +235,9 @@ void HistogramTablesFormatter::openMainTable(bool needWrite)
 	if(_measurementSet == 0)
 	{
 		if(needWrite)
-			_measurementSet = new casa::Table(_measurementSetName, casa::Table::Update);
+			_measurementSet = new casacore::Table(_measurementSetName, casacore::Table::Update);
 		else
-			_measurementSet = new casa::Table(_measurementSetName);
+			_measurementSet = new casacore::Table(_measurementSetName);
 	}
 	else if(needWrite)
 	{

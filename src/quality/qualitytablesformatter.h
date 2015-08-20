@@ -20,8 +20,8 @@
 #ifndef MSIO_QUALITY_DATA_H
 #define MSIO_QUALITY_DATA_H
 
-#include <ms/MeasurementSets/MeasurementSet.h>
-#include <tables/Tables/TableRecord.h>
+#include <casacore/ms/MeasurementSets/MeasurementSet.h>
+#include <casacore/tables/Tables/TableRecord.h>
 
 /**
 	@author A.R. Offringa <offringa@astro.rug.nl>
@@ -223,7 +223,7 @@ class QualityTablesFormatter {
 				if(_measurementSet->keywordSet().isDefined(TableToName(table)))
 					_measurementSet->rwKeywordSet().removeField(TableToName(table));
 				if(_measurementSet->isReadable(TableToFilename(table)))
-					casa::Table::deleteTable(TableToFilename(table));
+					casacore::Table::deleteTable(TableToFilename(table));
 			}
 		}
 		
@@ -283,14 +283,14 @@ class QualityTablesFormatter {
 		const static std::string ColumnNameTime;
 		const static std::string ColumnNameValue;
 		
-		casa::Table *_measurementSet;
+		casacore::Table *_measurementSet;
 		const std::string _measurementSetName;
 		
-		casa::Table *_kindNameTable;
-		casa::Table *_timeTable;
-		casa::Table *_frequencyTable;
-		casa::Table *_baselineTable;
-		casa::Table *_baselineTimeTable;
+		casacore::Table *_kindNameTable;
+		casacore::Table *_timeTable;
+		casacore::Table *_frequencyTable;
+		casacore::Table *_baselineTable;
+		casacore::Table *_baselineTimeTable;
 		
 		bool hasOneEntry(enum QualityTable table, unsigned kindIndex);
 		void removeStatisticFromStatTable(enum QualityTable table, enum StatisticKind kind);
@@ -302,20 +302,20 @@ class QualityTablesFormatter {
 			* It holds "Measure"s of time, which is what casacore defines as a value including
 			* a unit and a reference frame.
 			*/
-		void addTimeColumn(casa::TableDesc &tableDesc);
+		void addTimeColumn(casacore::TableDesc &tableDesc);
 		
 		/**
 		 * Add the frequency column to the table descriptor. Used by create..Table() methods.
 		 * It holds "Quantum"s of frequency, which is what casacore defines as a value including
 		 * a unit (Hertz).
 		 */
-		void addFrequencyColumn(casa::TableDesc &tableDesc);
+		void addFrequencyColumn(casacore::TableDesc &tableDesc);
 		
 		/**
 		 * Add value column to the table descriptor. Used by create..Table() methods.
 		 * It consist of an array of statistics, each element holds a polarization.
 		 */
-		void addValueColumn(casa::TableDesc &tableDesc, unsigned polarizationCount);
+		void addValueColumn(casacore::TableDesc &tableDesc, unsigned polarizationCount);
 		
 		void createTable(enum QualityTable table, unsigned polarizationCount)
 		{
@@ -362,7 +362,7 @@ class QualityTablesFormatter {
 		 */
 		void createBaselineStatisticTable(unsigned polarizationCount);
 		void createBaselineTimeStatisticTable(unsigned polarizationCount);
-		unsigned findFreeKindIndex(casa::Table &kindTable);
+		unsigned findFreeKindIndex(casacore::Table &kindTable);
 		
 		void openMainTable(bool needWrite);
 		void closeMainTable()
@@ -372,7 +372,7 @@ class QualityTablesFormatter {
 			_measurementSet = 0;
 		}
 		
-		void openTable(QualityTable table, bool needWrite, casa::Table **tablePtr);
+		void openTable(QualityTable table, bool needWrite, casacore::Table **tablePtr);
 		void openKindNameTable(bool needWrite)
 		{
 			openTable(KindNameTable, needWrite, &_kindNameTable);
@@ -393,9 +393,9 @@ class QualityTablesFormatter {
 		{
 			openTable(BaselineTimeStatisticTable, needWrite, &_baselineTimeTable);
 		}
-		casa::Table &getTable(QualityTable table, bool needWrite)
+		casacore::Table &getTable(QualityTable table, bool needWrite)
 		{
-			casa::Table **tablePtr = 0;
+			casacore::Table **tablePtr = 0;
 			switch(table)
 			{
 				case KindNameTable: tablePtr = &_kindNameTable; break;

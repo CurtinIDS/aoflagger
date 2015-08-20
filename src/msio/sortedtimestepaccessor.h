@@ -24,8 +24,8 @@
 #include <stdexcept>
 #include <vector>
 
-#include <ms/MeasurementSets/MSTable.h>
-#include <tables/Tables/TableIter.h>
+#include <casacore/ms/MeasurementSets/MSTable.h>
+#include <casacore/tables/Tables/TableIter.h>
 
 #include "types.h"
 
@@ -40,7 +40,7 @@ class SortedTimestepAccessor
 		class TimestepIndex
 		{
 			public:
-				TimestepIndex(unsigned tableCount) : tables(new casa::Table*[tableCount]), _tableCount(tableCount)
+				TimestepIndex(unsigned tableCount) : tables(new casacore::Table*[tableCount]), _tableCount(tableCount)
 				{
 					for(unsigned i=0;i<tableCount;++i)
 						tables[i] = 0;
@@ -62,7 +62,7 @@ class SortedTimestepAccessor
 					}
 				}
 	
-				casa::Table **tables;
+				casacore::Table **tables;
 			private:
 				unsigned _tableCount;
 				TimestepIndex(TimestepIndex &) { }
@@ -176,7 +176,7 @@ class SortedTimestepAccessor
 				lowestFrequency = source.lowestFrequency;
 			}
 			std::string path;
-			casa::TableIterator *tableIter;
+			casacore::TableIterator *tableIter;
 			unsigned bandCount, channelsPerBand;
 			double highestFrequency, lowestFrequency;
 		};

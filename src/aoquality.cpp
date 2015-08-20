@@ -20,9 +20,9 @@
 
 #include <iostream>
 
-#include <tables/Tables/ArrColDesc.h>
-#include <tables/Tables/SetupNewTab.h>
-#include <tables/Tables/TableCopy.h>
+#include <casacore/tables/Tables/ArrColDesc.h>
+#include <casacore/tables/Tables/SetupNewTab.h>
+#include <casacore/tables/Tables/TableCopy.h>
 
 #include "msio/measurementset.h"
 
@@ -105,14 +105,14 @@ void actionCollect(const std::string &filename, enum CollectingMode mode, Statis
 	histogramCollection.SetPolarizationCount(polarizationCount);
 
 	// get columns
-	casa::Table table(filename, casa::Table::Update);
+	casacore::Table table(filename, casacore::Table::Update);
 	const char *dataColumnName = useCorrected ? "CORRECTED_DATA" : "DATA";
-	casa::ROArrayColumn<casa::Complex> dataColumn(table, dataColumnName);
-	casa::ROArrayColumn<bool> flagColumn(table, "FLAG");
-	casa::ROScalarColumn<double> timeColumn(table, "TIME");
-	casa::ROScalarColumn<int> antenna1Column(table, "ANTENNA1"); 
-	casa::ROScalarColumn<int> antenna2Column(table, "ANTENNA2");
-	casa::ROScalarColumn<int> windowColumn(table, "DATA_DESC_ID");
+	casacore::ROArrayColumn<casacore::Complex> dataColumn(table, dataColumnName);
+	casacore::ROArrayColumn<bool> flagColumn(table, "FLAG");
+	casacore::ROScalarColumn<double> timeColumn(table, "TIME");
+	casacore::ROScalarColumn<int> antenna1Column(table, "ANTENNA1"); 
+	casacore::ROScalarColumn<int> antenna2Column(table, "ANTENNA2");
+	casacore::ROScalarColumn<int> windowColumn(table, "DATA_DESC_ID");
 	
 	std::cout << "Collecting statistics..." << std::endl;
 	
@@ -162,8 +162,8 @@ void actionCollect(const std::string &filename, enum CollectingMode mode, Statis
 		
 		const BandInfo &band = bands[bandIndex];
 		
-		const casa::Array<casa::Complex> dataArray = dataColumn(row);
-		const casa::Array<bool> flagArray = flagColumn(row);
+		const casacore::Array<casacore::Complex> dataArray = dataColumn(row);
+		const casacore::Array<bool> flagArray = flagColumn(row);
 		
 		std::vector<std::complex<float>* > samples(polarizationCount);
 		bool **isRFI = new bool*[polarizationCount];
@@ -176,8 +176,8 @@ void actionCollect(const std::string &filename, enum CollectingMode mode, Statis
 			flaggedAntennae.find(antenna1Index) != flaggedAntennae.end() ||
 			flaggedAntennae.find(antenna2Index) != flaggedAntennae.end();
 		
-		casa::Array<casa::Complex>::const_iterator dataIter = dataArray.begin();
-		casa::Array<bool>::const_iterator flagIter = flagArray.begin();
+		casacore::Array<casacore::Complex>::const_iterator dataIter = dataArray.begin();
+		casacore::Array<bool>::const_iterator flagIter = flagArray.begin();
 		const unsigned startChannel = ignoreChannelZero ? 1 : 0;
 		if(ignoreChannelZero)
 		{
@@ -537,15 +537,15 @@ void actionSummarizeRFI(const std::string &filename)
 		<< StatisticsDerivator::GetStatisticAmplitude(QualityTablesFormatter::RFIPercentageStatistic, singlePolStat, 0) << '\n';
 }
 
-void WriteAntennae(casa::MeasurementSet& ms, const std::vector<AntennaInfo> &antennae)
+void WriteAntennae(casacore::MeasurementSet& ms, const std::vector<AntennaInfo> &antennae)
 {
-	casa::MSAntenna antTable = ms.antenna();
-	casa::ScalarColumn<casa::String> nameCol = casa::ScalarColumn<casa::String>(antTable, antTable.columnName(casa::MSAntennaEnums::NAME));
-	casa::ScalarColumn<casa::String> stationCol = casa::ScalarColumn<casa::String>(antTable, antTable.columnName(casa::MSAntennaEnums::STATION));
-	casa::ScalarColumn<casa::String> typeCol = casa::ScalarColumn<casa::String>(antTable, antTable.columnName(casa::MSAntennaEnums::TYPE));
-	casa::ScalarColumn<casa::String> mountCol = casa::ScalarColumn<casa::String>(antTable, antTable.columnName(casa::MSAntennaEnums::MOUNT));
-	casa::ArrayColumn<double> positionCol = casa::ArrayColumn<double>(antTable, antTable.columnName(casa::MSAntennaEnums::POSITION));
-	casa::ScalarColumn<double> dishDiameterCol = casa::ScalarColumn<double>(antTable, antTable.columnName(casa::MSAntennaEnums::DISH_DIAMETER));
+	casacore::MSAntenna antTable = ms.antenna();
+	casacore::ScalarColumn<casacore::String> nameCol = casacore::ScalarColumn<casacore::String>(antTable, antTable.columnName(casacore::MSAntennaEnums::NAME));
+	casacore::ScalarColumn<casacore::String> stationCol = casacore::ScalarColumn<casacore::String>(antTable, antTable.columnName(casacore::MSAntennaEnums::STATION));
+	casacore::ScalarColumn<casacore::String> typeCol = casacore::ScalarColumn<casacore::String>(antTable, antTable.columnName(casacore::MSAntennaEnums::TYPE));
+	casacore::ScalarColumn<casacore::String> mountCol = casacore::ScalarColumn<casacore::String>(antTable, antTable.columnName(casacore::MSAntennaEnums::MOUNT));
+	casacore::ArrayColumn<double> positionCol = casacore::ArrayColumn<double>(antTable, antTable.columnName(casacore::MSAntennaEnums::POSITION));
+	casacore::ScalarColumn<double> dishDiameterCol = casacore::ScalarColumn<double>(antTable, antTable.columnName(casacore::MSAntennaEnums::DISH_DIAMETER));
 	
 	size_t rowIndex = antTable.nrow();
 	antTable.addRow(antennae.size());
@@ -556,7 +556,7 @@ void WriteAntennae(casa::MeasurementSet& ms, const std::vector<AntennaInfo> &ant
 		stationCol.put(rowIndex, ant.station);
 		typeCol.put(rowIndex, "");
 		mountCol.put(rowIndex, ant.mount);
-		casa::Vector<double> posArr(3);
+		casacore::Vector<double> posArr(3);
 		posArr[0] = ant.position.x; posArr[1] = ant.position.y; posArr[2] = ant.position.z;
 		positionCol.put(rowIndex, posArr);
 		dishDiameterCol.put(rowIndex, ant.diameter);
@@ -564,24 +564,24 @@ void WriteAntennae(casa::MeasurementSet& ms, const std::vector<AntennaInfo> &ant
 	}
 }
 
-void WritePolarizationForLinearPols(casa::MeasurementSet& ms, bool flagRow = false)
+void WritePolarizationForLinearPols(casacore::MeasurementSet& ms, bool flagRow = false)
 {
-	casa::MSPolarization polTable = ms.polarization();
-	casa::ScalarColumn<int> numCorrCol = casa::ScalarColumn<int>(polTable, polTable.columnName(casa::MSPolarizationEnums::NUM_CORR));
-	casa::ArrayColumn<int> corrTypeCol = casa::ArrayColumn<int>(polTable, polTable.columnName(casa::MSPolarizationEnums::CORR_TYPE));
-	casa::ArrayColumn<int> corrProductCol = casa::ArrayColumn<int>(polTable, polTable.columnName(casa::MSPolarizationEnums::CORR_PRODUCT));
-	casa::ScalarColumn<bool> flagRowCol = casa::ScalarColumn<bool>(polTable, polTable.columnName(casa::MSPolarizationEnums::FLAG_ROW));
+	casacore::MSPolarization polTable = ms.polarization();
+	casacore::ScalarColumn<int> numCorrCol = casacore::ScalarColumn<int>(polTable, polTable.columnName(casacore::MSPolarizationEnums::NUM_CORR));
+	casacore::ArrayColumn<int> corrTypeCol = casacore::ArrayColumn<int>(polTable, polTable.columnName(casacore::MSPolarizationEnums::CORR_TYPE));
+	casacore::ArrayColumn<int> corrProductCol = casacore::ArrayColumn<int>(polTable, polTable.columnName(casacore::MSPolarizationEnums::CORR_PRODUCT));
+	casacore::ScalarColumn<bool> flagRowCol = casacore::ScalarColumn<bool>(polTable, polTable.columnName(casacore::MSPolarizationEnums::FLAG_ROW));
 	
 	size_t rowIndex = polTable.nrow();
 	polTable.addRow(1);
 	numCorrCol.put(rowIndex, 4);
 	
-	casa::Vector<int> cTypeVec(4);
+	casacore::Vector<int> cTypeVec(4);
 	cTypeVec[0] = 9; cTypeVec[1] = 10; cTypeVec[2] = 11; cTypeVec[3] = 12;
 	corrTypeCol.put(rowIndex, cTypeVec);
 	
-	casa::Array<int> cProdArr(casa::IPosition(2, 2, 4));
-	casa::Array<int>::iterator i=cProdArr.begin();
+	casacore::Array<int> cProdArr(casacore::IPosition(2, 2, 4));
+	casacore::Array<int>::iterator i=cProdArr.begin();
 	*i = 0; ++i; *i = 0; ++i;
 	*i = 0; ++i; *i = 1; ++i;
 	*i = 1; ++i; *i = 0; ++i;
@@ -633,12 +633,12 @@ void actionCombine(const std::string outFilename, const std::vector<std::string>
 			}
 		}
 		// Create main table
-		casa::TableDesc tableDesc = casa::MS::requiredTableDesc();
-		casa::ArrayColumnDesc<std::complex<float> > dataColumnDesc = casa::ArrayColumnDesc<std::complex<float> >(casa::MS::columnName(casa::MSMainEnums::DATA));
+		casacore::TableDesc tableDesc = casacore::MS::requiredTableDesc();
+		casacore::ArrayColumnDesc<std::complex<float> > dataColumnDesc = casacore::ArrayColumnDesc<std::complex<float> >(casacore::MS::columnName(casacore::MSMainEnums::DATA));
 		tableDesc.addColumn(dataColumnDesc);
-		casa::SetupNewTable newTab(outFilename, tableDesc, casa::Table::New);
-		casa::MeasurementSet ms(newTab);
-		ms.createDefaultSubtables(casa::Table::New);
+		casacore::SetupNewTable newTab(outFilename, tableDesc, casacore::Table::New);
+		casacore::MeasurementSet ms(newTab);
+		ms.createDefaultSubtables(casacore::Table::New);
 		
 		std::cout << "Writing antenna table...\n";
 		WriteAntennae(ms, antennae);

@@ -7,9 +7,9 @@
 #include "../../quality/statisticsderivator.h"
 #include "../../util/aologger.h"
 
-#include <ms/MeasurementSets/MeasurementSet.h>
-#include <tables/Tables/ArrayColumn.h>
-#include <tables/Tables/ScalarColumn.h>
+#include <casacore/ms/MeasurementSets/MeasurementSet.h>
+#include <casacore/tables/Tables/ArrayColumn.h>
+#include <casacore/tables/Tables/ScalarColumn.h>
 
 #include <boost/filesystem/path.hpp>
 
@@ -74,12 +74,12 @@ public:
 	virtual void Write(const std::vector<Mask2DCPtr>& flags)
 	{
 		std::vector<Mask2DCPtr> flagsCopy(flags);
-		casa::MeasurementSet ms(_filename, casa::Table::Update);
+		casacore::MeasurementSet ms(_filename, casacore::Table::Update);
 		if(ms.nrow() > 0)
 		{
-			casa::ArrayColumn<bool> flagColumn(ms, casa::MeasurementSet::columnName(casa::MSMainEnums::FLAG));
-			casa::ROScalarColumn<double> timeColumn(ms, casa::MeasurementSet::columnName(casa::MSMainEnums::TIME));
-			casa::Array<bool> flagArray(flagColumn.get(0));
+			casacore::ArrayColumn<bool> flagColumn(ms, casacore::MeasurementSet::columnName(casacore::MSMainEnums::FLAG));
+			casacore::ROScalarColumn<double> timeColumn(ms, casacore::MeasurementSet::columnName(casacore::MSMainEnums::TIME));
+			casacore::Array<bool> flagArray(flagColumn.get(0));
 			const size_t
 				polCount = flagArray.shape()[0],
 				channelCount = flagArray.shape()[1];
@@ -118,7 +118,7 @@ public:
 					}
 				}
 				flagColumn.get(row, flagArray);
-				casa::Array<bool>::contiter iter = flagArray.cbegin();
+				casacore::Array<bool>::contiter iter = flagArray.cbegin();
 				for(size_t i=0; i!=channelCount*polCount; ++i)
 				{
 					*iter = *iter || timestepFlags[i];

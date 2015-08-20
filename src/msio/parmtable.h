@@ -5,10 +5,10 @@
 #include <set>
 #include <stdexcept>
 
-#include <ms/MeasurementSets/MSTable.h>
+#include <casacore/ms/MeasurementSets/MSTable.h>
 
-#include <tables/Tables/ArrayColumn.h>
-#include <tables/Tables/ScalarColumn.h>
+#include <casacore/tables/Tables/ArrayColumn.h>
+#include <casacore/tables/Tables/ScalarColumn.h>
 
 #include "../util/aologger.h"
 
@@ -76,7 +76,7 @@ class ParmTable
 				<< "i00=" << i00 << ", "
 				<< "i11=" << i11 << "\n";
 				
-			casa::Table table(_path);
+			casacore::Table table(_path);
 			
 			// Construct the images
 			unsigned width, height;
@@ -88,11 +88,11 @@ class ParmTable
 				yyImag = Image2D::CreateZeroImagePtr(width, height);
 				
 			// Read data
-			casa::ROScalarColumn<unsigned int> nameIdColumn(table, "NAMEID");
-			casa::ROScalarColumn<double>
+			casacore::ROScalarColumn<unsigned int> nameIdColumn(table, "NAMEID");
+			casacore::ROScalarColumn<double>
 				startX(table, "STARTX"),
 				startY(table, "STARTY");
-			casa::ROArrayColumn<double> values(table, "VALUES");
+			casacore::ROArrayColumn<double> values(table, "VALUES");
 				
 			int xPos=0, yPos=0;
 			//double currentX=startX(0);
@@ -125,8 +125,8 @@ class ParmTable
 					if(xShape > curXShape)
 						curXShape = xShape;
 					
-					const casa::Array<double> valueArray = values(row);
-					casa::Array<double>::const_iterator vIter = valueArray.begin();
+					const casacore::Array<double> valueArray = values(row);
+					casacore::Array<double>::const_iterator vIter = valueArray.begin();
 					for(unsigned x=0;x<xShape;++x) {
 						for(unsigned y=0;y<curYShape;++y) {
 							destImage->SetValue(yPos + y, xPos + x, *vIter);
@@ -175,13 +175,13 @@ class ParmTable
 	private:
 		void readNames()
 		{
-			casa::Table namesTable;
+			casacore::Table namesTable;
 			if(_path.size()>0 && *_path.rbegin()!='/')
-				namesTable = casa::Table(_path + "/NAMES");
+				namesTable = casacore::Table(_path + "/NAMES");
 			else
-				namesTable = casa::Table(_path + "NAMES");
+				namesTable = casacore::Table(_path + "NAMES");
 			
-			casa::ROScalarColumn<casa::String> nameColumn(namesTable, "NAME");
+			casacore::ROScalarColumn<casacore::String> nameColumn(namesTable, "NAME");
 			for(unsigned i=0;i!=namesTable.nrow();++i)
 			{
 				std::string name = nameColumn(i);
@@ -189,13 +189,13 @@ class ParmTable
 			}
 		}
 		
-		void getImageDimensions(casa::Table &table, unsigned &width, unsigned &height, int r00, int /*r11*/, int /*i00*/, int /*i11*/)
+		void getImageDimensions(casacore::Table &table, unsigned &width, unsigned &height, int r00, int /*r11*/, int /*i00*/, int /*i11*/)
 		{
-			casa::ROScalarColumn<unsigned int> nameIdColumn(table, "NAMEID");
-			casa::ROScalarColumn<double>
+			casacore::ROScalarColumn<unsigned int> nameIdColumn(table, "NAMEID");
+			casacore::ROScalarColumn<double>
 				startX(table, "STARTX"),
 				startY(table, "STARTY");
-			casa::ROArrayColumn<double> values(table, "VALUES");
+			casacore::ROArrayColumn<double> values(table, "VALUES");
 			
 			int maxX=0,yPos=0;
 			int maxY=0;

@@ -20,8 +20,8 @@
 #ifndef HISTOGRAM_TABLES_FORMATTER_H
 #define HISTOGRAM_TABLES_FORMATTER_H
 
-#include <ms/MeasurementSets/MeasurementSet.h>
-#include <tables/Tables/TableRecord.h>
+#include <casacore/ms/MeasurementSets/MeasurementSet.h>
+#include <casacore/tables/Tables/TableRecord.h>
 
 #include <vector>
 
@@ -145,7 +145,7 @@ class HistogramTablesFormatter {
 				if(_measurementSet->keywordSet().isDefined(TableName(table)))
 					_measurementSet->rwKeywordSet().removeField(TableName(table));
 				if(_measurementSet->isReadable(TableFilename(table)))
-					casa::Table::deleteTable(TableFilename(table));
+					casacore::Table::deleteTable(TableFilename(table));
 			}
 		}
 		
@@ -185,19 +185,19 @@ class HistogramTablesFormatter {
 		const static std::string ColumnNameBinEnd;
 		const static std::string ColumnNameCount;
 		
-		casa::Table *_measurementSet;
+		casacore::Table *_measurementSet;
 		const std::string _measurementSetName;
 		
-		casa::Table *_typeTable;
-		casa::Table *_countTable;
+		casacore::Table *_typeTable;
+		casacore::Table *_countTable;
 		
 		bool hasOneEntry(unsigned typeIndex);
 		void removeTypeEntry(enum HistogramType type, unsigned polarizationIndex);
 		void removeEntries(enum TableKind table);
 		
-		void addTimeColumn(casa::TableDesc &tableDesc);
-		void addFrequencyColumn(casa::TableDesc &tableDesc);
-		void addValueColumn(casa::TableDesc &tableDesc);
+		void addTimeColumn(casacore::TableDesc &tableDesc);
+		void addFrequencyColumn(casacore::TableDesc &tableDesc);
+		void addValueColumn(casacore::TableDesc &tableDesc);
 		
 		void createTable(enum TableKind table)
 		{
@@ -211,7 +211,7 @@ class HistogramTablesFormatter {
 		
 		void createTypeTable();
 		void createCountTable();
-		unsigned findFreeTypeIndex(casa::Table &typeTable);
+		unsigned findFreeTypeIndex(casacore::Table &typeTable);
 		
 		void openMainTable(bool needWrite);
 		void closeMainTable()
@@ -223,7 +223,7 @@ class HistogramTablesFormatter {
 			}
 		}
 		
-		void openTable(TableKind table, bool needWrite, casa::Table **tablePtr);
+		void openTable(TableKind table, bool needWrite, casacore::Table **tablePtr);
 		void openTypeTable(bool needWrite)
 		{
 			openTable(HistogramTypeTable, needWrite, &_typeTable);
@@ -232,9 +232,9 @@ class HistogramTablesFormatter {
 		{
 			openTable(HistogramCountTable, needWrite, &_countTable);
 		}
-		casa::Table &getTable(TableKind table, bool needWrite)
+		casacore::Table &getTable(TableKind table, bool needWrite)
 		{
-			casa::Table **tablePtr = 0;
+			casacore::Table **tablePtr = 0;
 			switch(table)
 			{
 				case HistogramTypeTable: tablePtr = &_typeTable; break;

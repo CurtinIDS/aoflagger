@@ -24,10 +24,10 @@
 #include <stdexcept>
 #include <vector>
 
-#include <ms/MeasurementSets/MSTable.h>
-#include <ms/MeasurementSets/MSColumns.h>
+#include <casacore/ms/MeasurementSets/MSTable.h>
+#include <casacore/ms/MeasurementSets/MSColumns.h>
 
-#include <tables/Tables/TableIter.h>
+#include <casacore/tables/Tables/TableIter.h>
 
 #include "types.h"
 
@@ -211,14 +211,14 @@ class TimestepAccessor
 			}
 			unsigned index;
 			std::string path;
-			casa::Table *table;
+			casacore::Table *table;
 			unsigned bandCount, channelsPerBand;
 			double highestFrequency, lowestFrequency;
-			casa::ROScalarColumn<int> *antenna1Column, *antenna2Column;
-			casa::ROScalarColumn<double> *timeColumn;
-			casa::ROArrayColumn<casa::Complex> *dataColumn;
-			casa::ArrayColumn<casa::Complex> *updateDataColumn;
-			casa::ROArrayColumn<double> *uvwColumn;
+			casacore::ROScalarColumn<int> *antenna1Column, *antenna2Column;
+			casacore::ROScalarColumn<double> *timeColumn;
+			casacore::ROArrayColumn<casacore::Complex> *dataColumn;
+			casacore::ArrayColumn<casacore::Complex> *updateDataColumn;
+			casacore::ROArrayColumn<double> *uvwColumn;
 		};
 		struct BufferItem
 		{

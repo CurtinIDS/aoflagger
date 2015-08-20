@@ -155,14 +155,14 @@ void UVImager::Image(const IntegerDomain &frequencies, const IntegerDomain &ante
 			unsigned index2 = antenna1Domain.Index(a2);
 			int field = iterator.Field();
 			double time = iterator.Time();
-			casa::Array<casa::Complex>::const_iterator cdI = iterator.CorrectedDataIterator();
-			casa::Array<bool>::const_iterator fI = iterator.FlagIterator();
+			casacore::Array<casacore::Complex>::const_iterator cdI = iterator.CorrectedDataIterator();
+			casacore::Array<bool>::const_iterator fI = iterator.FlagIterator();
 			for(int f=0;f<frequencies.GetValue(0);++f) { ++fI; ++fI; ++fI; ++fI; ++cdI; ++cdI; ++cdI; ++cdI; }
 			for(unsigned f=0;f<frequencies.ValueCount();++f) {
 				SingleFrequencySingleBaselineData &curData = data[f][index1][index2][scan];
-				casa::Complex xxData = *cdI;
+				casacore::Complex xxData = *cdI;
 				++cdI; ++cdI; ++cdI;
-				casa::Complex yyData = *cdI;
+				casacore::Complex yyData = *cdI;
 				++cdI;
 				curData.data = xxData + yyData;
 				bool flagging = *fI;
