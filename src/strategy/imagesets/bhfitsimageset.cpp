@@ -1,22 +1,3 @@
-/***************************************************************************
- *   Copyright (C) 2008 by A.R. Offringa   *
- *   offringa@astro.rug.nl   *
- *                                                                         *
- *   This program is free software; you can redistribute it and/or modify  *
- *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
- *   (at your option) any later version.                                   *
- *                                                                         *
- *   This program is distributed in the hope that it will be useful,       *
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
- *   GNU General Public License for more details.                          *
- *                                                                         *
- *   You should have received a copy of the GNU General Public License     *
- *   along with this program; if not, write to the                         *
- *   Free Software Foundation, Inc.,                                       *
- *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
- ***************************************************************************/
 #include "bhfitsimageset.h"
 
 #include "../../msio/fitsfile.h"
@@ -93,7 +74,13 @@ namespace rfiStrategy {
 			if(_file->GetKeywordValue(antKey.str(), antRangeStr)) {
 				std::pair<int, int> range = getRangeFromString(antRangeStr);
 				TimeRange timeRange;
-				timeRange.start = range.first;
+				// As commented by Marcin below, the ranges in the fits headers are given like 'start - end', where the indices start
+				// counting at 1, and the end index is *inclusive*, such that '1 - 1' represents a range with one index (being the
+				// first timestep in the FITS file).
+				// Comment by Marcin Sokolowski:
+				// MS this is due to fact that Andre didn't know it starts from 1, but he skips the end integration (assumes it is not ANT), but it is
+				timeRange.start = range.first - 1; 
+				// so here I don't subtract 1 in order to program check until this one too !
 				timeRange.end = range.second;
 				timeRange.name = antKey.str();
 				_timeRanges.push_back(timeRange);
@@ -102,7 +89,8 @@ namespace rfiStrategy {
 			if(_file->GetKeywordValue(termKey.str(), termRangeStr)) {
 				std::pair<int, int> range = getRangeFromString(termRangeStr);
 				TimeRange timeRange;
-				timeRange.start = range.first;
+				// (see earlier comment by Marcin Sokolowski)
+				timeRange.start = range.first - 1;
 				timeRange.end = range.second;
 				timeRange.name = termKey.str();
 				_timeRanges.push_back(timeRange);
@@ -111,6 +99,17 @@ namespace rfiStrategy {
 			++keyIndex;
 		} while(searchOn);
 		AOLogger::Debug << "This file has " << _timeRanges.size() << " time ranges.\n";
+		
+		if( _timeRanges.empty()) {
+		   // if no states found in the header - just assume all are antenna 
+		   TimeRange timeRange;
+			 // See earlier comment by Marcin Sokolowski
+			timeRange.start = 1;
+			timeRange.end = _file->GetCurrentImageSize(2);
+			timeRange.name = "ANT";
+			_timeRanges.push_back(timeRange);		                                                  
+			AOLogger::Warn << "No states specified in the fits header assuming all (1-" << timeRange.end << ") integrations are " << timeRange.name << "\n";
+		}
 	}
 
 	BaselineData BHFitsImageSet::loadData(const ImageSetIndex &index)
