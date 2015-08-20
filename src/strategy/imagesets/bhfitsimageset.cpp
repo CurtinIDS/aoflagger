@@ -104,7 +104,7 @@ namespace rfiStrategy {
 		   // if no states found in the header - just assume all are antenna 
 		   TimeRange timeRange;
 			 // See earlier comment by Marcin Sokolowski
-			timeRange.start = 1;
+			timeRange.start = 0;
 			timeRange.end = _file->GetCurrentImageSize(2);
 			timeRange.name = "ANT";
 			_timeRanges.push_back(timeRange);		                                                  
