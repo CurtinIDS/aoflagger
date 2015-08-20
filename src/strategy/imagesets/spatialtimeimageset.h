@@ -140,7 +140,6 @@ namespace rfiStrategy {
 			MeasurementSet _set;
 			SpatialTimeLoader _loader;
 			std::stack<BaselineData> _baseline;
-			size_t _cachedTimeIndex;
 	};
 
 	void SpatialTimeImageSetIndex::Previous()

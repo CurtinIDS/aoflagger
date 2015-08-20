@@ -73,7 +73,7 @@ void ServerConnection::onReceiveInitialResponse()
 		throw std::runtime_error(std::string("Error reported by client during initial response: ") + ErrorStr::GetStr(errorCode));
 	if(initialResponse.negotiatedProtocolVersion != AO_REMOTE_PROTOCOL_VERSION)
 		throw std::runtime_error("Client seems to run different protocol version");
-	if(initialResponse.hostNameSize == 0 || initialResponse.hostNameSize > 65536)
+	if(initialResponse.hostNameSize == 0)
 		throw std::runtime_error("Client did not send proper hostname");
 	
 	std::vector<char> hostname(initialResponse.hostNameSize + 1);
