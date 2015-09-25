@@ -1,4 +1,3 @@
-
 #ifndef SIROPERATOR_H
 #define SIROPERATOR_H
 

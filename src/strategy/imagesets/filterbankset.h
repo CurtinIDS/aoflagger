@@ -8,10 +8,6 @@
 
 #include "../../util/aologger.h"
 
-/**
-	@author A.R. Offringa <offringa@astro.rug.nl>
-*/
-
 namespace rfiStrategy {
 
 	class FilterBankSetIndex : public ImageSetIndex {

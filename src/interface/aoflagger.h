@@ -1,5 +1,6 @@
 /** @file aoflagger.h @brief Main AOFlagger header file.
  * @author André Offringa offringa@gmail.com
+ * @copyright by A.R. Offringa under the GPL version 3
  */
 
 #ifndef AOFLAGGER_INTERFACE_H

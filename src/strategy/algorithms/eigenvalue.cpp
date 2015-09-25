@@ -1,4 +1,3 @@
-
 #include "eigenvalue.h"
 
 #include <stdexcept>
