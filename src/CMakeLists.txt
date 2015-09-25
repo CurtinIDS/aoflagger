@@ -290,12 +290,9 @@ add_executable(aoflagger-bin aoflagger.cpp)
 set_target_properties(aoflagger-bin
   PROPERTIES OUTPUT_NAME aoflagger)
 
-add_executable(rfistrategy rfistrategy.cpp)
-
 add_executable(msinfo msinfo.cpp)
 
 add_executable(colormapper colormapper.cpp)
-# add_executable(imgzenith imgzenith.cpp imaging/zenithimager.cpp)
 
 if(BOOST_ASIO_H_FOUND AND SIGCXX_FOUND AND GTKMM_FOUND)
 	add_executable(aoremoteclient aoremoteclient.cpp)

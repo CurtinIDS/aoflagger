@@ -8,8 +8,6 @@
 
 #include "format.h"
 
-#include "../util/autoarray.h"
-
 #include "../quality/statisticscollection.h"
 #include "../quality/histogramcollection.h"
 
