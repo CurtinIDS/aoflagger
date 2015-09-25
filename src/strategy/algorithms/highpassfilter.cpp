@@ -1,4 +1,3 @@
-
 #include <xmmintrin.h>
 
 #include "highpassfilter.h"

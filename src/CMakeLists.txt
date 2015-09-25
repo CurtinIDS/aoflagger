@@ -110,7 +110,6 @@ set(MSIO_FILES
   msio/pngfile.cpp
   msio/rspreader.cpp
   msio/samplerow.cpp
-  msio/segmentedimage.cpp
   msio/sortedtimestepaccessor.cpp
   msio/spatialtimeloader.cpp
   msio/stokesimager.cpp

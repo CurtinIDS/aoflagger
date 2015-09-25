@@ -7,6 +7,7 @@
 * strategy, are the SumThreshold method,
 * background fitting techniques (smoothing, sliding window, median
 * filters, high-pass filters) and morphological operators.
+* AOFlagger is distributed under the GPL 3 open-source license.
 *
 * I have spent a lot of time on this package, and I believe it is the
 * best flagger available.
