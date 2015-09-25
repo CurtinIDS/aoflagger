@@ -121,6 +121,7 @@ class ImageWidget : public Gtk::DrawingArea {
 		void SavePdf(const std::string &filename);
 		void SaveSvg(const std::string &filename);
 		void SavePng(const std::string &filename);
+		void SaveText(const std::string &filename);
 		
 		bool ShowTitle() const { return _showTitle; }
 		void SetShowTitle(bool showTitle) {

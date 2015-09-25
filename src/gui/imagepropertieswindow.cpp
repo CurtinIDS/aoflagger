@@ -31,6 +31,7 @@ ImagePropertiesWindow::ImagePropertiesWindow(ImageWidget &imageWidget, const std
 	_imageWidget(imageWidget),
 	_applyButton("_Apply", true),
 	_exportButton("_Export", true),
+	_exportDataButton("Export _data", true),
 	_closeButton("_Close", true),
 	
 	_colorMapFrame("Color map"),
@@ -94,6 +95,9 @@ ImagePropertiesWindow::ImagePropertiesWindow(ImageWidget &imageWidget, const std
 	_exportButton.set_image_from_icon_name("document-save-as");
 	_exportButton.signal_clicked().connect(sigc::mem_fun(*this, &ImagePropertiesWindow::onExportClicked));
 	_bottomButtonBox.pack_start(_exportButton);
+
+	_exportDataButton.signal_clicked().connect(sigc::mem_fun(*this, &ImagePropertiesWindow::onExportDataClicked));
+	_bottomButtonBox.pack_start(_exportDataButton);
 
 	_closeButton.set_image_from_icon_name("window-close");
 	_closeButton.signal_clicked().connect(sigc::mem_fun(*this, &ImagePropertiesWindow::onCloseClicked));
@@ -458,3 +462,30 @@ void ImagePropertiesWindow::onExportClicked()
 		}
 	}
 }
+
+void ImagePropertiesWindow::onExportDataClicked()
+{
+	if(_imageWidget.HasImage())
+	{
+		Gtk::FileChooserDialog dialog("Specify data filename", Gtk::FILE_CHOOSER_ACTION_SAVE);
+		dialog.set_transient_for(*this);
+
+		//Add response buttons the the dialog:
+		dialog.add_button("_Cancel", Gtk::RESPONSE_CANCEL);
+		dialog.add_button("_Save", Gtk::RESPONSE_OK);
+
+		Glib::RefPtr<Gtk::FileFilter> pdfFilter = Gtk::FileFilter::create();
+		std::string pdfName = "Text format: width; height; data1; data2... (*.txt)";
+		pdfFilter->set_name(pdfName);
+		pdfFilter->add_pattern("*.txt");
+		pdfFilter->add_mime_type("text/plain");
+		dialog.add_filter(pdfFilter);
+		int result = dialog.run();
+
+		if(result == Gtk::RESPONSE_OK)
+		{
+			_imageWidget.SaveText(dialog.get_filename());
+		}
+	}
+}
+

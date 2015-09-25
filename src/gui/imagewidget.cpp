@@ -25,6 +25,7 @@
 #include "../strategy/algorithms/thresholdtools.h"
 
 #include <iostream>
+#include <fstream>
 
 #include "plot/colorscale.h"
 #include "plot/horizontalplotscale.h"
@@ -270,6 +271,34 @@ void ImageWidget::SavePng(const std::string &filename)
 		update(cairo, width, height);
 	}
 	surface->write_to_png(filename);
+}
+
+void ImageWidget::SaveText(const std::string &filename)
+{
+	if(HasImage())
+	{
+		Image2DCPtr image = _image;
+		unsigned int
+			startX = (unsigned int) round(_startHorizontal * image->Width()),
+			startY = (unsigned int) round(_startVertical * image->Height()),
+			endX = (unsigned int) round(_endHorizontal * image->Width()),
+			endY = (unsigned int) round(_endVertical * image->Height()),
+			startTimestep = startX,
+			endTimestep = endX;
+		size_t
+			imageWidth = endX - startX,
+			imageHeight = endY - startY;
+		AOLogger::Debug << "Saving text file for " << imageWidth << " x " << imageHeight << " values.\n";
+		std::ofstream file(filename.c_str());
+		file << imageWidth << '\n' << imageHeight << '\n';
+		for(size_t y=startY; y!=endY; ++y)
+		{
+			for(size_t x=startX; x!=endX; ++x)
+			{
+				file << image->Value(x, y) << '\n';
+			}
+		}
+	}
 }
 
 void ImageWidget::update(Cairo::RefPtr<Cairo::Context> cairo, unsigned width, unsigned height)
