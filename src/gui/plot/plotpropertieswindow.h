@@ -17,9 +17,6 @@
 
 #include <boost/function.hpp>
 
-/**
-	@author A.R. Offringa <offringa@astro.rug.nl>
-*/
 class PlotPropertiesWindow : public Gtk::Window {
 	public:
 		PlotPropertiesWindow(class Plot2D &plot, const std::string &title);

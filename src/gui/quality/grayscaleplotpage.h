@@ -14,9 +14,6 @@
 #include "../../msio/timefrequencydata.h"
 #include "../../msio/timefrequencymetadata.h"
 
-/**
-	@author A.R. Offringa <offringa@astro.rug.nl>
-*/
 class GrayScalePlotPage : public Gtk::HBox {
 	public:
 		GrayScalePlotPage();

@@ -10,9 +10,6 @@
 #include <gtkmm/textview.h>
 #include <gtkmm/window.h>
 
-/**
-	@author A.R. Offringa <offringa@astro.rug.nl>
-*/
 class DataWindow : public Gtk::Window {
 	public:
 		DataWindow()

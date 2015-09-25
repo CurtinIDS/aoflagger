@@ -5,9 +5,6 @@
 
 #include "plotable.h"
 
-/**
-	@author A.R. Offringa <offringa@astro.rug.nl>
-*/
 class PlotWidget : public Gtk::DrawingArea {
 	public:
 		PlotWidget() : _plot(0)

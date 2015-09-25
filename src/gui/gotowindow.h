@@ -14,9 +14,6 @@
 
 #include "../strategy/control/types.h"
 
-/**
-	@author A.R. Offringa <offringa@astro.rug.nl>
-*/
 class GoToWindow : public Gtk::Window {
 	public:
 		GoToWindow(class RFIGuiWindow &rfiGuiWindow);

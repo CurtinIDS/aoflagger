@@ -7,9 +7,6 @@
 
 #include "plot/plotwidget.h"
 
-/**
-	@author A.R. Offringa <offringa@astro.rug.nl>
-*/
 class PlotFrame : public Gtk::HBox {
 	public:
 		PlotFrame();

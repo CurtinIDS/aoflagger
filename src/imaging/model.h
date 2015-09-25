@@ -37,9 +37,7 @@ struct OutputReceiver<TimeFrequencyData>
 	}
 	void SetY(size_t y) { _y = y; }
 };
-/**
-	@author A.R. Offringa <offringa@astro.rug.nl>
-*/
+
 class Model {
 	struct Source {
 		virtual ~Source() { }

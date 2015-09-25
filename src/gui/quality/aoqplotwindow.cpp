@@ -38,7 +38,7 @@ AOQPlotWindow::AOQPlotWindow() :
 	_notebook.signal_switch_page().connect(sigc::mem_fun(*this, &AOQPlotWindow::onSwitchPage));
 	
 	_vBox.pack_end(_statusBar, Gtk::PACK_SHRINK);
-	_statusBar.push("Quality plot util is ready. Author: André Offringa (offringa@astro.rug.nl)");
+	_statusBar.push("Quality plot util is ready. Author: André Offringa (offringa@gmail.com)");
 	
 	add(_vBox);
 	

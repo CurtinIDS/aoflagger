@@ -331,7 +331,7 @@ int main(int argc, char **argv)
 	{
 		std::cerr
 			<< "An unhandled exception occured: " << exception.what() << '\n'
-			<< "If you think this is a bug, please contact offringa@astro.rug.nl\n";
+			<< "If you think this is a bug, please contact offringa@gmail.com\n";
 		return RETURN_UNHANDLED_EXCEPTION;
 	}
 }

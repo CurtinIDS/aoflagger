@@ -10,9 +10,7 @@
 #include "../imagesets/imageset.h"
 
 namespace rfiStrategy {
-	/**
-		@author A.R. Offringa <offringa@astro.rug.nl>
-	*/
+
 	class WriteDataAction : public Action {
 		public:
 			WriteDataAction()

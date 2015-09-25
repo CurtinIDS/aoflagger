@@ -15,9 +15,6 @@
 
 #include "../strategy/control/types.h"
 
-/**
-	@author A.R. Offringa <offringa@astro.rug.nl>
-*/
 class EditStrategyWindow : public Gtk::Window
 {
 	public:

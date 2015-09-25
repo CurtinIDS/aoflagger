@@ -11,9 +11,6 @@
 
 #include "plot/plotwidget.h"
 
-/**
-	@author A.R. Offringa <offringa@astro.rug.nl>
-*/
 class PlotWindow : public Gtk::Window {
 	public:
 		PlotWindow(class PlotManager &plotManager);

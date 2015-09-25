@@ -8,9 +8,6 @@
 #include "timefrequencydata.h"
 #include "timefrequencymetadata.h"
 
-/**
-	@author A.R. Offringa <offringa@astro.rug.nl>
-*/
 class RSPReader {
 	public:
 		explicit RSPReader(const std::string &rawFile) : _rawFile(rawFile), _clockSpeed(200000000)

@@ -5,9 +5,6 @@
 #include <string>
 #include <stack>
 
-/**
-	@author A.R. Offringa <offringa@astro.rug.nl>
-*/
 class XmlWriter {
 	public:
 		XmlWriter() : _file(0), _stream(0)

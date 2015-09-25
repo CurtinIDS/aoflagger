@@ -7,9 +7,6 @@
 #include "../../msio/mask2d.h"
 #include "../../msio/segmentedimage.h"
 
-/**
-	@author A.R. Offringa <offringa@astro.rug.nl>
-*/
 class Morphology {
 	public:
 		Morphology() : _hLineEnlarging(1), _vLineEnlarging(1), _hDensityEnlargeRatio(0.5), _vDensityEnlargeRatio(0.5) { }

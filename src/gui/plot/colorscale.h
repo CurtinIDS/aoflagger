@@ -8,9 +8,6 @@
 
 #include "verticalplotscale.h"
 
-/**
-	@author A.R. Offringa <offringa@astro.rug.nl>
-*/
 class ColorScale {
 	public:
 		ColorScale();

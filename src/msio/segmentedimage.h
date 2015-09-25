@@ -8,9 +8,6 @@
 typedef boost::shared_ptr<class SegmentedImage> SegmentedImagePtr;
 typedef boost::shared_ptr<const class SegmentedImage> SegmentedImageCPtr;
 
-/**
-	@author A.R. Offringa <offringa@astro.rug.nl>
-*/
 class SegmentedImage{
 	public:
 		~SegmentedImage()

@@ -4,9 +4,6 @@
 #include <vector>
 #include <string>
 
-/**
-	@author A.R. Offringa <offringa@astro.rug.nl>
-*/
 class IntegerDomain {
 	public:
 		IntegerDomain(const IntegerDomain &source);

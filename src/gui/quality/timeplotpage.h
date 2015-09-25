@@ -5,9 +5,6 @@
 
 #include "../../quality/statisticscollection.h"
 
-/**
-	@author A.R. Offringa <offringa@astro.rug.nl>
-*/
 class TimePlotPage : public TwoDimensionalPlotPage {
 	protected:
 		virtual const std::map<double, class DefaultStatistics> &GetStatistics() const

@@ -8,9 +8,6 @@
 
 #include "../../msio/types.h"
 
-/**
-	@author A.R. Offringa <offringa@astro.rug.nl>
-*/
 class Plot2DPointSet{
 	public:
 		Plot2DPointSet() :

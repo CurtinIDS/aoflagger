@@ -7,9 +7,6 @@
 
 namespace rfiStrategy {
 
-	/**
-		@author A.R. Offringa <offringa@astro.rug.nl>
-	*/
 	class SpatialCompositionAction : public Action {
 		public:
 			enum Operation { SumCrossCorrelationsOperation, SumAutoCorrelationsOperation, EigenvalueDecompositionOperation, EigenvalueRemovalOperation } ;

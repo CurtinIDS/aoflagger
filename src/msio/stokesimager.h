@@ -3,9 +3,6 @@
 
 #include "image2d.h"
 
-/**
-	@author A.R. Offringa <offringa@astro.rug.nl>
-*/
 class StokesImager{
 	public:
 		static Image2DPtr CreateSum(Image2DCPtr left, Image2DCPtr right);

@@ -7,9 +7,6 @@
 
 namespace rfiStrategy {
 
-	/**
-		@author A.R. Offringa <offringa@astro.rug.nl>
-	*/
 	class HighPassFilterAction : public Action {
 		public:
 			enum Mode { StoreContaminated, StoreRevised };

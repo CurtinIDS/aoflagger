@@ -13,9 +13,6 @@
 #include <gtkmm/scale.h>
 #include <gtkmm/window.h>
 
-/**
-	@author A.R. Offringa <offringa@astro.rug.nl>
-*/
 class ComplexPlanePlotWindow : public Gtk::Window {
 	public:
 		ComplexPlanePlotWindow(class RFIGuiWindow &rfiGuiWindow, class PlotManager &plotManager);

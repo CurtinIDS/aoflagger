@@ -8,9 +8,6 @@
 #include "../../quality/statisticscollection.h"
 #include "../../quality/statisticsderivator.h"
 
-/**
-	@author A.R. Offringa <offringa@astro.rug.nl>
-*/
 class SummaryPage : public Gtk::HBox {
 	public:
 		SummaryPage()

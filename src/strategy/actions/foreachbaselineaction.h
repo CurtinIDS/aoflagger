@@ -16,9 +16,6 @@
 
 namespace rfiStrategy {
 
-	/**
-		@author A.R. Offringa <offringa@astro.rug.nl>
-	*/
 	class ForEachBaselineAction : public ActionBlock {
 		public:
 			ForEachBaselineAction() : _threadCount(4), _selection(CrossCorrelations), _resultSet(0), _exceptionOccured(false),  _hasInitAntennae(false)

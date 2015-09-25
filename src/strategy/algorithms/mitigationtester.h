@@ -10,9 +10,6 @@
 
 #include "../../util/rng.h"
 
-/**
-	@author A.R. Offringa <offringa@astro.rug.nl>
-*/
 class MitigationTester{
 	public:
 		enum NoiseType { Gaussian, GaussianProduct, GaussianPartialProduct, Rayleigh };

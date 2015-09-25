@@ -7,9 +7,6 @@
 
 #include <set>
 
-/**
-	@author A.R. Offringa <offringa@astro.rug.nl>
-*/
 namespace rfiStrategy {
 
 	class ForEachMSAction  : public ActionBlock {

@@ -13,9 +13,6 @@
 
 namespace rfiStrategy {
 	
-	/**
-		@author A.R. Offringa <offringa@astro.rug.nl>
-	*/
 	class DirectionProfileAction : public Action {
 		public:
 			enum Axis { HorizontalAxis, VerticalAxis };

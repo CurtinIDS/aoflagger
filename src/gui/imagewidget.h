@@ -12,9 +12,6 @@
 #include "../msio/timefrequencymetadata.h"
 #include "../msio/segmentedimage.h"
 
-/**
-	@author A.R. Offringa <offringa@astro.rug.nl>
-*/
 class ImageWidget : public Gtk::DrawingArea {
 	public:
 		enum TFMap { BWMap, InvertedMap, HotColdMap, RedBlueMap, RedYellowBlueMap, FireMap, BlackRedMap };

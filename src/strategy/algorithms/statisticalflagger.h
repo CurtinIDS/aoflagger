@@ -5,9 +5,6 @@
 
 #include "../../msio/mask2d.h"
 
-/**
-	@author A.R. Offringa <offringa@astro.rug.nl>
-*/
 class StatisticalFlagger{
 	public:
 		StatisticalFlagger();

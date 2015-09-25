@@ -8,9 +8,6 @@
 
 namespace rfiStrategy {
 
-	/**
-		@author A.R. Offringa <offringa@astro.rug.nl>
-	*/
 	class ActionFactory {
 		public:
 			static const std::vector<std::string> GetActionList();

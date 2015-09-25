@@ -18,9 +18,6 @@ namespace rfiStrategy {
 			StrategyWriterError(const std::string &arg) : std::runtime_error(arg) { }
 	};
 
-	/**
-		@author A.R. Offringa <offringa@astro.rug.nl>
-	*/
 	class StrategyWriter : private XmlWriter {
 		public:
 			StrategyWriter() : _writeDescriptions(false)

@@ -8,9 +8,6 @@
 
 #include "tickset.h"
 
-/**
-	@author A.R. Offringa <offringa@astro.rug.nl>
-*/
 class VerticalPlotScale {
 	public:
 		VerticalPlotScale();

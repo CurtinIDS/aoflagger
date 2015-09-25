@@ -7,9 +7,6 @@
 
 #include "../../msio/measurementset.h"
 
-/**
-	@author A.R. Offringa <offringa@astro.rug.nl>
-*/
 class AntennaePlotPage : public TwoDimensionalPlotPage {
 	protected:
 		virtual void processStatistics(class StatisticsCollection *statCollection, const std::vector<AntennaInfo> &antennas)

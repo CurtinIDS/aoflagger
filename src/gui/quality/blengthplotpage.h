@@ -9,9 +9,6 @@
 
 #include "../../remote/clusteredobservation.h"
 
-/**
-	@author A.R. Offringa <offringa@astro.rug.nl>
-*/
 class BLengthPlotPage : public TwoDimensionalPlotPage {
 	public:
     BLengthPlotPage() :

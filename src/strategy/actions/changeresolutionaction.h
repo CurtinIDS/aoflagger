@@ -7,9 +7,6 @@
 
 namespace rfiStrategy {
 	
-	/**
-		@author A.R. Offringa <offringa@astro.rug.nl>
-	*/
 	class ChangeResolutionAction : public ActionBlock {
 		public:
 			ChangeResolutionAction() : _timeDecreaseFactor(10), _frequencyDecreaseFactor(1), _restoreRevised(true), _restoreContaminated(false), _restoreMasks(false), _useMaskInAveraging(false)

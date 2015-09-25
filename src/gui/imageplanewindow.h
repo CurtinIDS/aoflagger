@@ -16,9 +16,6 @@
 
 #include "imagewidget.h"
 
-/**
-	@author A.R. Offringa <offringa@astro.rug.nl>
-*/
 class ImagePlaneWindow : public Gtk::Window {
 	public:
 		ImagePlaneWindow();

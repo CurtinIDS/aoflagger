@@ -30,9 +30,6 @@
 
 class BaselineWindowController;
 
-/**
-	@author A.R. Offringa <offringa@astro.rug.nl>
-*/
 class RFIGuiWindow : public Gtk::Window, private StrategyController {
 	public:
 		RFIGuiWindow();

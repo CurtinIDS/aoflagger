@@ -14,9 +14,6 @@ typedef boost::shared_ptr<const class SampleRow> SampleRowCPtr;
 
 #include "../strategy/algorithms/convolutions.h"
 
-/**
-	@author A.R. Offringa <offringa@astro.rug.nl>
-*/
 class SampleRow {
 	public:
 		~SampleRow()

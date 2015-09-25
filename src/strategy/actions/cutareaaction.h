@@ -9,9 +9,6 @@
 
 namespace rfiStrategy {
 	
-	/**
-		@author A.R. Offringa <offringa@astro.rug.nl>
-	*/
 	class CutAreaAction : public ActionBlock {
 		public:
 			CutAreaAction() : _startTimeSteps(0), _endTimeSteps(0), _topChannels(1), _bottomChannels(0)

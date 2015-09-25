@@ -7,9 +7,6 @@
 
 namespace rfiStrategy {
 	
-	/**
-		@author A.R. Offringa <offringa@astro.rug.nl>
-	*/
 	class FrequencySelectionAction : public Action {
 		public:
 			FrequencySelectionAction() : _threshold(3.0), _clipDown(true)

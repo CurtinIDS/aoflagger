@@ -10,9 +10,6 @@
 // Needs to be included LAST
 #include "../../f2c.h"
 
-/**
-	@author A.R. Offringa <offringa@astro.rug.nl>
-*/
 class SVDMitigater : public SurfaceFitMethod {
 	public:
 		SVDMitigater();

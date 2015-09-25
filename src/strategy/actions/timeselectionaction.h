@@ -7,9 +7,6 @@
 
 namespace rfiStrategy {
 	
-	/**
-		@author A.R. Offringa <offringa@astro.rug.nl>
-	*/
 	class TimeSelectionAction : public Action {
 		public:
 			TimeSelectionAction() : _threshold(3.5)

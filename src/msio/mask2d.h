@@ -10,9 +10,6 @@
 typedef boost::shared_ptr<class Mask2D> Mask2DPtr;
 typedef boost::shared_ptr<const class Mask2D> Mask2DCPtr;
 
-/**
-	@author A.R. Offringa <offringa@astro.rug.nl>
-*/
 class Mask2D {
 	public:
 		~Mask2D();

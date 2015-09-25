@@ -17,9 +17,6 @@
 #include "../plot/plot2d.h"
 #include "../plot/plotwidget.h"
 
-/**
-	@author A.R. Offringa <offringa@astro.rug.nl>
-*/
 class HistogramPage : public Gtk::HBox {
 	public:
 		HistogramPage();

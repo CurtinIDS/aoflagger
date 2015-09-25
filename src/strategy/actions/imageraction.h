@@ -9,9 +9,6 @@
 
 namespace rfiStrategy {
 
-	/**
-		@author A.R. Offringa <offringa@astro.rug.nl>
-	*/
 	class ImagerAction : public Action {
 		public:
 			enum ImagingType {

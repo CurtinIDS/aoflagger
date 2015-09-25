@@ -6,9 +6,6 @@
 
 #include "../../msio/timefrequencymetadata.h"
 
-/**
-	@author A.R. Offringa <offringa@astro.rug.nl>
-*/
 class FrequencyPowerPlot {
 	public:
 		FrequencyPowerPlot() : _plot(0), _logYAxis(false) { }

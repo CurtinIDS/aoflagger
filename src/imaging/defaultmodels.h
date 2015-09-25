@@ -4,9 +4,6 @@
 #include "model.h"
 #include "observatorium.h"
 
-/**
-	@author A.R. Offringa <offringa@astro.rug.nl>
-*/
 class DefaultModels {
 	public:
 		enum SetLocation { EmptySet, NCPSet, B1834Set };

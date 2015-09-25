@@ -1,14 +1,9 @@
 #ifndef ARRAYCOLUMNITERATOR_H
 #define ARRAYCOLUMNITERATOR_H
 
-//#define AIPS_NO_TEMPLATE_SRC
-//#define CASACORE_NO_AUTO_TEMPLATES
 #include <casacore/ms/MeasurementSets/MSColumns.h>
 #include <casacore/tables/Tables/RefRows.h>
 
-/**
-	@author A.R. Offringa <offringa@astro.rug.nl>
-*/
 template<typename T>
 class ROArrayColumnIterator {
 	public:

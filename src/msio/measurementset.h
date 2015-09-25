@@ -14,10 +14,6 @@
 
 #include "antennainfo.h"
 
-/**
-	@author A.R. Offringa <offringa@astro.rug.nl>
-*/
-
 class MSIterator {
 	public:
 		MSIterator(class MeasurementSet &ms, bool hasCorrectedData=true);

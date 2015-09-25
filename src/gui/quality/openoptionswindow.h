@@ -7,9 +7,6 @@
 #include <gtkmm/entry.h>
 #include <gtkmm/window.h>
 
-/**
-	@author A.R. Offringa <offringa@astro.rug.nl>
-*/
 class OpenOptionsWindow : public Gtk::Window {
 	public:
 		OpenOptionsWindow() :

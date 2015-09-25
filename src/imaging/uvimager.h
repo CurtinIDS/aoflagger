@@ -15,9 +15,6 @@ struct SingleFrequencySingleBaselineData {
 	unsigned field;
 };
 
-/**
-	@author A.R. Offringa <offringa@astro.rug.nl>
-*/
 class UVImager {
 	public:
 		enum ImageKind { Homogeneous, Flagging };

@@ -11,9 +11,6 @@
 #include <gtkmm/buttonbox.h>
 #include <gtkmm/frame.h>
 
-/**
-	@author A.R. Offringa <offringa@astro.rug.nl>
-*/
 class MSOptionWindow : public Gtk::Window {
 	public:
 		MSOptionWindow(class RFIGuiWindow &rfiGuiWindow, class StrategyController &strategyController, const std::string &filename);

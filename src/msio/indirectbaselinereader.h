@@ -10,9 +10,6 @@
 #include "baselinereader.h"
 #include "directbaselinereader.h"
 
-/**
-	@author A.R. Offringa <offringa@astro.rug.nl>
-*/
 class IndirectBaselineReader : public BaselineReader {
 	public:
 		explicit IndirectBaselineReader(const std::string &msFile);

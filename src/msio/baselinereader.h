@@ -15,9 +15,6 @@
 typedef boost::shared_ptr<class BaselineReader> BaselineReaderPtr;
 typedef boost::shared_ptr<const class BaselineReader> BaselineReaderCPtr;
 
-/**
-	@author A.R. Offringa <offringa@astro.rug.nl>
-*/
 class BaselineReader {
 	public:
 		BaselineReader(const std::string &msFile);

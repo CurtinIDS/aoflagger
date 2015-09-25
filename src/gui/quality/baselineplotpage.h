@@ -12,9 +12,6 @@
 
 #include "grayscaleplotpage.h"
 
-/**
-	@author A.R. Offringa <offringa@astro.rug.nl>
-*/
 class BaselinePlotPage : public GrayScalePlotPage {
 	public:
 		BaselinePlotPage();

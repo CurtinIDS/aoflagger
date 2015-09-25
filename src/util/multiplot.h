@@ -9,9 +9,6 @@
 
 #include "../gui/plot/plotmanager.h"
 
-/**
-	@author A.R. Offringa <offringa@astro.rug.nl>
-*/
 class MultiPlot {
 	public:
 		MultiPlot(Plot2D &plot, size_t plotCount);

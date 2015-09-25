@@ -6,9 +6,6 @@
 
 #include <gtkmm/drawingarea.h>
 
-/**
-	@author A.R. Offringa <offringa@astro.rug.nl>
-*/
 class HorizontalPlotScale {
 	public:
 		HorizontalPlotScale();

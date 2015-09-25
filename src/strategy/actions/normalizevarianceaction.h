@@ -11,9 +11,6 @@
 
 namespace rfiStrategy {
 
-	/**
-		@author A.R. Offringa <offringa@astro.rug.nl>
-	*/
 	class NormalizeVarianceAction : public Action {
 		public:
 			NormalizeVarianceAction() :

@@ -10,9 +10,6 @@
 #include "image2d.h"
 #include "mask2d.h"
 
-/**
-	@author A.R. Offringa <offringa@astro.rug.nl>
-*/
 class MemoryBaselineReader : public BaselineReader {
 	public:
 		explicit MemoryBaselineReader(const std::string &msFile)

@@ -14,9 +14,6 @@
 #include <gtkmm/scale.h>
 #include <gtkmm/window.h>
 
-/**
-	@author A.R. Offringa <offringa@astro.rug.nl>
-*/
 class ImagePropertiesWindow : public Gtk::Window {
 	public:
 		ImagePropertiesWindow(class ImageWidget &imageWidget, const std::string &title);

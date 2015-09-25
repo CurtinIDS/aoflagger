@@ -6,9 +6,6 @@
 #include "../../quality/statisticscollection.h"
 #include "../../quality/statisticsderivator.h"
 
-/**
-	@author A.R. Offringa <offringa@astro.rug.nl>
-*/
 class FrequencyPlotPage : public TwoDimensionalPlotPage {
 	public:
     FrequencyPlotPage() : _ftButton("FT")

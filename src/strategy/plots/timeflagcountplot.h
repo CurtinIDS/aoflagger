@@ -5,9 +5,6 @@
 
 #include "../../msio/timefrequencymetadata.h"
 
-/**
-	@author A.R. Offringa <offringa@astro.rug.nl>
-*/
 class TimeFlagCountPlot {
 	public:
 		TimeFlagCountPlot() : _startTime(0) { };

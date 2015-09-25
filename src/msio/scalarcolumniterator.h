@@ -4,9 +4,6 @@
 #include <casacore/ms/MeasurementSets/MSColumns.h>
 #include <casacore/tables/Tables/ScalarColumn.h>
 
-/**
-	@author A.R. Offringa <offringa@astro.rug.nl>
-*/
 template<typename T>
 class ScalarColumnIterator {
 	public:

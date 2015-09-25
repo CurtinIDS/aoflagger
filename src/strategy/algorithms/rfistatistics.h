@@ -13,9 +13,6 @@
 #include "../../msio/mask2d.h"
 #include "../../msio/segmentedimage.h"
 
-/**
-	@author A.R. Offringa <offringa@astro.rug.nl>
-*/
 class RFIStatistics {
 	public:
 		class ChannelInfo {

@@ -14,9 +14,7 @@
 #include "../../msio/mask2d.h"
 
 namespace rfiStrategy {
-	/**
-		@author A.R. Offringa <offringa@astro.rug.nl>
-	*/
+
 	class WriteFlagsAction : public Action {
 		public:
 			WriteFlagsAction();

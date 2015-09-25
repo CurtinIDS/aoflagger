@@ -13,9 +13,6 @@
 
 #include <set>
 
-/**
-	@author A.R. Offringa <offringa@astro.rug.nl>
-*/
 class TwoDimensionalPlotPage : public Gtk::HBox {
 	public:
 		TwoDimensionalPlotPage();

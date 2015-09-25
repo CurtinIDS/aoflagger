@@ -6,9 +6,6 @@
 
 #include "../../msio/types.h"
 
-/**
-	@author A.R. Offringa <offringa@astro.rug.nl>
-*/
 class SinusFitter {
 	public:
 		SinusFitter();

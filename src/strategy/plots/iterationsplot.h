@@ -7,9 +7,6 @@
 #include "../../msio/mask2d.h"
 #include "../../msio/timefrequencymetadata.h"
 
-/**
-	@author A.R. Offringa <offringa@astro.rug.nl>
-*/
 class IterationsPlot
 {
 public:

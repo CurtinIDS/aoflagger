@@ -4,10 +4,6 @@
 #include <casacore/ms/MeasurementSets/MeasurementSet.h>
 #include <casacore/tables/Tables/TableRecord.h>
 
-/**
-	@author A.R. Offringa <offringa@astro.rug.nl>
-*/
-
 #define QUALITY_TABLES_VERSION      1
 #define QUALITY_TABLES_VERSION_STR "1"
 

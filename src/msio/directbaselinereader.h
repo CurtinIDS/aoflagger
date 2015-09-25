@@ -11,9 +11,6 @@
 #include "mask2d.h"
 #include "measurementset.h"
 
-/**
-	@author A.R. Offringa <offringa@astro.rug.nl>
-*/
 class DirectBaselineReader : public BaselineReader {
 	public:
 		explicit DirectBaselineReader(const std::string &msFile);

@@ -11,9 +11,6 @@
 
 #include "surfacefitmethod.h"
 
-/**
-	@author A.R. Offringa <offringa@astro.rug.nl>
-*/
 class LocalFitMethod : public SurfaceFitMethod {
 	public:
 		enum Method { None, Average, GaussianWeightedAverage, FastGaussianWeightedAverage, Median, Minimum };

@@ -6,9 +6,6 @@
 
 #include "dimension.h"
 
-/**
-	@author A.R. Offringa <offringa@astro.rug.nl>
-*/
 class System {
 	public:
 		System() : _includeZeroYAxis(false)

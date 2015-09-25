@@ -38,9 +38,6 @@ namespace rfiStrategy {
 			bool _isValid;
 	};
 
-	/**
-		@author A.R. Offringa <offringa@astro.rug.nl>
-	*/
 	class FitsImageSet : public ImageSet
 	{
 		public:

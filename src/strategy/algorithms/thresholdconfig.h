@@ -6,9 +6,6 @@
 #include "../../msio/image2d.h"
 #include "../../msio/mask2d.h"
 
-/**
-	@author A.R. Offringa <offringa@astro.rug.nl>
-*/
 class ThresholdConfig {
 	public:
 		enum Method { SumThreshold, VarThreshold };

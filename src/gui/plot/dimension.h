@@ -3,9 +3,6 @@
 
 #include "plot2dpointset.h"
 
-/**
-	@author A.R. Offringa <offringa@astro.rug.nl>
-*/
 class Dimension {
 	public:
 		Dimension() : _pointSets(0) { }

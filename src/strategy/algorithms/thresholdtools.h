@@ -7,9 +7,6 @@
 #include "../../msio/image2d.h"
 #include "../../msio/mask2d.h"
 
-/**
-	@author A.R. Offringa <offringa@astro.rug.nl>
-*/
 class ThresholdTools {
 	public:
 		static void MeanAndStdDev(const Image2DCPtr &image, const Mask2DCPtr &mask, num_t &mean, num_t &stddev);

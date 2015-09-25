@@ -7,9 +7,6 @@
 
 #include "editstrategywindow.h"
 
-/**
-	@author A.R. Offringa <offringa@astro.rug.nl>
-*/
 class AddStrategyActionMenu : public Gtk::Menu {
 	public:
 		AddStrategyActionMenu(class EditStrategyWindow &editStrategyWindow) :

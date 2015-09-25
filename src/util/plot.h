@@ -6,9 +6,7 @@
 #include <stdexcept>
 #include <string>
 #include <vector>
-/**
-	@author A.R. Offringa <offringa@astro.rug.nl>
-*/
+
 class Plot {
 	public:
 		Plot(const std::string &pdfFile);

@@ -8,9 +8,6 @@
 #include "../../msio/samplerow.h"
 #include "../../msio/timefrequencymetadata.h"
 
-/**
-	@author A.R. Offringa <offringa@astro.rug.nl>
-*/
 class RFIPlots{
 	public:
 		static void MakeDistPlot(class Plot2DPointSet &pointSet, Image2DCPtr image, Mask2DCPtr mask);

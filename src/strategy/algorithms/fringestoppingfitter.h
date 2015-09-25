@@ -8,9 +8,6 @@
 #include "../../msio/samplerow.h"
 #include "../../msio/timefrequencymetadata.h"
 
-/**
-	@author A.R. Offringa <offringa@astro.rug.nl>
-*/
 class FringeStoppingFitter : public SurfaceFitMethod {
 	public:
 		FringeStoppingFitter();

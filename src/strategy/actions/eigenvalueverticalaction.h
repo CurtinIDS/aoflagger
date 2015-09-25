@@ -11,9 +11,6 @@
 
 namespace rfiStrategy {
 	
-	/**
-		@author A.R. Offringa <offringa@astro.rug.nl>
-	*/
 	class EigenValueVerticalAction : public Action {
 		public:
 			EigenValueVerticalAction() : _timeIntegrated(true)

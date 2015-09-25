@@ -15,9 +15,6 @@
 
 #include "../util/progresslistener.h"
 
-/**
-	@author A.R. Offringa <offringa@astro.rug.nl>
-*/
 class ProgressWindow : public Gtk::Window, public ProgressListener {
 	public:
 		ProgressWindow(class RFIGuiWindow &parentWindow);

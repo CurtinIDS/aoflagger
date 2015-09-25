@@ -11,9 +11,6 @@
 
 #include "../util/serializable.h"
 
-/**
-	@author A.R. Offringa <offringa@astro.rug.nl>
-*/
 class EarthPosition {
 public:
 	EarthPosition() : x(0.0), y(0.0), z(0.0) { }

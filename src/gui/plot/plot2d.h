@@ -12,9 +12,6 @@
 #include "horizontalplotscale.h"
 #include "verticalplotscale.h"
 
-/**
-	@author A.R. Offringa <offringa@astro.rug.nl>
-*/
 class Plot2D : public Plotable {
 	public:
 		enum RangeDetermination { MinMaxRange, WinsorizedRange, SpecifiedRange };

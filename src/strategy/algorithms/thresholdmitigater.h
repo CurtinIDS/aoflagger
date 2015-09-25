@@ -7,9 +7,6 @@
 #include "../../msio/image2d.h"
 #include "../../msio/mask2d.h"
 
-/**
-	@author A.R. Offringa <offringa@astro.rug.nl>
-*/
 class ThresholdMitigater{
 	public:
 		//static void Threshold(class Image2D &image, num_t threshold);

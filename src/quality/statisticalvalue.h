@@ -3,10 +3,6 @@
 
 #include <complex>
 
-/**
-	@author A.R. Offringa <offringa@astro.rug.nl>
-*/
-
 class StatisticalValue {
 	public:
 		StatisticalValue(unsigned _polarizationCount) :

@@ -5,9 +5,6 @@
 
 #include "../../msio/timefrequencymetadata.h"
 
-/**
-	@author A.R. Offringa <offringa@astro.rug.nl>
-*/
 class FrequencyFlagCountPlot{
 	public:
 		FrequencyFlagCountPlot() : _ignoreFirstChannel(true) { }
