@@ -11,7 +11,7 @@
 #include "remoteprocess.h"
 #include "server.h"
 
-#include "../msio/antennainfo.h"
+#include "../structures/antennainfo.h"
 
 class StatisticsCollection;
 

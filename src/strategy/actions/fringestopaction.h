@@ -1,7 +1,7 @@
 #ifndef FRINGESTOPACTION_H
 #define FRINGESTOPACTION_H 
 
-#include "../../msio/types.h"
+#include "../../structures/types.h"
 
 #include "action.h"
 

@@ -1,9 +1,9 @@
 #ifndef SIROPERATOR_H
 #define SIROPERATOR_H
 
-#include "../../msio/mask2d.h"
-#include "../../msio/types.h"
-#include "../../msio/xyswappedmask2d.h"
+#include "../../structures/mask2d.h"
+#include "../../structures/types.h"
+#include "../../structures/xyswappedmask2d.h"
 
 /**
  * This class contains functions that implement an algorithm to dilate

@@ -11,8 +11,8 @@
 
 #include "format.h"
 
-#include "../msio/antennainfo.h"
-#include "../msio/msrowdataext.h"
+#include "../structures/antennainfo.h"
+#include "../structures/msrowdataext.h"
 
 class StatisticsCollection;
 class HistogramCollection;

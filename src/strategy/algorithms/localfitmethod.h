@@ -5,9 +5,9 @@
 
 #include <boost/thread/mutex.hpp>
 
-#include "../../msio/image2d.h"
-#include "../../msio/mask2d.h"
-#include "../../msio/timefrequencydata.h"
+#include "../../structures/image2d.h"
+#include "../../structures/mask2d.h"
+#include "../../structures/timefrequencydata.h"
 
 #include "surfacefitmethod.h"
 

@@ -5,9 +5,9 @@
 
 #include <gtkmm/messagedialog.h>
 
-#include "../msio/antennainfo.h"
-#include "../msio/date.h"
-#include "../msio/image2d.h"
+#include "../structures/antennainfo.h"
+#include "../structures/date.h"
+#include "../structures/image2d.h"
 
 #include "../strategy/plots/rfiplots.h"
 

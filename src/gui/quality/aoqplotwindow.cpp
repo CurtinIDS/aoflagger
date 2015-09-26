@@ -5,7 +5,7 @@
 #include <gtkmm/main.h>
 #include <gtkmm/messagedialog.h>
 
-#include "../../msio/measurementset.h"
+#include "../../structures/measurementset.h"
 
 #include "../../quality/histogramtablesformatter.h"
 #include "../../quality/histogramcollection.h"

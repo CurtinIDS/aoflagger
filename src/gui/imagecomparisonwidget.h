@@ -5,10 +5,10 @@
 
 #include <vector>
 
-#include "../msio/image2d.h"
-#include "../msio/timefrequencydata.h"
-#include "../msio/timefrequencymetadata.h"
-#include "../msio/segmentedimage.h"
+#include "../structures/image2d.h"
+#include "../structures/timefrequencydata.h"
+#include "../structures/timefrequencymetadata.h"
+#include "../structures/segmentedimage.h"
 
 #include "imagewidget.h"
 

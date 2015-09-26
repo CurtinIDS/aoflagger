@@ -1,7 +1,7 @@
 #ifndef STATISTICALFLAGACTION_H
 #define STATISTICALFLAGACTION_H
 
-#include "../../msio/types.h"
+#include "../../structures/types.h"
 
 #include "action.h"
 

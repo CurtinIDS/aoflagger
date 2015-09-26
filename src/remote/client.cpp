@@ -15,8 +15,8 @@
 #include "format.h"
 #include "processcommander.h"
 
-#include "../msio/antennainfo.h"
-#include "../msio/measurementset.h"
+#include "../structures/antennainfo.h"
+#include "../structures/measurementset.h"
 
 namespace aoRemote
 {

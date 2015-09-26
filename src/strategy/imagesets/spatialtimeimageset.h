@@ -9,7 +9,7 @@
 
 #include "imageset.h"
 
-#include "../../msio/measurementset.h"
+#include "../../structures/measurementset.h"
 #include "../../msio/spatialtimeloader.h"
 
 namespace rfiStrategy {

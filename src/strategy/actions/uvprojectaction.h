@@ -8,7 +8,7 @@
 #include "../control/artifactset.h"
 #include "../control/actionblock.h"
 
-#include "../../msio/timefrequencydata.h"
+#include "../../structures/timefrequencydata.h"
 
 #include <iostream>
 

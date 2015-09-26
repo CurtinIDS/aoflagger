@@ -6,9 +6,9 @@
 #include <string>
 #include <sstream>
 
-#include "../../msio/mask2d.h"
-#include "../../msio/timefrequencydata.h"
-#include "../../msio/timefrequencymetadata.h"
+#include "../../structures/mask2d.h"
+#include "../../structures/timefrequencydata.h"
+#include "../../structures/timefrequencymetadata.h"
 
 #include "../../util/aologger.h"
 

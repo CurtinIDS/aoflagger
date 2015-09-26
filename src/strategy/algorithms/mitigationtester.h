@@ -5,8 +5,8 @@
 #include <vector>
 #include <fstream>
 
-#include "../../msio/image2d.h"
-#include "../../msio/mask2d.h"
+#include "../../structures/image2d.h"
+#include "../../structures/mask2d.h"
 
 #include "../../util/rng.h"
 

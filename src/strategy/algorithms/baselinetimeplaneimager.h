@@ -3,7 +3,7 @@
 
 #include <complex>
 
-#include "../../msio/image2d.h"
+#include "../../structures/image2d.h"
 
 template<typename NumType>
 class BaselineTimePlaneImager

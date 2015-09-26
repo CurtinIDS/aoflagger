@@ -1,7 +1,7 @@
 #ifndef FREQUENCYSELECTIONACTION_H
 #define FREQUENCYSELECTIONACTION_H
 
-#include "../../msio/types.h"
+#include "../../structures/types.h"
 
 #include "action.h"
 

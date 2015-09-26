@@ -11,7 +11,7 @@
 #include <casacore/tables/Tables/TableIter.h>
 #include <casacore/tables/TaQL/ExprNode.h>
 
-#include "timefrequencydata.h"
+#include "../structures/timefrequencydata.h"
 
 #include "../util/aologger.h"
 

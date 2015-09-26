@@ -13,7 +13,7 @@
 
 #include <math.h>
 
-#include "types.h"
+#include "../structures/types.h"
 
 /**
  * This class represents an exception that occurred during reading/writing of a FITS file.

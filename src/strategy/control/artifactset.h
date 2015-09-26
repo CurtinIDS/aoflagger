@@ -3,9 +3,9 @@
 
 #include <vector>
 
-#include "../../msio/types.h"
-#include "../../msio/timefrequencydata.h"
-#include "../../msio/timefrequencymetadata.h"
+#include "../../structures/types.h"
+#include "../../structures/timefrequencydata.h"
+#include "../../structures/timefrequencymetadata.h"
 
 #include "../../types.h"
 

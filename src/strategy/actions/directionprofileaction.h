@@ -3,7 +3,7 @@
 
 #include <cmath>
 
-#include "../../msio/timefrequencydata.h"
+#include "../../structures/timefrequencydata.h"
 
 #include "action.h"
 

@@ -3,10 +3,10 @@
 
 #include <vector>
 
-#include "../../msio/image2d.h"
-#include "../../msio/mask2d.h"
-#include "../../msio/samplerow.h"
-#include "../../msio/timefrequencymetadata.h"
+#include "../../structures/image2d.h"
+#include "../../structures/mask2d.h"
+#include "../../structures/samplerow.h"
+#include "../../structures/timefrequencymetadata.h"
 
 class RFIPlots{
 	public:

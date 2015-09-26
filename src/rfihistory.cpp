@@ -6,7 +6,7 @@
 #include <casacore/ms/MeasurementSets/MSTable.h>
 #include <casacore/ms/MeasurementSets/MSColumns.h>
 
-#include "msio/date.h"
+#include "structures/date.h"
 
 int main(int argc, char **argv)
 {

@@ -9,8 +9,9 @@
 
 #include "imageset.h"
 
-#include "../../msio/spatialmatrixmetadata.h"
-#include "../../msio/measurementset.h"
+#include "../../structures/spatialmatrixmetadata.h"
+#include "../../structures/measurementset.h"
+
 #include "../../msio/baselinematrixloader.h"
 
 namespace rfiStrategy {

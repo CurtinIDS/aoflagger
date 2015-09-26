@@ -4,7 +4,7 @@
 
 #include "../../util/plot.h"
 
-#include "../../msio/mask2d.h"
+#include "../../structures/mask2d.h"
 #include "../../msio/baselinereader.h"
 
 #include "strategy.h"

@@ -1,11 +1,11 @@
 #ifndef UVIMAGER_H
 #define UVIMAGER_H
 
-#include "../msio/timefrequencymetadata.h"
-#include "../msio/measurementset.h"
-#include "../msio/date.h"
+#include "../structures/timefrequencymetadata.h"
+#include "../structures/measurementset.h"
+#include "../structures/date.h"
 
-#include "../msio/timefrequencydata.h"
+#include "../structures/timefrequencydata.h"
 
 struct SingleFrequencySingleBaselineData {
 	casacore::Complex data;

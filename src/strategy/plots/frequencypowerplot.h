@@ -4,7 +4,7 @@
 #include <map>
 #include <string>
 
-#include "../../msio/timefrequencymetadata.h"
+#include "../../structures/timefrequencymetadata.h"
 
 class FrequencyPowerPlot {
 	public:

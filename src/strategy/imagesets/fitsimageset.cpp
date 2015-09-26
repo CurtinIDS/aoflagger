@@ -3,10 +3,10 @@
 #include <sstream>
 #include <vector>
 
-#include "../../msio/date.h"
+#include "../../structures/date.h"
 #include "../../msio/fitsfile.h"
-#include "../../msio/image2d.h"
-#include "../../msio/timefrequencydata.h"
+#include "../../structures/image2d.h"
+#include "../../structures/timefrequencydata.h"
 
 #include "../../util/aologger.h"
 

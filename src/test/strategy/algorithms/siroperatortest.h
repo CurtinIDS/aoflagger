@@ -4,7 +4,7 @@
 #include "../../testingtools/asserter.h"
 #include "../../testingtools/unittest.h"
 
-#include "../../../msio/mask2d.h"
+#include "../../../structures/mask2d.h"
 
 #include "../../../strategy/algorithms/siroperator.h"
 

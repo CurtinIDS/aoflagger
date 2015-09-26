@@ -11,10 +11,10 @@
 
 #include <boost/filesystem.hpp>
 
-#include "arraycolumniterator.h"
-#include "scalarcolumniterator.h"
-#include "timefrequencydata.h"
-#include "system.h"
+#include "../structures/arraycolumniterator.h"
+#include "../structures/scalarcolumniterator.h"
+#include "../structures/timefrequencydata.h"
+#include "../structures/system.h"
 
 #include "../util/aologger.h"
 #include "../util/stopwatch.h"

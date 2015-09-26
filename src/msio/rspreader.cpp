@@ -3,9 +3,9 @@
 #include <sstream>
 
 #include "rspreader.h"
-#include "image2d.h"
-#include "mask2d.h"
-#include "samplerow.h"
+#include "../structures/image2d.h"
+#include "../structures/mask2d.h"
+#include "../structures/samplerow.h"
 
 #include "../util/aologger.h"
 #include "../util/ffttools.h"

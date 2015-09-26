@@ -1,7 +1,7 @@
 #ifndef CHANGERESOLUTIONACTION_H
 #define CHANGERESOLUTIONACTION_H
 
-#include "../../msio/timefrequencydata.h"
+#include "../../structures/timefrequencydata.h"
 
 #include "../control/actionblock.h"
 

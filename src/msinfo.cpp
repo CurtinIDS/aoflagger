@@ -5,8 +5,8 @@
 
 #include <casacore/ms/MeasurementSets/MeasurementSet.h>
 
-#include "msio/measurementset.h"
-#include "msio/antennainfo.h"
+#include "structures/measurementset.h"
+#include "structures/antennainfo.h"
 
 #include "strategy/algorithms/thresholdtools.h"
 

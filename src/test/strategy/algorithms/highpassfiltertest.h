@@ -5,8 +5,8 @@
 #include "../../testingtools/unittest.h"
 #include "../../testingtools/imageasserter.h"
 
-#include "../../../msio/mask2d.h"
-#include "../../../msio/image2d.h"
+#include "../../../structures/mask2d.h"
+#include "../../../structures/image2d.h"
 
 #include "../../../strategy/algorithms/localfitmethod.h"
 #include "../../../strategy/algorithms/highpassfilter.h"

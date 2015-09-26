@@ -3,7 +3,7 @@
 
 #include <gtkmm/box.h>
 
-#include "../msio/timefrequencydata.h"
+#include "../structures/timefrequencydata.h"
 
 #include "plot/plotwidget.h"
 

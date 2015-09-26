@@ -4,7 +4,7 @@
 #include <casacore/tables/Tables/SetupNewTab.h>
 #include <casacore/tables/Tables/TableCopy.h>
 
-#include "msio/measurementset.h"
+#include "structures/measurementset.h"
 
 #include "quality/defaultstatistics.h"
 #include "quality/histogramcollection.h"

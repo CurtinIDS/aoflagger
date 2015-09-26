@@ -7,8 +7,8 @@
 
 #include <boost/thread/mutex.hpp>
 
-#include "../../msio/timefrequencymetadata.h"
-#include "../../msio/mask2d.h"
+#include "../../structures/timefrequencymetadata.h"
+#include "../../structures/mask2d.h"
 
 class DefaultStatistics;
 

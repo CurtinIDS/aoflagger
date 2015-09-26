@@ -28,7 +28,7 @@
 #include "../../strategy/control/artifactset.h"
 #include "../../strategy/control/defaultstrategy.h"
 
-#include "../../msio/timefrequencydata.h"
+#include "../../structures/timefrequencydata.h"
 
 #include "../../util/aologger.h"
 

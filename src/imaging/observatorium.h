@@ -3,7 +3,7 @@
 
 #include <vector>
 
-#include "../msio/antennainfo.h"
+#include "../structures/antennainfo.h"
 
 class Observatorium
 {

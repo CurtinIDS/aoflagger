@@ -1,7 +1,7 @@
 #ifndef CONVOLUTIONS_H
 #define CONVOLUTIONS_H
 
-#include "../../msio/types.h"
+#include "../../structures/types.h"
 
 #include "../../util/rng.h"
 

@@ -5,7 +5,7 @@
 #include <stdexcept>
 #include <sstream>
 
-#include "../../msio/image2d.h"
+#include "../../structures/image2d.h"
 #include "equalsasserter.h"
 
 class ImageAsserter {

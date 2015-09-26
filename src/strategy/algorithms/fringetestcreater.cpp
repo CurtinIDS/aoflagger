@@ -1,7 +1,7 @@
 #include "fringetestcreater.h"
 
-#include "../../msio/timefrequencydata.h"
-#include "../../msio/timefrequencymetadata.h"
+#include "../../structures/timefrequencydata.h"
+#include "../../structures/timefrequencymetadata.h"
 
 #include "../../imaging/uvimager.h"
 

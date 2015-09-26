@@ -29,7 +29,7 @@
 #include "../imagesets/imageset.h"
 #include "../imagesets/msimageset.h"
 
-#include "../../msio/measurementset.h"
+#include "../../structures/measurementset.h"
 
 #include <boost/algorithm/string/case_conv.hpp>
 

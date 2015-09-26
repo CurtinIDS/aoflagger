@@ -6,9 +6,9 @@
 #include <complex>
 #include <set>
 
-#include "../msio/antennainfo.h"
-#include "../msio/timefrequencydata.h"
-#include "../msio/timefrequencymetadata.h"
+#include "../structures/antennainfo.h"
+#include "../structures/timefrequencydata.h"
+#include "../structures/timefrequencymetadata.h"
 
 struct stat;
 class StatisticsDerivator

@@ -3,7 +3,7 @@
 
 #include "../../util/progresslistener.h"
 
-#include "../../msio/timefrequencydata.h"
+#include "../../structures/timefrequencydata.h"
 
 #include "../control/actioncontainer.h"
 #include "../control/artifactset.h"

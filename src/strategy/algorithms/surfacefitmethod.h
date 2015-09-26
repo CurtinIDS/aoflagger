@@ -1,8 +1,8 @@
 #ifndef IMAGE_H
 #define IMAGE_H
 
-#include "../../msio/image2d.h"
-#include "../../msio/timefrequencydata.h"
+#include "../../structures/image2d.h"
+#include "../../structures/timefrequencydata.h"
 
 #include "../../util/ffttools.h"
 

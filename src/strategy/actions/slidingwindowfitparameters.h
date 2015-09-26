@@ -1,4 +1,4 @@
-#include "../../msio/types.h"
+#include "../../structures/types.h"
 
 #ifndef RFI_SLIDINGWINDOWFITPARAMETERS_H
 #define RFI_SLIDINGWINDOWFITPARAMETERS_H

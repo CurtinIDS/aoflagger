@@ -1,4 +1,4 @@
-#include "../../msio/antennainfo.h"
+#include "../../structures/antennainfo.h"
 
 #include "../../imaging/uvimager.h"
 

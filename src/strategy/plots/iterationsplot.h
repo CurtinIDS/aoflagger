@@ -4,8 +4,8 @@
 #include <string>
 #include <map>
 
-#include "../../msio/mask2d.h"
-#include "../../msio/timefrequencymetadata.h"
+#include "../../structures/mask2d.h"
+#include "../../structures/timefrequencymetadata.h"
 
 class IterationsPlot
 {

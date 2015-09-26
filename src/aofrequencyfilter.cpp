@@ -6,7 +6,7 @@
 #include "remote/observationtimerange.h"
 #include "remote/processcommander.h"
 
-#include "msio/system.h"
+#include "structures/system.h"
 
 #include "util/lane.h"
 

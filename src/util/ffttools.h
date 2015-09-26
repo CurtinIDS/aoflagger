@@ -5,8 +5,8 @@
 #ifndef FFTTOOLS_H
 #define FFTTOOLS_H
 
-#include "../msio/image2d.h"
-#include "../msio/samplerow.h"
+#include "../structures/image2d.h"
+#include "../structures/samplerow.h"
 
 /**
  * This is a wrapper around the fftw3 library that is able to calculate fast Fourier transformations.

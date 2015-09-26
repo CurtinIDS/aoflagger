@@ -11,8 +11,8 @@
 
 #include "../../quality/qualitytablesformatter.h"
 
-#include "../../msio/timefrequencydata.h"
-#include "../../msio/timefrequencymetadata.h"
+#include "../../structures/timefrequencydata.h"
+#include "../../structures/timefrequencymetadata.h"
 
 class GrayScalePlotPage : public Gtk::HBox {
 	public:

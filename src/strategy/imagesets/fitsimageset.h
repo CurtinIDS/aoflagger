@@ -10,8 +10,8 @@
 
 #include "../../baseexception.h"
 
-#include "../../msio/antennainfo.h"
-#include "../../msio/types.h"
+#include "../../structures/antennainfo.h"
+#include "../../structures/types.h"
 
 namespace rfiStrategy {
 	

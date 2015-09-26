@@ -1,6 +1,6 @@
 #include "imagewidget.h"
 
-#include "../msio/image2d.h"
+#include "../structures/image2d.h"
 
 #include "../strategy/algorithms/thresholdconfig.h"
 #include "../strategy/algorithms/thresholdtools.h"

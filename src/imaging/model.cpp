@@ -1,7 +1,7 @@
 #include "model.h"
 
-#include "../msio/image2d.h"
-#include "../msio/timefrequencydata.h"
+#include "../structures/image2d.h"
+#include "../structures/timefrequencydata.h"
 
 #include "observatorium.h"
 #include "../util/rng.h"

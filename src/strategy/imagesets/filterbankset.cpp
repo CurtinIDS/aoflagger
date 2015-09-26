@@ -1,7 +1,7 @@
 #include "filterbankset.h"
 
-#include "../../msio/date.h"
-#include "../../msio/system.h"
+#include "../../structures/date.h"
+#include "../../structures/system.h"
 
 #include <fstream>
 

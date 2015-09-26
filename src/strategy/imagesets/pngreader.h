@@ -7,7 +7,7 @@
 #include <map>
 #include <cmath>
 
-#include "../../msio/types.h"
+#include "../../structures/types.h"
 
 #include "singleimageset.h"
 

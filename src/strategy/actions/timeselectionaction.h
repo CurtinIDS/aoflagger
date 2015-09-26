@@ -1,7 +1,7 @@
 #ifndef TIMESELECTIONACTION_H
 #define TIMESELECTIONACTION_H
 
-#include "../../msio/types.h"
+#include "../../structures/types.h"
 
 #include "action.h"
 

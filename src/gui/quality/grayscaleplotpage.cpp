@@ -1,6 +1,6 @@
 #include <limits>
 
-#include "../../msio/samplerow.h"
+#include "../../structures/samplerow.h"
 
 #include "grayscaleplotpage.h"
 

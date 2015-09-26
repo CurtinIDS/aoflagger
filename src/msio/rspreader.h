@@ -5,8 +5,8 @@
 
 #include "../util/aologger.h"
 
-#include "timefrequencydata.h"
-#include "timefrequencymetadata.h"
+#include "../structures/timefrequencydata.h"
+#include "../structures/timefrequencymetadata.h"
 
 class RSPReader {
 	public:

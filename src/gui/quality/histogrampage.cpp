@@ -7,7 +7,7 @@
 
 #include "../../quality/histogramtablesformatter.h"
 
-#include "../../msio/measurementset.h"
+#include "../../structures/measurementset.h"
 #include "../../quality/histogramcollection.h"
 #include "../../quality/rayleighfitter.h"
 

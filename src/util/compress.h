@@ -3,7 +3,7 @@
 
 #include <fstream>
 
-#include "../msio/timefrequencydata.h"
+#include "../structures/timefrequencydata.h"
 
 class Compress
 {

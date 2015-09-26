@@ -3,7 +3,7 @@
 
 #include <stdexcept>
 
-#include "../../msio/samplerow.h"
+#include "../../structures/samplerow.h"
 
 #include "../../imaging/uvimager.h"
 

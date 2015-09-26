@@ -1,8 +1,8 @@
 #ifndef CUTAREAACTION_H
 #define CUTAREAACTION_H
 
-#include "../../msio/timefrequencydata.h"
-#include "../../msio/timefrequencymetadata.h"
+#include "../../structures/timefrequencydata.h"
+#include "../../structures/timefrequencymetadata.h"
 
 #include "../control/actionblock.h"
 #include "../control/artifactset.h"

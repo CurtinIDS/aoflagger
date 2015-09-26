@@ -98,21 +98,22 @@ set(INTERFACE_FILES
 set(MSIO_FILES
   msio/baselinematrixloader.cpp
   msio/baselinereader.cpp
-  msio/colormap.cpp
   msio/directbaselinereader.cpp
   msio/fitsfile.cpp
-  msio/image2d.cpp
   msio/indirectbaselinereader.cpp
-  msio/mask2d.cpp
-  msio/measurementset.cpp
   msio/memorybaselinereader.cpp
   msio/pngfile.cpp
   msio/rspreader.cpp
-  msio/samplerow.cpp
-  msio/spatialtimeloader.cpp
-  msio/stokesimager.cpp
-  msio/timefrequencydata.cpp
-  msio/timestepaccessor.cpp)
+  msio/spatialtimeloader.cpp)
+  
+set(STRUCTURES_FILES
+  structures/colormap.cpp
+  structures/image2d.cpp
+  structures/mask2d.cpp
+  structures/measurementset.cpp
+  structures/samplerow.cpp
+  structures/stokesimager.cpp
+  structures/timefrequencydata.cpp)
   
 set(QUALITY_FILES
   quality/histogramcollection.cpp
@@ -248,7 +249,7 @@ if(SIGCXX_FOUND)
   set(ALL_LIBRARIES ${ALL_LIBRARIES} ${SIGCXX_LIBRARIES})
 endif(SIGCXX_FOUND)
 
-add_library(aoflagger ${IMAGING_FILES} ${INTERFACE_FILES} ${MSIO_FILES} ${QUALITY_FILES} ${STRATEGY_FILES} ${UTIL_FILES})
+add_library(aoflagger ${IMAGING_FILES} ${INTERFACE_FILES} ${MSIO_FILES} ${QUALITY_FILES} ${STRATEGY_FILES} ${STRUCTURES_FILES} ${UTIL_FILES})
 target_link_libraries(aoflagger ${ALL_LIBRARIES})
 
 link_libraries(aoflagger)

@@ -7,11 +7,11 @@
 
 #include <boost/thread/mutex.hpp>
 
-#include "../../msio/image2d.h"
-#include "../../msio/timefrequencydata.h"
-#include "../../msio/timefrequencymetadata.h"
-#include "../../msio/mask2d.h"
-#include "../../msio/segmentedimage.h"
+#include "../../structures/image2d.h"
+#include "../../structures/timefrequencydata.h"
+#include "../../structures/timefrequencymetadata.h"
+#include "../../structures/mask2d.h"
+#include "../../structures/segmentedimage.h"
 
 class RFIStatistics {
 	public:

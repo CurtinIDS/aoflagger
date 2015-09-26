@@ -1,4 +1,4 @@
-#include "../../msio/image2d.h"
+#include "../../structures/image2d.h"
 
 #include "thresholdmitigater.h"
 #include "thresholdtools.h"

@@ -5,7 +5,7 @@
 
 #include "../../quality/statisticscollection.h"
 
-#include "../../msio/measurementset.h"
+#include "../../structures/measurementset.h"
 
 class AntennaePlotPage : public TwoDimensionalPlotPage {
 	protected:

@@ -6,9 +6,9 @@
 #include <map>
 #include <vector>
 
-#include "../msio/antennainfo.h"
-#include "../msio/types.h"
-#include "../msio/msrowdataext.h"
+#include "../structures/antennainfo.h"
+#include "../structures/types.h"
+#include "../structures/msrowdataext.h"
 
 #include "clusteredobservation.h"
 

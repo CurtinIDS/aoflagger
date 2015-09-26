@@ -6,7 +6,7 @@
 #include <string>
 #include <vector>
 
-#include "../../msio/types.h"
+#include "../../structures/types.h"
 
 class Plot2DPointSet{
 	public:

@@ -4,7 +4,7 @@
 #include <cmath>
 #include <vector>
 
-#include "../../msio/timefrequencydata.h"
+#include "../../structures/timefrequencydata.h"
 
 #include "../../util/aologger.h"
 

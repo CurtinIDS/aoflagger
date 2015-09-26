@@ -1,6 +1,6 @@
 #include "localfitmethod.h"
 
-#include "../../msio/image2d.h"
+#include "../../structures/image2d.h"
 #include "../../msio/pngfile.h"
 
 #include "../../util/rng.h"

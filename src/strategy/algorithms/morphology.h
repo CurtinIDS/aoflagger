@@ -4,8 +4,8 @@
 #include <vector>
 #include <map>
 
-#include "../../msio/mask2d.h"
-#include "../../msio/segmentedimage.h"
+#include "../../structures/mask2d.h"
+#include "../../structures/segmentedimage.h"
 
 class Morphology {
 	public:

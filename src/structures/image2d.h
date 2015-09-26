@@ -19,7 +19,7 @@ typedef boost::shared_ptr<const class Image2D> Image2DCPtr;
 /**
  * This class represents a two dimensional single-valued (=gray scale) image. It can be
  * read from and written to a @c .fits file and written to a @c .png file. A new Image2D can
- * be constructed with e.g. the CreateFromFits(), CreateEmptyImage() or CreateFromDiff() static methods.
+ * be constructed with e.g. the CreateFromFits(), CreateUnsetImage() or CreateFromDiff() static methods.
  */
 class Image2D {
 	public:

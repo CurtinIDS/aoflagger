@@ -3,7 +3,7 @@
 
 #include <iostream>
 
-#include "../../msio/image2d.h"
+#include "../../structures/image2d.h"
 
 #include "surfacefitmethod.h"
 

@@ -15,8 +15,8 @@
 #include <gtkmm/toggleaction.h>
 #include <gtkmm/window.h>
 
-#include "../msio/timefrequencydata.h"
-#include "../msio/timefrequencymetadata.h"
+#include "../structures/timefrequencydata.h"
+#include "../structures/timefrequencymetadata.h"
 
 #include "../strategy/control/types.h"
 

@@ -2,7 +2,7 @@
 
 #include "../strategy/algorithms/thresholdtools.h"
 
-#include "../msio/samplerow.h"
+#include "../structures/samplerow.h"
 
 #include "compress.h"
 

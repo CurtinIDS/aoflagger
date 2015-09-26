@@ -2,7 +2,7 @@
 
 #include <boost/filesystem.hpp>
 
-#include "../../msio/measurementset.h"
+#include "../../structures/measurementset.h"
 
 #include "strategy.h"
 

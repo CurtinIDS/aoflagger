@@ -4,8 +4,8 @@
 #include <vector>
 #include <cmath>
 
-#include "../../msio/image2d.h"
-#include "../../msio/mask2d.h"
+#include "../../structures/image2d.h"
+#include "../../structures/mask2d.h"
 
 class ThresholdTools {
 	public:

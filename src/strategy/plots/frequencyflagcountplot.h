@@ -3,7 +3,7 @@
 
 #include <map>
 
-#include "../../msio/timefrequencymetadata.h"
+#include "../../structures/timefrequencymetadata.h"
 
 class FrequencyFlagCountPlot{
 	public:

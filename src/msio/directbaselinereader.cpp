@@ -7,9 +7,9 @@
 #include <casacore/tables/DataMan/TiledStManAccessor.h>
 #include <casacore/ms/MeasurementSets/MeasurementSet.h>
 
-#include "arraycolumniterator.h"
-#include "scalarcolumniterator.h"
-#include "timefrequencydata.h"
+#include "../structures/arraycolumniterator.h"
+#include "../structures/scalarcolumniterator.h"
+#include "../structures/timefrequencydata.h"
 
 #include "../util/aologger.h"
 #include "../util/stopwatch.h"

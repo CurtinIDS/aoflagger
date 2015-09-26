@@ -8,11 +8,12 @@
 #include <gtkmm/icontheme.h>
 
 #include "../msio/baselinematrixloader.h"
-#include "../msio/image2d.h"
-#include "../msio/timefrequencydata.h"
-#include "../msio/timefrequencymetadata.h"
-#include "../msio/segmentedimage.h"
-#include "../msio/spatialmatrixmetadata.h"
+
+#include "../structures/image2d.h"
+#include "../structures/timefrequencydata.h"
+#include "../structures/timefrequencymetadata.h"
+#include "../structures/segmentedimage.h"
+#include "../structures/spatialmatrixmetadata.h"
 
 #include "../strategy/actions/strategy.h"
 

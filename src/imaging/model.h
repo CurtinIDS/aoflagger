@@ -4,8 +4,9 @@
 #include <vector>
 #include <cmath>
 
-#include "../msio/image2d.h"
-#include "../msio/types.h"
+#include "../structures/image2d.h"
+
+#include "../structures/types.h"
 
 #include "uvimager.h"
 

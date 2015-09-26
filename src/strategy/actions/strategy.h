@@ -6,7 +6,7 @@
 
 #include <boost/thread.hpp>
 
-#include "../../msio/timefrequencydata.h"
+#include "../../structures/timefrequencydata.h"
 
 #include "action.h"
 #include "foreachbaselineaction.h"

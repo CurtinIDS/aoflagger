@@ -5,11 +5,12 @@
 #include <vector>
 #include <stdexcept>
 
-#include "antennainfo.h"
 #include "baselinereader.h"
-#include "image2d.h"
-#include "mask2d.h"
-#include "measurementset.h"
+
+#include "../structures/antennainfo.h"
+#include "../structures/image2d.h"
+#include "../structures/mask2d.h"
+#include "../structures/measurementset.h"
 
 class DirectBaselineReader : public BaselineReader {
 	public:

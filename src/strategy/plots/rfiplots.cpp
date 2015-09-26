@@ -6,8 +6,8 @@
 #include "../../util/plot.h"
 #include "../../util/multiplot.h"
 
-#include "../../msio/timefrequencydata.h"
-#include "../../msio/timefrequencymetadata.h"
+#include "../../structures/timefrequencydata.h"
+#include "../../structures/timefrequencymetadata.h"
 
 #include "../algorithms/sinusfitter.h"
 #include "../algorithms/thresholdtools.h"

@@ -5,9 +5,13 @@
 
 #include <casacore/tables/Tables/TableIter.h>
 
-#include "timefrequencydata.h"
-#include "measurementset.h"
+#include "../structures/timefrequencydata.h"
+#include "../structures/measurementset.h"
 
+/**
+ * Loader for time x baseline matrices. These are mainly used for SVD experiments.
+ * This class is used in the SpatialTimeImageSet .
+ */
 class SpatialTimeLoader
 {
 	public:

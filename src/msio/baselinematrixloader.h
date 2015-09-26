@@ -5,8 +5,8 @@
 
 #include <casacore/tables/Tables/TableIter.h>
 
-#include "timefrequencydata.h"
-#include "measurementset.h"
+#include "../structures/timefrequencydata.h"
+#include "../structures/measurementset.h"
 
 class BaselineMatrixLoader
 {

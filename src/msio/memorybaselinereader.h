@@ -5,10 +5,10 @@
 #include <vector>
 #include <stdexcept>
 
-#include "antennainfo.h"
+#include "../structures/antennainfo.h"
 #include "baselinereader.h"
-#include "image2d.h"
-#include "mask2d.h"
+#include "../structures/image2d.h"
+#include "../structures/mask2d.h"
 
 class MemoryBaselineReader : public BaselineReader {
 	public:

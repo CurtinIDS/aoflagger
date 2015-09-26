@@ -6,7 +6,7 @@
 #include <gtkmm/box.h>
 #include <gtkmm/checkbutton.h>
 
-#include "../msio/types.h"
+#include "../structures/types.h"
 
 class HighlightWindow : public Gtk::Window {
 	public:

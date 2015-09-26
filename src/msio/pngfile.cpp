@@ -1,6 +1,7 @@
 #include "pngfile.h"
-#include "colormap.h"
-#include "image2d.h"
+#include "../structures/colormap.h"
+
+#include "../structures/image2d.h"
 
 PngFile::PngFile(const std::string &filename, unsigned width, unsigned height) : _filename(filename), _width(width), _height(height), _pixelSize(4)
 {

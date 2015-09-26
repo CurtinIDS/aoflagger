@@ -1,9 +1,9 @@
 #ifndef AOFLAGGER_SUMTHRESHOLDTEST_H
 #define AOFLAGGER_SUMTHRESHOLDTEST_H
 
-#include "../../../msio/image2d.h"
-#include "../../../msio/mask2d.h"
-#include "../../../msio/timefrequencydata.h"
+#include "../../../structures/image2d.h"
+#include "../../../structures/mask2d.h"
+#include "../../../structures/timefrequencydata.h"
 
 #include "../../../strategy/algorithms/mitigationtester.h"
 #include "../../../strategy/algorithms/thresholdconfig.h"

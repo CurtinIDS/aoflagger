@@ -4,7 +4,7 @@
 #include <string>
 #include <stdexcept>
 
-#include "../../msio/types.h"
+#include "../../structures/types.h"
 
 #include "imageset.h"
 

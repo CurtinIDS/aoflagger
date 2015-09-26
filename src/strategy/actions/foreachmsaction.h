@@ -3,7 +3,7 @@
 
 #include "../control/actionblock.h"
 
-#include "../../msio/types.h"
+#include "../../structures/types.h"
 
 #include <set>
 

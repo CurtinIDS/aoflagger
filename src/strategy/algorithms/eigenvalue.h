@@ -1,7 +1,7 @@
 #ifndef RFI_EIGENVALUE_H
 #define RFI_EIGENVALUE_H
 
-#include "../../msio/image2d.h"
+#include "../../structures/image2d.h"
 
 class Eigenvalue
 {

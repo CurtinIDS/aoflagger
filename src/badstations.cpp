@@ -2,7 +2,7 @@
 
 #include "strategy/algorithms/baselineselector.h"
 
-#include "msio/measurementset.h"
+#include "structures/measurementset.h"
 
 #include "quality/defaultstatistics.h"
 #include "quality/histogramcollection.h"

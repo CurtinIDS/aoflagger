@@ -12,8 +12,8 @@
 
 #include "../util/aologger.h"
 
-#include "image2d.h"
-#include "timefrequencydata.h"
+#include "../structures/image2d.h"
+#include "../structures/timefrequencydata.h"
 
 class ParmTable
 {

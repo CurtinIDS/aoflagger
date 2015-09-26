@@ -5,7 +5,7 @@
 
 #include <boost/thread/mutex.hpp>
 
-#include "../../msio/types.h"
+#include "../../structures/types.h"
 
 #include "action.h"
 

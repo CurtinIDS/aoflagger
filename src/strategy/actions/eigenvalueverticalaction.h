@@ -1,7 +1,7 @@
 #ifndef EIGENVALUEVERTICALACTION_H
 #define EIGENVALUEVERTICALACTION_H
 
-#include "../../msio/timefrequencydata.h"
+#include "../../structures/timefrequencydata.h"
 
 #include "action.h"
 

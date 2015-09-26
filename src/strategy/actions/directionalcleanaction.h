@@ -6,8 +6,8 @@
 #include "../../util/ffttools.h"
 #include "../../util/plot.h"
 
-#include "../../msio/samplerow.h"
-#include "../../msio/timefrequencydata.h"
+#include "../../structures/samplerow.h"
+#include "../../structures/timefrequencydata.h"
 
 #include "action.h"
 

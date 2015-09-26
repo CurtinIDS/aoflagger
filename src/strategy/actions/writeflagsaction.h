@@ -11,7 +11,7 @@
 #include <boost/thread/condition.hpp>
 #include <boost/thread/thread.hpp>
 
-#include "../../msio/mask2d.h"
+#include "../../structures/mask2d.h"
 
 namespace rfiStrategy {
 

@@ -1,9 +1,9 @@
 #include "uvimager.h"
 
-#include "../msio/image2d.h"
-#include "../msio/mask2d.h"
-#include "../msio/timefrequencydata.h"
-#include "../msio/spatialmatrixmetadata.h"
+#include "../structures/image2d.h"
+#include "../structures/mask2d.h"
+#include "../structures/timefrequencydata.h"
+#include "../structures/spatialmatrixmetadata.h"
 
 #include "../util/integerdomain.h"
 #include "../util/stopwatch.h"

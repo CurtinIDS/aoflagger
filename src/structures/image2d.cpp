@@ -1,6 +1,6 @@
 #include "image2d.h"
-#include "pngfile.h"
-#include "fitsfile.h"
+
+#include "../msio/fitsfile.h"
 
 #include <algorithm>
 #include <cstring>

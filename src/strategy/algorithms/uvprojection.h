@@ -1,9 +1,9 @@
 #ifndef RFI_UV_PROJECTION_H
 #define RFI_UV_PROJECTION_H
 
-#include "../../msio/types.h"
-#include "../../msio/image2d.h"
-#include "../../msio/timefrequencymetadata.h"
+#include "../../structures/types.h"
+#include "../../structures/image2d.h"
+#include "../../structures/timefrequencymetadata.h"
 
 #include "../../imaging/uvimager.h"
 

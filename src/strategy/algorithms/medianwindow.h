@@ -3,7 +3,7 @@
 
 #include <set>
 
-#include "../../msio/samplerow.h"
+#include "../../structures/samplerow.h"
 
 template<typename NumType>
 class MedianWindow

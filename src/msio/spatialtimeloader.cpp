@@ -5,8 +5,8 @@
 
 #include <casacore/tables/TaQL/ExprNode.h>
 
-#include "arraycolumniterator.h"
-#include "scalarcolumniterator.h"
+#include "../structures/arraycolumniterator.h"
+#include "../structures/scalarcolumniterator.h"
 
 #include "../util/aologger.h"
 

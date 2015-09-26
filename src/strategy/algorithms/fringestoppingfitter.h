@@ -5,8 +5,8 @@
 
 #include "../algorithms/surfacefitmethod.h"
 
-#include "../../msio/samplerow.h"
-#include "../../msio/timefrequencymetadata.h"
+#include "../../structures/samplerow.h"
+#include "../../structures/timefrequencymetadata.h"
 
 class FringeStoppingFitter : public SurfaceFitMethod {
 	public:

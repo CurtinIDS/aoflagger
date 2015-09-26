@@ -4,9 +4,9 @@
 
 #include <casacore/tables/TaQL/ExprNode.h>
 
-#include "arraycolumniterator.h"
-#include "scalarcolumniterator.h"
-#include "spatialmatrixmetadata.h"
+#include "../structures/arraycolumniterator.h"
+#include "../structures/scalarcolumniterator.h"
+#include "../structures/spatialmatrixmetadata.h"
 
 BaselineMatrixLoader::BaselineMatrixLoader(MeasurementSet &measurementSet)
 	: _sortedTable(0), _tableIter(0), _currentIterIndex(0), _measurementSet(measurementSet), _timeIndexCount(0), _metaData(0)

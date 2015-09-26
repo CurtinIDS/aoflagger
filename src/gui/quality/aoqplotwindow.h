@@ -21,7 +21,7 @@
 #include "timefrequencyplotpage.h"
 #include "timeplotpage.h"
 
-#include "../../msio/antennainfo.h"
+#include "../../structures/antennainfo.h"
 
 class AOQPlotWindow : public Gtk::Window {
 	public:

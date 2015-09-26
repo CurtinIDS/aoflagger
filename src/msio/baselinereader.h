@@ -7,10 +7,10 @@
 
 #include <boost/shared_ptr.hpp>
 
-#include "antennainfo.h"
-#include "image2d.h"
-#include "mask2d.h"
-#include "measurementset.h"
+#include "../structures/antennainfo.h"
+#include "../structures/image2d.h"
+#include "../structures/mask2d.h"
+#include "../structures/measurementset.h"
 
 typedef boost::shared_ptr<class BaselineReader> BaselineReaderPtr;
 typedef boost::shared_ptr<const class BaselineReader> BaselineReaderCPtr;

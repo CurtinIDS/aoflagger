@@ -6,7 +6,7 @@
 #include <vector>
 #include <cmath>
 
-#include "../../msio/types.h"
+#include "../../structures/types.h"
 
 class NoiseStatistics {
 	public:

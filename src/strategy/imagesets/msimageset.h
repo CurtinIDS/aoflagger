@@ -5,11 +5,11 @@
 #include <string>
 #include <stdexcept>
 
-#include "../../msio/antennainfo.h"
-#include "../../msio/timefrequencydata.h"
-#include "../../msio/timefrequencymetadata.h"
+#include "../../structures/antennainfo.h"
+#include "../../structures/timefrequencydata.h"
+#include "../../structures/timefrequencymetadata.h"
 #include "../../msio/baselinereader.h"
-#include "../../msio/measurementset.h"
+#include "../../structures//measurementset.h"
 
 #include "imageset.h"
 

@@ -2,9 +2,9 @@
 
 #include <map>
 
-#include "../../msio/timefrequencydata.h"
-#include "../../msio/image2d.h"
-#include "../../msio/samplerow.h"
+#include "../../structures/timefrequencydata.h"
+#include "../../structures/image2d.h"
+#include "../../structures/samplerow.h"
 
 #include "../algorithms/medianwindow.h"
 #include "../algorithms/rfistatistics.h"

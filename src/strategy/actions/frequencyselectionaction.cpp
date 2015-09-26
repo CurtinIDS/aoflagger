@@ -1,7 +1,7 @@
 #include "frequencyselectionaction.h"
 
-#include "../../msio/image2d.h"
-#include "../../msio/samplerow.h"
+#include "../../structures/image2d.h"
+#include "../../structures/samplerow.h"
 
 #include "../control/artifactset.h"
 

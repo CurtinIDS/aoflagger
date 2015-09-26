@@ -1,7 +1,7 @@
 #ifndef FRINGETESTCREATER_H
 #define FRINGETESTCREATER_H
 
-#include "../../msio/timefrequencymetadata.h"
+#include "../../structures/timefrequencymetadata.h"
 
 class FringeTestCreater {
 	public:

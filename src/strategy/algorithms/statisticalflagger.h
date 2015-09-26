@@ -3,7 +3,7 @@
 
 #include <string>
 
-#include "../../msio/mask2d.h"
+#include "../../structures/mask2d.h"
 
 class StatisticalFlagger{
 	public:

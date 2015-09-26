@@ -5,7 +5,7 @@
 
 #include "../../util/ffttools.h"
 
-#include "../../msio/timefrequencydata.h"
+#include "../../structures/timefrequencydata.h"
 
 #include "action.h"
 

@@ -5,7 +5,7 @@
 
 #include "../../quality/statisticscollection.h"
 
-#include "../../msio/measurementset.h"
+#include "../../structures/measurementset.h"
 
 #include "../../remote/clusteredobservation.h"
 

@@ -6,8 +6,8 @@
 #include <cmath>
 #include <iomanip>
 
-#include "../../msio/date.h"
-#include "../../msio/timefrequencydata.h"
+#include "../../structures/date.h"
+#include "../../structures/timefrequencydata.h"
 
 #include "../../util/aologger.h"
 #include "../../util/plot.h"

@@ -1,5 +1,5 @@
 #include "memorybaselinereader.h"
-#include "system.h"
+#include "../structures/system.h"
 
 #include "../util/aologger.h"
 #include "../util/stopwatch.h"

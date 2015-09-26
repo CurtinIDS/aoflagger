@@ -1,7 +1,7 @@
 #ifndef RNG_H
 #define RNG_H
 
-#include "../msio/types.h"
+#include "../structures/types.h"
 
 class RNG{
 	public:

@@ -6,7 +6,7 @@
 #include "../control/actionblock.h"
 #include "../control/artifactset.h"
 
-#include "../../msio/timefrequencydata.h"
+#include "../../structures/timefrequencydata.h"
 
 namespace rfiStrategy {
 
