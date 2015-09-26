@@ -263,9 +263,7 @@ void ImageWidget::SaveText(const std::string &filename)
 			startX = (unsigned int) round(_startHorizontal * image->Width()),
 			startY = (unsigned int) round(_startVertical * image->Height()),
 			endX = (unsigned int) round(_endHorizontal * image->Width()),
-			endY = (unsigned int) round(_endVertical * image->Height()),
-			startTimestep = startX,
-			endTimestep = endX;
+			endY = (unsigned int) round(_endVertical * image->Height());
 		size_t
 			imageWidth = endX - startX,
 			imageHeight = endY - startY;

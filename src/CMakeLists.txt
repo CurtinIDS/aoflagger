@@ -90,8 +90,7 @@ set(GUI_FILES
 
 set(IMAGING_FILES
   imaging/uvimager.cpp
-  imaging/model.cpp
-  imaging/fourproductcorrelatortester.cpp)
+  imaging/model.cpp)
 
 set(INTERFACE_FILES
   interface/aoflagger.cpp)
@@ -110,7 +109,6 @@ set(MSIO_FILES
   msio/pngfile.cpp
   msio/rspreader.cpp
   msio/samplerow.cpp
-  msio/sortedtimestepaccessor.cpp
   msio/spatialtimeloader.cpp
   msio/stokesimager.cpp
   msio/timefrequencydata.cpp
