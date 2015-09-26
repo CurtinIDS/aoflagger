@@ -8,6 +8,9 @@
 #include "../structures/timefrequencydata.h"
 #include "../structures/measurementset.h"
 
+/**
+ * Loader for antenna x antenna matrices, useful for e.g. spatial analyses such as spatial filtering.
+ */
 class BaselineMatrixLoader
 {
 	public:
