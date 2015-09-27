@@ -327,7 +327,7 @@ void RFIGuiController::PlotSingularValues()
 	}
 }
 
-void RFIGuiController::Open(const std::string& filename, BaselineIOMode ioMode, bool readUVW, const std::string& dataColumn, bool subtractModel, size_t polCountToRead, bool loadStrategy)
+void RFIGuiController::Open(const std::string& filename, BaselineIOMode ioMode, bool readUVW, const std::string& dataColumn, bool subtractModel, size_t polCountToRead, bool loadBaseline, bool loadStrategy)
 {
 	std::cout << "Opening " << filename << std::endl;
 	try
@@ -368,7 +368,7 @@ void RFIGuiController::Open(const std::string& filename, BaselineIOMode ioMode, 
 			_strategyController->NotifyChange();
 		}
 	
-		_rfiGuiWindow.SetImageSet(imageSet);
+		_rfiGuiWindow.SetImageSet(imageSet, loadBaseline);
 	} catch(std::exception &e)
 	{
 		Gtk::MessageDialog dialog(_rfiGuiWindow, e.what(), false, Gtk::MESSAGE_ERROR);

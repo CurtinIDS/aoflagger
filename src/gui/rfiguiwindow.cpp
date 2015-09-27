@@ -178,7 +178,7 @@ void RFIGuiWindow::onActionDirectoryOpenForSpatial()
 		rfiStrategy::SpatialMSImageSet *imageSet = new rfiStrategy::SpatialMSImageSet(dialog.get_filename());
 		imageSet->Initialize();
 		lock.unlock();
-		SetImageSet(imageSet);
+		SetImageSet(imageSet, true);
 	}
 }
 
@@ -200,7 +200,7 @@ void RFIGuiWindow::onActionDirectoryOpenForST()
 		rfiStrategy::SpatialTimeImageSet *imageSet = new rfiStrategy::SpatialTimeImageSet(dialog.get_filename());
 		imageSet->Initialize();
 		lock.unlock();
-		SetImageSet(imageSet);
+		SetImageSet(imageSet, true);
 	}
 }
 
@@ -230,8 +230,7 @@ void RFIGuiWindow::OpenPath(const std::string &path)
 		_optionWindow = new MSOptionWindow(*_controller, path);
 		_optionWindow->present();
 	}
-	else
-	{
+	else {
 		boost::mutex::scoped_lock lock(_ioMutex);
 		rfiStrategy::ImageSet *imageSet = rfiStrategy::ImageSet::Create(path, DirectReadMode);
 		imageSet->Initialize();
@@ -252,7 +251,7 @@ void RFIGuiWindow::OpenPath(const std::string &path)
 		);
 		NotifyChange();
 		
-		SetImageSet(imageSet);
+		SetImageSet(imageSet, true);
 	}
 }
 
@@ -455,7 +454,7 @@ void RFIGuiWindow::onToggleImage()
 	_timeFrequencyWidget.Update();
 }
 
-void RFIGuiWindow::SetImageSet(rfiStrategy::ImageSet *newImageSet)
+void RFIGuiWindow::SetImageSet(rfiStrategy::ImageSet *newImageSet, bool loadBaseline)
 {
 	if(_imageSet != 0) {
 		delete _imageSet;
@@ -464,11 +463,14 @@ void RFIGuiWindow::SetImageSet(rfiStrategy::ImageSet *newImageSet)
 	_imageSet = newImageSet;
 	_imageSetIndex = _imageSet->StartIndex();
 	
-	if(dynamic_cast<rfiStrategy::MSImageSet*>(newImageSet) != 0)
+	if(loadBaseline)
 	{
-		onGoToPressed();
-	} else {
-		loadCurrentTFData();
+		if(dynamic_cast<rfiStrategy::MSImageSet*>(newImageSet) != 0)
+		{
+			onGoToPressed();
+		} else {
+			loadCurrentTFData();
+		}
 	}
 }
 

@@ -133,7 +133,7 @@ void MSOptionWindow::onOpen()
 	
 	bool loadStrategy = _loadOptimizedStrategy.get_active();
 	
-	_controller.Open(_filename, ioMode, readUVW, dataColumnName, subtractModel, polCount, loadStrategy);
+	_controller.Open(_filename, ioMode, readUVW, dataColumnName, subtractModel, polCount, true, loadStrategy);
 	
 	hide();
 }

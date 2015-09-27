@@ -1,6 +1,7 @@
 #include "version.h"
 
 #include "gui/rfiguiwindow.h"
+#include "gui/controllers/rfiguicontroller.h"
 
 #include "util/aologger.h"
 
@@ -34,7 +35,8 @@ static void run(int argc, char *argv[])
 	
 	std::vector<std::string> filenames;
 	std::set<SavedBaseline> savedBaselines;
-
+	bool interactive = true;
+	
 	while(argi < argc)
 	{
 		if(argv[argi][0] == '-')
@@ -78,6 +80,7 @@ static void run(int argc, char *argv[])
 				sb.bandIndex = atoi(argv[argi+4]);
 				sb.sequenceIndex = atoi(argv[argi+5]);
 				savedBaselines.insert(sb);
+				interactive = false;
 				argi += 5;
 			}
 			else {
@@ -96,6 +99,7 @@ static void run(int argc, char *argv[])
 	Glib::RefPtr<Gtk::Application> app = Gtk::Application::create(altArgc, argv, "", Gio::APPLICATION_HANDLES_OPEN);
 	RFIGuiWindow window;
 	window.present();
+	
 	if(!filenames.empty())
 	{
 		if(filenames.size() > 1)
@@ -103,7 +107,10 @@ static void run(int argc, char *argv[])
 			AOLogger::Error << "Error: multiple input paths specified; RFIGui can only handle one path.\n";
 			return;
 		}
-		window.OpenPath(filenames[0]);
+		if(interactive)
+			window.OpenPath(filenames[0]);
+		else
+			window.Controller().Open(filenames[0], DirectReadMode, true, "DATA", false, 4, false, true);
 	}
 	app->run(window);
 }

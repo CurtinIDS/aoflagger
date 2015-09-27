@@ -33,7 +33,7 @@ class RFIGuiWindow : public Gtk::Window, private StrategyController {
 		RFIGuiWindow();
 		~RFIGuiWindow();
 
-		void SetImageSet(rfiStrategy::ImageSet *newImageSet);
+		void SetImageSet(rfiStrategy::ImageSet *newImageSet, bool loadBaseline);
 		void SetImageSetIndex(rfiStrategy::ImageSetIndex *newImageSetIndex);
 		rfiStrategy::ImageSet &GetImageSet() const { return *_imageSet; }
 		rfiStrategy::ImageSetIndex &GetImageSetIndex() const { return *_imageSetIndex; }
@@ -84,6 +84,8 @@ class RFIGuiWindow : public Gtk::Window, private StrategyController {
 		void onExecuteStrategyFinished();
 		void OpenPath(const std::string &path);
 		void ShowHistogram(class HistogramCollection &histogramCollection);
+		
+		class RFIGuiController& Controller() { return *_controller; }
 	private:
 		rfiStrategy::Strategy &Strategy() { return *_strategy; }
 		void SetStrategy(rfiStrategy::Strategy *newStrategy);
