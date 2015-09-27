@@ -96,9 +96,10 @@ class ImageWidget : public Gtk::DrawingArea {
 		void SetMax(num_t max) { _max = max; }
 		void SetMin(num_t min) { _min = min; }
 		
-		void SavePdf(const std::string &filename);
-		void SaveSvg(const std::string &filename);
-		void SavePng(const std::string &filename);
+		void SaveByExtension(const std::string& filename, unsigned width=0, unsigned height=0);
+		void SavePdf(const std::string &filename, unsigned width=0, unsigned height=0);
+		void SaveSvg(const std::string &filename, unsigned width=0, unsigned height=0);
+		void SavePng(const std::string &filename, unsigned width=0, unsigned height=0);
 		void SaveText(const std::string &filename);
 		
 		bool ShowTitle() const { return _showTitle; }

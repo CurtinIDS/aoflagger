@@ -1,9 +1,12 @@
 #include "version.h"
 
 #include "gui/rfiguiwindow.h"
+
 #include "gui/controllers/rfiguicontroller.h"
 
 #include "util/aologger.h"
+
+#include "strategy/imagesets/msimageset.h"
 
 #include <boost/tuple/tuple.hpp>
 #include <boost/tuple/tuple_comparison.hpp>
@@ -98,7 +101,8 @@ static void run(int argc, char *argv[])
 	int altArgc = 1;
 	Glib::RefPtr<Gtk::Application> app = Gtk::Application::create(altArgc, argv, "", Gio::APPLICATION_HANDLES_OPEN);
 	RFIGuiWindow window;
-	window.present();
+	if(interactive)
+		window.present();
 	
 	if(!filenames.empty())
 	{
@@ -112,7 +116,28 @@ static void run(int argc, char *argv[])
 		else
 			window.Controller().Open(filenames[0], DirectReadMode, true, "DATA", false, 4, false, true);
 	}
-	app->run(window);
+	
+	if(!savedBaselines.empty())
+	{
+		rfiStrategy::MSImageSet* imageSet =
+			dynamic_cast<rfiStrategy::MSImageSet*>(&window.GetImageSet());
+		if(imageSet == 0)
+		{
+			AOLogger::Error << "Option -save-baseline can only be used for measurement sets.\n";
+			return;
+		}
+		window.GetTimeFrequencyWidget().SetShowXAxisDescription(true);
+		window.GetTimeFrequencyWidget().SetShowYAxisDescription(true);
+		window.GetTimeFrequencyWidget().SetShowZAxisDescription(true);
+		for(std::set<SavedBaseline>::const_iterator i=savedBaselines.begin(); i!=savedBaselines.end(); ++i)
+		{
+			window.SetImageSetIndex(imageSet->Index(i->a1Index, i->a2Index, i->bandIndex, i->sequenceIndex));
+			window.GetTimeFrequencyWidget().SaveByExtension(i->filename, 800, 480);
+		}
+	}
+	
+	if(interactive)
+		app->run(window);
 }
 
 int main(int argc, char *argv[])

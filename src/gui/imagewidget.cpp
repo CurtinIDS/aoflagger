@@ -5,15 +5,17 @@
 #include "../strategy/algorithms/thresholdconfig.h"
 #include "../strategy/algorithms/thresholdtools.h"
 
-#include <iostream>
-#include <fstream>
+#include "../util/aologger.h"
 
 #include "plot/colorscale.h"
 #include "plot/horizontalplotscale.h"
 #include "plot/verticalplotscale.h"
 #include "plot/title.h"
 
-#include "../util/aologger.h"
+#include <iostream>
+#include <fstream>
+
+#include <boost/algorithm/string.hpp>
 
 ImageWidget::ImageWidget() :
 	_isInitialized(false),
@@ -202,23 +204,41 @@ void ImageWidget::Update()
 	}
 }
 
-void ImageWidget::SavePdf(const std::string &filename)
+void ImageWidget::SaveByExtension(const std::string& filename, unsigned width, unsigned height)
 {
-	unsigned width, height;
-	if(is_visible())
+	const char* eMsg = "Saving image to file failed: could not determine file type from filename extension -- maybe the type is not supported. Supported types are .png, .svg or .pdf.";
+	if(filename.size() < 4)
+		throw std::runtime_error(eMsg);
+	std::string ext = filename.substr(filename.size()-4);
+	boost::to_lower<std::string>(ext);
+	if(ext == ".png")
+		SavePng(filename, width, height);
+	else if(ext == ".svg")
+		SaveSvg(filename, width, height);
+	else if(ext == ".pdf")
+		SavePdf(filename, width, height);
+	else throw std::runtime_error(eMsg);
+}
+
+void ImageWidget::SavePdf(const std::string &filename, unsigned width, unsigned height)
+{
+	if(width == 0 || height == 0)
 	{
-		width = get_width();
-		height = get_height();
-	}
-	else {
-		width = 640;
-		height = 480;
+		if(is_visible())
+		{
+			width = get_width();
+			height = get_height();
+		}
+		else {
+			width = 640;
+			height = 480;
+		}
 	}
 	Cairo::RefPtr<Cairo::PdfSurface> surface = Cairo::PdfSurface::create(filename, width, height);
 	Cairo::RefPtr<Cairo::Context> cairo = Cairo::Context::create(surface);
 	if(HasImage())
 	{
-		AOLogger::Debug << "Saving PDF of " <<get_width() << " x " << get_height() << "\n";
+		AOLogger::Debug << "Saving PDF of " << width << " x " << height << "\n";
 		update(cairo, width, height);
 	}
 	cairo->show_page();
@@ -227,28 +247,50 @@ void ImageWidget::SavePdf(const std::string &filename)
 	surface->finish();
 }
 
-void ImageWidget::SaveSvg(const std::string &filename)
+void ImageWidget::SaveSvg(const std::string &filename, unsigned width, unsigned height)
 {
-	unsigned width = get_width(), height = get_height();
+	if(width == 0 || height == 0)
+	{
+		if(is_visible())
+		{
+			width = get_width();
+			height = get_height();
+		}
+		else {
+			width = 640;
+			height = 480;
+		}
+	}
 	Cairo::RefPtr<Cairo::SvgSurface> surface = Cairo::SvgSurface::create(filename, width, height);
 	Cairo::RefPtr<Cairo::Context> cairo = Cairo::Context::create(surface);
 	if(HasImage())
 	{
-		AOLogger::Debug << "Saving SVG of " << get_width() << " x " << get_height() << "\n";
+		AOLogger::Debug << "Saving SVG of " << width << " x " << height << "\n";
 		update(cairo, width, height);
 	}
 	cairo->show_page();
 	surface->finish();
 }
 
-void ImageWidget::SavePng(const std::string &filename)
+void ImageWidget::SavePng(const std::string &filename, unsigned width, unsigned height)
 {
-	unsigned width = get_width(), height = get_height();
+	if(width == 0 || height == 0)
+	{
+		if(is_visible())
+		{
+			width = get_width();
+			height = get_height();
+		}
+		else {
+			width = 640;
+			height = 480;
+		}
+	}
 	Cairo::RefPtr<Cairo::ImageSurface> surface = Cairo::ImageSurface::create(Cairo::FORMAT_ARGB32, width, height);
 	Cairo::RefPtr<Cairo::Context> cairo = Cairo::Context::create(surface);
 	if(HasImage())
 	{
-		AOLogger::Debug << "Saving PNG of " << get_width() << " x " << get_height() << "\n";
+		AOLogger::Debug << "Saving PNG of " << width << " x " << height << "\n";
 		update(cairo, width, height);
 	}
 	surface->write_to_png(filename);
