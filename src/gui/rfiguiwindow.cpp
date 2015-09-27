@@ -62,7 +62,7 @@
 #include <iostream>
 
 RFIGuiWindow::RFIGuiWindow() : 
-	_controller(new RFIGuiController(*this)),
+	_controller(new RFIGuiController(*this, this)),
 	_mainVBox(Gtk::ORIENTATION_VERTICAL),
 	_imagePlaneWindow(0), _histogramWindow(0), _optionWindow(0), _editStrategyWindow(0),
 	_gotoWindow(0), _progressWindow(0), _highlightWindow(0), _plotComplexPlaneWindow(0),
@@ -227,7 +227,7 @@ void RFIGuiWindow::OpenPath(const std::string &path)
 		delete _optionWindow;
 	if(rfiStrategy::ImageSet::IsMSFile(path))
 	{
-		_optionWindow = new MSOptionWindow(*this, *this, path);
+		_optionWindow = new MSOptionWindow(*_controller, path);
 		_optionWindow->present();
 	}
 	else

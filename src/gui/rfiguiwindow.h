@@ -28,8 +28,6 @@
 
 #include "../imaging/defaultmodels.h"
 
-class BaselineWindowController;
-
 class RFIGuiWindow : public Gtk::Window, private StrategyController {
 	public:
 		RFIGuiWindow();

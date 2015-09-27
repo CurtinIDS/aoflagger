@@ -1,20 +1,118 @@
-#include <libgen.h>
+#include "version.h"
 
-#include "gui/application.h"
+#include "gui/rfiguiwindow.h"
 
 #include "util/aologger.h"
+
+#include <boost/tuple/tuple.hpp>
+#include <boost/tuple/tuple_comparison.hpp>
+
+#include <gtkmm/application.h>
 
 #include <glibmm/error.h>
 #include <glibmm/wrap.h>
 
+#include <string>
+#include <vector>
+
+#include <libgen.h>
+
+struct SavedBaseline
+{
+	size_t a1Index, a2Index, bandIndex, sequenceIndex;
+	std::string filename;
+	bool operator<(const SavedBaseline& rhs) const
+	{
+		return boost::tie(a1Index, a2Index, bandIndex, sequenceIndex, filename) <
+			boost::tie(rhs.a1Index, rhs.a2Index, rhs.bandIndex, rhs.sequenceIndex, rhs.filename);
+	}
+};
+
+static void run(int argc, char *argv[])
+{
+	int argi = 1;
+	
+	std::vector<std::string> filenames;
+	std::set<SavedBaseline> savedBaselines;
+
+	while(argi < argc)
+	{
+		if(argv[argi][0] == '-')
+		{
+			std::string p;
+			if(argv[argi][1] == '-')
+				p = &argv[argi][2];
+			else
+				p = &argv[argi][1];
+			if(p == "h" || p == "help" || p == "?")
+			{
+				AOLogger::Info
+					<< "The RFIGui is a program to analyze the time-frequency information in radio astronomical observations.\n"
+					<< "It is written by André Offringa (offringa@gmail.com) and published under the GPL 3.\n"
+					<< "This program is part of AOFlagger " << AOFLAGGER_VERSION_STR << " (" << AOFLAGGER_VERSION_DATE_STR << ")\n\n"
+					<< "Syntax:\n"
+					<< "  rfigui [-option1 [-option2 ...]] [measurement set]\n\n"
+					<< "The main window will be opened when no parameters are specified.\n"
+					<< "Possible options:\n"
+					<< " -help\n"
+					<< "    Display this help message and exit.\n"
+					<< " -version\n"
+					<< "    Display AOFlagger version and exit.\n"
+					<< " -save-baseline <filename> <antenna1> <antenna2> <band> <sequence index>\n"
+					<< "    Save the selected baseline to the given filename. The parameter can be specified\n"
+					<< "    multiple times to save multiple baselines in one run. When this parameter is specified,\n"
+					<< "    the main window will not open and the program will exit after saving the requested baselines.\n";
+				return;
+			}
+			else if(p == "version")
+			{
+				AOLogger::Info << "AOFlagger " << AOFLAGGER_VERSION_STR << " (" << AOFLAGGER_VERSION_DATE_STR << ")\n";
+				return;
+			}
+			else if(p == "save-baseline")
+			{
+				SavedBaseline sb;
+				sb.filename = argv[argi+1];
+				sb.a1Index = atoi(argv[argi+2]);
+				sb.a2Index = atoi(argv[argi+3]);
+				sb.bandIndex = atoi(argv[argi+4]);
+				sb.sequenceIndex = atoi(argv[argi+5]);
+				savedBaselines.insert(sb);
+				argi += 5;
+			}
+			else {
+				AOLogger::Error << "Unknown parameter " << argv[argi] << " specified on command line.\n";
+				return;
+			}
+		}
+		else {
+			filenames.push_back(argv[argi]);
+		}
+		++argi;
+	}
+	
+	// We have to 'lie' about argc to create(..), because of a bug in older gtkmms.
+	int altArgc = 1;
+	Glib::RefPtr<Gtk::Application> app = Gtk::Application::create(altArgc, argv, "", Gio::APPLICATION_HANDLES_OPEN);
+	RFIGuiWindow window;
+	window.present();
+	if(!filenames.empty())
+	{
+		if(filenames.size() > 1)
+		{
+			AOLogger::Error << "Error: multiple input paths specified; RFIGui can only handle one path.\n";
+			return;
+		}
+		window.OpenPath(filenames[0]);
+	}
+	app->run(window);
+}
+
 int main(int argc, char *argv[])
 {
-	
 	AOLogger::Init(basename(argv[0]), false, true);
-	{
-		Application application;
-		application.Run(argc, argv);
-	}
+	
+	run(argc, argv);
 	
 	Glib::Error::register_cleanup();
 	Glib::wrap_register_cleanup();

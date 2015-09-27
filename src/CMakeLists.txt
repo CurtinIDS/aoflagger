@@ -71,7 +71,6 @@ set(GUI_PLOT_FILES
 
 set(GUI_FILES
   gui/controllers/rfiguicontroller.cpp
-  gui/application.cpp
   gui/complexplaneplotwindow.cpp
   gui/editstrategywindow.cpp
   gui/gotowindow

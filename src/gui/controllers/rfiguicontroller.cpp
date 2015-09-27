@@ -1,10 +1,16 @@
 #include "rfiguicontroller.h"
 
+#include "../../strategy/actions/strategy.h"
+
 #include "../../strategy/algorithms/fringestoppingfitter.h"
 #include "../../strategy/algorithms/mitigationtester.h"
 #include "../../strategy/algorithms/svdmitigater.h"
 
 #include "../../strategy/plots/rfiplots.h"
+#include "../../strategy/control/defaultstrategy.h"
+
+#include "../../strategy/imagesets/imageset.h"
+#include "../../strategy/imagesets/msimageset.h"
 
 #include "../../quality/histogramcollection.h"
 
@@ -14,8 +20,10 @@
 
 #include "../rfiguiwindow.h"
 
-RFIGuiController::RFIGuiController(RFIGuiWindow& rfiGuiWindow) :
-	_rfiGuiWindow(rfiGuiWindow)
+#include <gtkmm/messagedialog.h>
+
+RFIGuiController::RFIGuiController(RFIGuiWindow& rfiGuiWindow, StrategyController* strategyController) :
+	_rfiGuiWindow(rfiGuiWindow), _strategyController(strategyController)
 {
 	_plotManager = new class PlotManager();
 }
@@ -316,6 +324,55 @@ void RFIGuiController::PlotSingularValues()
 
 		SVDMitigater::CreateSingularValueGraph(ActiveData(), plot);
 		_plotManager->Update();
+	}
+}
+
+void RFIGuiController::Open(const std::string& filename, BaselineIOMode ioMode, bool readUVW, const std::string& dataColumn, bool subtractModel, size_t polCountToRead, bool loadStrategy)
+{
+	std::cout << "Opening " << filename << std::endl;
+	try
+	{
+		rfiStrategy::ImageSet *imageSet = rfiStrategy::ImageSet::Create(filename, ioMode);
+		if(dynamic_cast<rfiStrategy::MSImageSet*>(imageSet) != 0)
+		{
+			rfiStrategy::MSImageSet *msImageSet = static_cast<rfiStrategy::MSImageSet*>(imageSet);
+			msImageSet->SetSubtractModel(subtractModel);
+			msImageSet->SetDataColumnName(dataColumn);
+	
+			if(polCountToRead == 1)
+				msImageSet->SetReadStokesI();
+			else if(polCountToRead == 2)
+				msImageSet->SetReadDipoleAutoPolarisations();
+			else
+				msImageSet->SetReadAllPolarisations();
+	
+			msImageSet->SetReadUVW(readUVW);
+		}
+		imageSet->Initialize();
+		
+		if(loadStrategy)
+		{
+			rfiStrategy::DefaultStrategy::TelescopeId telescopeId;
+			unsigned flags;
+			double frequency, timeResolution, frequencyResolution;
+			rfiStrategy::DefaultStrategy::DetermineSettings(*imageSet, telescopeId, flags, frequency, timeResolution, frequencyResolution);
+			_strategyController->Strategy().RemoveAll();
+			rfiStrategy::DefaultStrategy::LoadStrategy(
+				_strategyController->Strategy(),
+				telescopeId,
+				flags | rfiStrategy::DefaultStrategy::FLAG_GUI_FRIENDLY,
+				frequency,
+				timeResolution,
+				frequencyResolution
+			);
+			_strategyController->NotifyChange();
+		}
+	
+		_rfiGuiWindow.SetImageSet(imageSet);
+	} catch(std::exception &e)
+	{
+		Gtk::MessageDialog dialog(_rfiGuiWindow, e.what(), false, Gtk::MESSAGE_ERROR);
+		dialog.run();
 	}
 }
 

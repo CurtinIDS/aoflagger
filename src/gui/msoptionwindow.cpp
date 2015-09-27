@@ -1,8 +1,7 @@
 #include <iostream>
 
-#include <gtkmm/messagedialog.h>
-
 #include "msoptionwindow.h"
+#include "controllers/rfiguicontroller.h"
 
 #include "../strategy/actions/strategy.h"
 
@@ -10,12 +9,9 @@
 
 #include "../strategy/control/defaultstrategy.h"
 
-#include "rfiguiwindow.h"
-
-MSOptionWindow::MSOptionWindow(RFIGuiWindow &rfiGUiWindow, StrategyController &strategyController, const std::string &filename) :
+MSOptionWindow::MSOptionWindow(class RFIGuiController &controller, const std::string &filename) :
 	Gtk::Window(),
-	_rfiGuiWindow(rfiGUiWindow),
-	_strategyController(strategyController),
+	_controller(controller),
 	_filename(filename),
 	_openButton("_Open", true),
 	_dataKindFrame("Columns to read"),
@@ -106,67 +102,38 @@ void MSOptionWindow::initPolarisationButtons()
 
 void MSOptionWindow::onOpen()
 {
-	std::cout << "Opening " << _filename << std::endl;
-	try
+	BaselineIOMode ioMode = DirectReadMode;
+	if(_indirectReadButton.get_active()) ioMode = IndirectReadMode;
+	else if(_memoryReadButton.get_active()) ioMode = MemoryReadMode;
+	bool readUVW = _readUVWButton.get_active();
+	
+	std::string dataColumnName;
+	bool subtractModel = false;
+	if(_observedDataButton.get_active())
+		dataColumnName = "DATA";
+	else if(_correctedDataButton.get_active())
+		dataColumnName = "CORRECTED_DATA";
+	else if(_modelDataButton.get_active())
+		dataColumnName = "MODEL_DATA";
+	else if(_residualDataButton.get_active())
 	{
-		BaselineIOMode ioMode = DirectReadMode;
-		if(_indirectReadButton.get_active()) ioMode = IndirectReadMode;
-		else if(_memoryReadButton.get_active()) ioMode = MemoryReadMode;
-		bool readUVW = _readUVWButton.get_active();
-		rfiStrategy::ImageSet *imageSet = rfiStrategy::ImageSet::Create(_filename, ioMode);
-		if(dynamic_cast<rfiStrategy::MSImageSet*>(imageSet) != 0)
-		{
-			rfiStrategy::MSImageSet *msImageSet = static_cast<rfiStrategy::MSImageSet*>(imageSet);
-			msImageSet->SetSubtractModel(false);
-			if(_observedDataButton.get_active())
-				msImageSet->SetDataColumnName("DATA");
-			else if(_correctedDataButton.get_active())
-				msImageSet->SetDataColumnName("CORRECTED_DATA");
-			else if(_modelDataButton.get_active())
-				msImageSet->SetDataColumnName("MODEL_DATA");
-			else if(_residualDataButton.get_active())
-			{
-				msImageSet->SetDataColumnName("DATA");
-				msImageSet->SetSubtractModel(true);
-			}
-			else if(_otherColumnButton.get_active())
-				msImageSet->SetDataColumnName(_otherColumnEntry.get_text());
-	
-			if(_allDipolePolarisationButton.get_active())
-				msImageSet->SetReadAllPolarisations();
-			else if(_autoDipolePolarisationButton.get_active())
-				msImageSet->SetReadDipoleAutoPolarisations();
-			else
-				msImageSet->SetReadStokesI();
-	
-			msImageSet->SetReadUVW(readUVW);
-		}
-		imageSet->Initialize();
-		
-		if(_loadOptimizedStrategy.get_active())
-		{
-			rfiStrategy::DefaultStrategy::TelescopeId telescopeId;
-			unsigned flags;
-			double frequency, timeResolution, frequencyResolution;
-			rfiStrategy::DefaultStrategy::DetermineSettings(*imageSet, telescopeId, flags, frequency, timeResolution, frequencyResolution);
-			_strategyController.Strategy().RemoveAll();
-			rfiStrategy::DefaultStrategy::LoadStrategy(
-				_strategyController.Strategy(),
-				telescopeId,
-				flags | rfiStrategy::DefaultStrategy::FLAG_GUI_FRIENDLY,
-				frequency,
-				timeResolution,
-				frequencyResolution
-			);
-			_strategyController.NotifyChange();
-		}
-	
-		_rfiGuiWindow.SetImageSet(imageSet);
-	} catch(std::exception &e)
-	{
-		Gtk::MessageDialog dialog(*this, e.what(), false, Gtk::MESSAGE_ERROR);
-		dialog.run();
+		dataColumnName = "DATA";
+		subtractModel = true;
 	}
+	else if(_otherColumnButton.get_active())
+		dataColumnName = _otherColumnEntry.get_text();
+
+	size_t polCount;
+	if(_allDipolePolarisationButton.get_active())
+		polCount = 4;
+	else if(_autoDipolePolarisationButton.get_active())
+		polCount = 2;
+	else
+		polCount = 1;
+	
+	bool loadStrategy = _loadOptimizedStrategy.get_active();
+	
+	_controller.Open(_filename, ioMode, readUVW, dataColumnName, subtractModel, polCount, loadStrategy);
+	
 	hide();
 }
-

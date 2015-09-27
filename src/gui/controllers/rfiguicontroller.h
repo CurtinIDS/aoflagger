@@ -9,7 +9,7 @@
 class RFIGuiController
 {
 	public:
-		RFIGuiController(class RFIGuiWindow &rfiGuiWindow);
+		RFIGuiController(class RFIGuiWindow &rfiGuiWindow, class StrategyController* strategyController);
 		~RFIGuiController();
 		
 		bool AreOriginalFlagsShown() const { return _showOriginalFlags; }
@@ -48,6 +48,7 @@ class RFIGuiController
 		void PlotTimeScatterComparison();
 		void PlotSingularValues();
 		
+		void Open(const std::string& filename, BaselineIOMode ioMode, bool readUVW, const std::string& dataColumn, bool subtractModel, size_t polCountToRead, bool loadStrategy);
 		void OpenTestSet(unsigned index, bool gaussianTestSets);
 		
 		bool IsImageLoaded() const;
@@ -68,6 +69,7 @@ class RFIGuiController
 		
 		sigc::signal<void> _signalStateChange;
 		class RFIGuiWindow &_rfiGuiWindow;
+		class StrategyController* _strategyController;
 		
 		class PlotManager *_plotManager;
 };

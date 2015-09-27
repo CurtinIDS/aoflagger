@@ -13,15 +13,14 @@
 
 class MSOptionWindow : public Gtk::Window {
 	public:
-		MSOptionWindow(class RFIGuiWindow &rfiGuiWindow, class StrategyController &strategyController, const std::string &filename);
+		MSOptionWindow(class RFIGuiController &controller, const std::string &filename);
 		~MSOptionWindow();
 		void onOpen();
 	private:
 		void initDataTypeButtons();
 		void initPolarisationButtons();
 
-		class RFIGuiWindow &_rfiGuiWindow;
-		class StrategyController &_strategyController;
+		class RFIGuiController &_controller;
 		const std::string _filename;
 
 		Gtk::ButtonBox _bottomButtonBox;
