@@ -104,40 +104,44 @@ static void run(int argc, char *argv[])
 	if(interactive)
 		window.present();
 	
-	if(!filenames.empty())
-	{
-		if(filenames.size() > 1)
+	try {
+		
+		if(!filenames.empty())
 		{
-			AOLogger::Error << "Error: multiple input paths specified; RFIGui can only handle one path.\n";
-			return;
+			if(filenames.size() > 1)
+				throw std::runtime_error("Error: multiple input paths specified; RFIGui can only handle one path.\n");
+			if(interactive)
+				window.OpenPath(filenames[0]);
+			else
+				window.Controller().Open(filenames[0], DirectReadMode, true, "DATA", false, 4, false, true);
 		}
+		
+		if(!savedBaselines.empty())
+		{
+			rfiStrategy::MSImageSet* imageSet =
+				dynamic_cast<rfiStrategy::MSImageSet*>(&window.GetImageSet());
+			if(imageSet == 0)
+				throw std::runtime_error("Option -save-baseline can only be used for measurement sets.\n");
+			window.GetTimeFrequencyWidget().SetShowXAxisDescription(true);
+			window.GetTimeFrequencyWidget().SetShowYAxisDescription(true);
+			window.GetTimeFrequencyWidget().SetShowZAxisDescription(true);
+			for(std::set<SavedBaseline>::const_iterator i=savedBaselines.begin(); i!=savedBaselines.end(); ++i)
+			{
+				window.SetImageSetIndex(imageSet->Index(i->a1Index, i->a2Index, i->bandIndex, i->sequenceIndex));
+				window.GetTimeFrequencyWidget().SaveByExtension(i->filename, 800, 480);
+			}
+		}
+		
 		if(interactive)
-			window.OpenPath(filenames[0]);
-		else
-			window.Controller().Open(filenames[0], DirectReadMode, true, "DATA", false, 4, false, true);
-	}
-	
-	if(!savedBaselines.empty())
+			app->run(window);
+	} catch(const std::exception& e)
 	{
-		rfiStrategy::MSImageSet* imageSet =
-			dynamic_cast<rfiStrategy::MSImageSet*>(&window.GetImageSet());
-		if(imageSet == 0)
-		{
-			AOLogger::Error << "Option -save-baseline can only be used for measurement sets.\n";
-			return;
-		}
-		window.GetTimeFrequencyWidget().SetShowXAxisDescription(true);
-		window.GetTimeFrequencyWidget().SetShowYAxisDescription(true);
-		window.GetTimeFrequencyWidget().SetShowZAxisDescription(true);
-		for(std::set<SavedBaseline>::const_iterator i=savedBaselines.begin(); i!=savedBaselines.end(); ++i)
-		{
-			window.SetImageSetIndex(imageSet->Index(i->a1Index, i->a2Index, i->bandIndex, i->sequenceIndex));
-			window.GetTimeFrequencyWidget().SaveByExtension(i->filename, 800, 480);
-		}
+		AOLogger::Error <<
+			"\n"
+			"==========\n"
+			"An unhandled exception occured while executing RFIGui. The error is:\n" <<
+			e.what() << '\n';
 	}
-	
-	if(interactive)
-		app->run(window);
 }
 
 int main(int argc, char *argv[])
