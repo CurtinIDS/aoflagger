@@ -39,6 +39,7 @@ static void run(int argc, char *argv[])
 	std::vector<std::string> filenames;
 	std::set<SavedBaseline> savedBaselines;
 	bool interactive = true;
+	std::string dataColumnName = "DATA";
 	
 	while(argi < argc)
 	{
@@ -66,7 +67,9 @@ static void run(int argc, char *argv[])
 					<< " -save-baseline <filename> <antenna1> <antenna2> <band> <sequence index>\n"
 					<< "    Save the selected baseline to the given filename. The parameter can be specified\n"
 					<< "    multiple times to save multiple baselines in one run. When this parameter is specified,\n"
-					<< "    the main window will not open and the program will exit after saving the requested baselines.\n";
+					<< "    the main window will not open and the program will exit after saving the requested baselines.\n"
+					<< " -data-column <columnname>\n"
+					<< "    Open the selected column name.\n";
 				return;
 			}
 			else if(p == "version")
@@ -85,6 +88,11 @@ static void run(int argc, char *argv[])
 				savedBaselines.insert(sb);
 				interactive = false;
 				argi += 5;
+			}
+			else if(p == "data-column")
+			{
+				++argi;
+				dataColumnName = argv[argi];
 			}
 			else {
 				AOLogger::Error << "Unknown parameter " << argv[argi] << " specified on command line.\n";
@@ -113,7 +121,7 @@ static void run(int argc, char *argv[])
 			if(interactive)
 				window.OpenPath(filenames[0]);
 			else
-				window.Controller().Open(filenames[0], DirectReadMode, true, "DATA", false, 4, false, true);
+				window.Controller().Open(filenames[0], DirectReadMode, true, dataColumnName, false, 4, false, true);
 		}
 		
 		if(!savedBaselines.empty())
