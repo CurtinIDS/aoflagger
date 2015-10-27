@@ -6,7 +6,7 @@ include(CheckCXXSymbolExists)
 include(CheckIncludeFileCXX)
 
 CHECK_CXX_COMPILER_FLAG("-march=native" COMPILER_SUPPORTS_MARCH_NATIVE)
-CHECK_CXX_COMPILER_FLAG("-pedantic -Wno-long-long -Werror=vla -std=c++98" COMPILER_SUPPORTS_PEDANTIC)
+CHECK_CXX_COMPILER_FLAG("-pedantic -Wno-long-long -Werror=vla -std=c++11" COMPILER_SUPPORTS_PEDANTIC)
 CHECK_SYMBOL_EXISTS(posix_fallocate "fcntl.h" HAVE_POSIX_FALLOCATE) 
 CHECK_CXX_SYMBOL_EXISTS(exp10 "cmath" HAVE_EXP10)
 
@@ -23,7 +23,9 @@ else()
 endif(COMPILER_SUPPORTS_MARCH_NATIVE)
 
 if(COMPILER_SUPPORTS_PEDANTIC)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pedantic -Wno-long-long -Werror=vla -std=c++98")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pedantic -Wno-long-long -Werror=vla -std=c++11")
+else(COMPILER_SUPPORTS_PEDANTIC)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 endif(COMPILER_SUPPORTS_PEDANTIC)
 
 if(HAVE_POSIX_FALLOCATE)

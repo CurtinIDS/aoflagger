@@ -185,18 +185,30 @@ void actionCollect(const std::string &filename, enum CollectingMode mode, Statis
 			{
 				case CollectDefault:
 					if(antennaIsFlagged || timestepIndex < flaggedTimesteps)
-						statisticsCollection.Add(antenna1Index, antenna2Index, time, bandIndex, p, &samples[p]->real(), &samples[p]->imag(), isRFI[p], correlatorFlagsForBadAntenna, band.channels.size() - startChannel, 2, 1, 1);
+						statisticsCollection.Add(antenna1Index, antenna2Index, time, bandIndex, p,
+																		 &reinterpret_cast<float*>(&samples[p])[0],
+																		 &reinterpret_cast<float*>(&samples[p])[1],
+																		 isRFI[p], correlatorFlagsForBadAntenna, band.channels.size() - startChannel, 2, 1, 1);
 					else
-						statisticsCollection.Add(antenna1Index, antenna2Index, time, bandIndex, p, &samples[p]->real(), &samples[p]->imag(), isRFI[p], correlatorFlags, band.channels.size() - startChannel, 2, 1, 1);
+						statisticsCollection.Add(antenna1Index, antenna2Index, time, bandIndex, p,
+																		 &reinterpret_cast<float*>(&samples[p])[0],
+																		 &reinterpret_cast<float*>(&samples[p])[1],
+																		 isRFI[p], correlatorFlags, band.channels.size() - startChannel, 2, 1, 1);
 					break;
 				case CollectHistograms:
 					histogramCollection.Add(antenna1Index, antenna2Index, p, samples[p], isRFI[p], band.channels.size() - startChannel);
 					break;
 				case CollectTimeFrequency:
 					if(antennaIsFlagged || timestepIndex < flaggedTimesteps)
-						statisticsCollection.Add(antenna1Index, antenna2Index, time, bandIndex, p, &samples[p]->real(), &samples[p]->imag(), isRFI[p], correlatorFlagsForBadAntenna, band.channels.size() - startChannel, 2, 1, 1);
+						statisticsCollection.Add(antenna1Index, antenna2Index, time, bandIndex, p,
+																		 &reinterpret_cast<float*>(&samples[p])[0],
+																		 &reinterpret_cast<float*>(&samples[p])[1],
+																		 isRFI[p], correlatorFlagsForBadAntenna, band.channels.size() - startChannel, 2, 1, 1);
 					else
-						statisticsCollection.AddToTimeFrequency(antenna1Index, antenna2Index, time, bandIndex, p, &samples[p]->real(), &samples[p]->imag(), isRFI[p], correlatorFlags, band.channels.size() - startChannel, 2, 1, 1);
+						statisticsCollection.AddToTimeFrequency(antenna1Index, antenna2Index, time, bandIndex, p,
+																										&reinterpret_cast<float*>(&samples[p])[0],
+																										&reinterpret_cast<float*>(&samples[p])[1],
+																										isRFI[p], correlatorFlags, band.channels.size() - startChannel, 2, 1, 1);
 					break;
 			}
 		}
@@ -586,7 +598,7 @@ void actionCombine(const std::string outFilename, const std::vector<std::string>
 		HistogramCollection histogramCollection;
 		if(remote)
 		{
-			std::auto_ptr<aoRemote::ClusteredObservation> observation( aoRemote::ClusteredObservation::Load(firstInFilename));
+			std::unique_ptr<aoRemote::ClusteredObservation> observation( aoRemote::ClusteredObservation::Load(firstInFilename));
 			aoRemote::ProcessCommander commander(*observation);
 			commander.PushReadAntennaTablesTask();
 			commander.PushReadQualityTablesTask(&statisticsCollection, &histogramCollection);
@@ -594,7 +606,7 @@ void actionCombine(const std::string outFilename, const std::vector<std::string>
 			antennae = commander.Antennas();
 		} else {
 			std::cout << "Reading antenna table...\n";
-			std::auto_ptr<MeasurementSet> ms(new MeasurementSet(firstInFilename));
+			std::unique_ptr<MeasurementSet> ms(new MeasurementSet(firstInFilename));
 			antennae.resize(ms->AntennaCount());
 			for(size_t i=0; i!=ms->AntennaCount(); ++i)
 				antennae[i] = ms->GetAntennaInfo(i);

@@ -18,7 +18,7 @@ ClusteredObservation::ClusteredObservation()
 ClusteredObservation *ClusteredObservation::LoadFromVds(const std::string &vdsFilename)
 {
 	VdsFile vdsFile(vdsFilename);
-	std::auto_ptr<ClusteredObservation> cObs(new ClusteredObservation());
+	std::unique_ptr<ClusteredObservation> cObs(new ClusteredObservation());
 	const size_t nParts = vdsFile.NParts();
 	for(size_t i=0;i!=nParts;++i)
 	{
@@ -52,7 +52,7 @@ ClusteredObservation *ClusteredObservation::LoadFromVds(const std::string &vdsFi
 ClusteredObservation *ClusteredObservation::LoadFromRef(const std::string &refFilename)
 {
 	AOTools::RefFile refFile(refFilename);
-	std::auto_ptr<ClusteredObservation> cObs(new ClusteredObservation());
+	std::unique_ptr<ClusteredObservation> cObs(new ClusteredObservation());
 	for(AOTools::RefFile::const_iterator i=refFile.begin();i!=refFile.end();++i)
 	{
 		const AOTools::RefFileEntry &entry = *i;

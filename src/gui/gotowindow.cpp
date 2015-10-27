@@ -75,7 +75,7 @@ GoToWindow::GoToWindow(RFIGuiWindow &rfiGuiWindow) : Gtk::Window(),
 		Gtk::TreeModel::iterator iter = _sequenceStore->append();
 		(*iter)[_sequenceModelColumns.sequenceIndex] = i;
 		std::stringstream desc;
-		std::auto_ptr<rfiStrategy::MSImageSetIndex> index(_imageSet->Index(antenna1Index, antenna2Index, bandIndex, i));
+		std::unique_ptr<rfiStrategy::MSImageSetIndex> index(_imageSet->Index(antenna1Index, antenna2Index, bandIndex, i));
 		size_t fIndex = _imageSet->GetField(*index);
 		FieldInfo field = _imageSet->GetFieldInfo(fIndex);
 		desc << field.name << " (" << fIndex << ')';
