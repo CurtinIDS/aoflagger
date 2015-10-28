@@ -6,6 +6,7 @@
 #include <gtkmm/box.h>
 #include <gtkmm/button.h>
 #include <gtkmm/buttonbox.h>
+#include <gtkmm/checkbutton.h>
 #include <gtkmm/frame.h>
 #include <gtkmm/liststore.h>
 #include <gtkmm/scrolledwindow.h>
@@ -23,12 +24,13 @@ class GoToWindow : public Gtk::Window {
 
 		Gtk::ButtonBox _buttonBox;
 		Gtk::VBox _vBox;
-		Gtk::HBox _hBox;
+		Gtk::HBox _hBox, _hBottomBox;
 		Gtk::VBox _bandFrameBox;
 		Gtk::Frame _antenna1Frame, _antenna2Frame, _bandFrame, _sequenceFrame;
 		Gtk::TreeView _antenna1View, _antenna2View, _bandView, _sequenceView;
 		Gtk::ScrolledWindow _antenna1Scroll, _antenna2Scroll, _bandScroll, _sequenceScroll;
 		Gtk::Button _loadButton;
+		Gtk::CheckButton _keepOpenCB;
 
 		class AntennaModelColumns : public Gtk::TreeModelColumnRecord
 		{

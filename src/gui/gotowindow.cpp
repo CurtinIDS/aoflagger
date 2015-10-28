@@ -13,6 +13,7 @@ GoToWindow::GoToWindow(RFIGuiWindow &rfiGuiWindow) : Gtk::Window(),
 	_antenna1Frame("Antenna 1"), _antenna2Frame("Antenna 2"),
 	_bandFrame("Band"), _sequenceFrame("Time sequence"),
 	_loadButton("Load"),
+	_keepOpenCB("Keep window open"),
 	_rfiGuiWindow(rfiGuiWindow),
 	_imageSet(&dynamic_cast<rfiStrategy::MSImageSet&>(rfiGuiWindow.GetImageSet()))
 {
@@ -130,8 +131,11 @@ GoToWindow::GoToWindow(RFIGuiWindow &rfiGuiWindow) : Gtk::Window(),
 
 	_loadButton.signal_clicked().connect(sigc::mem_fun(*this, &GoToWindow::onLoadClicked));
 	_buttonBox.pack_start(_loadButton);
+	
+	_hBottomBox.pack_start(_buttonBox);
+	_hBottomBox.pack_start(_keepOpenCB, false, false);
 
-	_vBox.pack_start(_buttonBox, Gtk::PACK_SHRINK, 0);
+	_vBox.pack_start(_hBottomBox, Gtk::PACK_SHRINK, 0);
 
 	add(_vBox);
 	_vBox.show_all();
@@ -170,7 +174,8 @@ void GoToWindow::onLoadClicked()
 		size_t bIndex = bRow[_bandModelColumns.bandIndex];
 		size_t sIndex = sRow[_sequenceModelColumns.sequenceIndex];
 		_rfiGuiWindow.SetImageSetIndex(_imageSet->Index(a1Index, a2Index, bIndex, sIndex));
-		hide();
+		if(!_keepOpenCB.get_active())
+			hide();
 	}
 }
 
