@@ -17,6 +17,7 @@ GoToWindow::GoToWindow(RFIGuiWindow &rfiGuiWindow) : Gtk::Window(),
 	_rfiGuiWindow(rfiGuiWindow),
 	_imageSet(&dynamic_cast<rfiStrategy::MSImageSet&>(rfiGuiWindow.GetImageSet()))
 {
+	set_default_size(0, 500);
 	_antennaeStore = Gtk::ListStore::create(_antennaModelColumns);
 	_bandStore = Gtk::ListStore::create(_bandModelColumns);
 	_sequenceStore = Gtk::ListStore::create(_sequenceModelColumns);
