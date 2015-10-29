@@ -26,14 +26,14 @@ class IndirectBaselineReader : public BaselineReader {
 		class ReorderInfo
 		{
 		public:
-			std::auto_ptr<std::ofstream> dataFile;
-			std::auto_ptr<std::ofstream> flagFile;
+			std::unique_ptr<std::ofstream> dataFile;
+			std::unique_ptr<std::ofstream> flagFile;
 		};
 		class UpdateInfo
 		{
 		public:
-			std::auto_ptr<std::ifstream> dataFile;
-			std::auto_ptr<std::ifstream> flagFile;
+			std::unique_ptr<std::ifstream> dataFile;
+			std::unique_ptr<std::ifstream> flagFile;
 		};
 		class SeqIndexLookupTable
 		{

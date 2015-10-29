@@ -181,7 +181,13 @@ namespace rfiStrategy {
 			}
 			++index;
 		}
-		throw BadUsageException("Baseline not found");
+		std::stringstream str;
+		str << "Baseline not found: "
+			<< "antenna1=" << antenna1 << ", "
+			<< "antenna2=" << antenna2 << ", "
+			<< "band=" << band << ", "
+			<< "sequenceId=" << sequenceId;
+		throw BadUsageException(str.str());
 	}
 
 	void MSImageSet::AddReadRequest(const ImageSetIndex &index)
