@@ -31,7 +31,7 @@ GoToWindow::GoToWindow(RFIGuiWindow &rfiGuiWindow) : Gtk::Window(),
 	const unsigned bandIndex = _imageSet->GetBand(setIndex);
 	const unsigned sequenceIndex = _imageSet->GetSequenceId(setIndex);
 
-	// First, the baseline pairs are iterated to get all antenna indices.
+	// First, the sequences are iterated to get all antenna indices.
 	std::set<size_t> set;
 	for(std::vector<MeasurementSet::Sequence>::const_iterator i=_sequences.begin();
 		i != _sequences.end() ; ++i)
@@ -70,13 +70,19 @@ GoToWindow::GoToWindow(RFIGuiWindow &rfiGuiWindow) : Gtk::Window(),
 			bandRow = iter;
 	}
 	
-	size_t sequenceCount = _imageSet->SequenceCount();
-	for(size_t i=0;i<sequenceCount;++i)
+	size_t sequenceIdCount = _imageSet->SequenceCount();
+	size_t lastSeqIndex = 0;
+	for(size_t i=0;i<sequenceIdCount;++i)
 	{
 		Gtk::TreeModel::iterator iter = _sequenceStore->append();
 		(*iter)[_sequenceModelColumns.sequenceIndex] = i;
 		std::stringstream desc;
-		std::unique_ptr<rfiStrategy::MSImageSetIndex> index(_imageSet->Index(antenna1Index, antenna2Index, bandIndex, i));
+		// Find some index that has this sequence.
+		while(_sequences[lastSeqIndex].sequenceId != i)
+		{
+			++lastSeqIndex;
+		}
+		std::unique_ptr<rfiStrategy::MSImageSetIndex> index(_imageSet->Index(_sequences[lastSeqIndex].antenna1, _sequences[lastSeqIndex].antenna2, _sequences[lastSeqIndex].spw, i));
 		size_t fIndex = _imageSet->GetField(*index);
 		FieldInfo field = _imageSet->GetFieldInfo(fIndex);
 		desc << field.name << " (" << fIndex << ')';
