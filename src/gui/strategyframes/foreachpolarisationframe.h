@@ -15,7 +15,7 @@
 class ForEachPolarisationFrame : public Gtk::Frame {
 	public:
 		ForEachPolarisationFrame(rfiStrategy::ForEachPolarisationBlock &action, EditStrategyWindow &editStrategyWindow)
-		: Gtk::Frame("For each baseline"),
+		: Gtk::Frame("For each polarisation"),
 		_editStrategyWindow(editStrategyWindow), _action(action),
 		_onXXButton("XX"),
 		_onXYButton("XY"),
