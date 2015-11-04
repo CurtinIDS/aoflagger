@@ -284,7 +284,7 @@ int main(int argc, char **argv)
 				fomAction->Add(subStrategy);
 			}
 			if(threadCount.IsSet())
-				rfiStrategy::Strategy::SetThreadCount(*subStrategy, threadCount);
+				rfiStrategy::Strategy::SetThreadCount(*fomAction, threadCount);
 		}
 		else {
 			fomAction->SetLoadOptimizedStrategy(true);
