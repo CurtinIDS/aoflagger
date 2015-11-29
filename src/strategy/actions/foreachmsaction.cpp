@@ -49,7 +49,7 @@ void ForEachMSAction::Perform(ArtifactSet &artifacts, ProgressListener &progress
 		
 		if(!skip)
 		{
-			std::auto_ptr<ImageSet> imageSet(ImageSet::Create(filename, _baselineIOMode, _readUVW));
+			std::unique_ptr<ImageSet> imageSet(ImageSet::Create(filename, _baselineIOMode, _readUVW));
 			bool isMS = dynamic_cast<MSImageSet*>(&*imageSet) != 0;
 			if(isMS)
 			{ 
@@ -90,7 +90,7 @@ void ForEachMSAction::Perform(ArtifactSet &artifacts, ProgressListener &progress
 				}
 			}
 			
-			std::auto_ptr<ImageSetIndex> index(imageSet->StartIndex());
+			std::unique_ptr<ImageSetIndex> index(imageSet->StartIndex());
 			artifacts.SetImageSet(&*imageSet);
 			artifacts.SetImageSetIndex(&*index);
 
