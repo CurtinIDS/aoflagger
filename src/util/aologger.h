@@ -73,8 +73,14 @@ class AOLogger
 				}
 				void Flush()
 				{
-					boost::mutex::scoped_lock lock(_mutex);
-					std::cout.flush();
+					if((int) _coutLevel <= (int) Level)
+					{
+						boost::mutex::scoped_lock lock(_mutex);
+						if(ToStdErr)
+							std::cerr.flush();
+						else
+							std::cout.flush();
+					}
 				}
 				void SetUseLogger(bool useLogger)
 				{

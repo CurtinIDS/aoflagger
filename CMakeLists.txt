@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 2.6)
 
 project(AOFlagger)
 
+# Casacore has a separate CMake file in this directory
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/CMake)
 
 find_package(PkgConfig)
@@ -11,6 +12,7 @@ pkg_check_modules(SIGCXX sigc++-2.0)
 
 SET(CASACORE_MAKE_REQUIRED_EXTERNALS_OPTIONAL TRUE)
 find_package(Casacore REQUIRED COMPONENTS casa ms tables measures)
+
 find_package(CFITSIO REQUIRED)
 
 find_path(FFTW3_INCLUDE_DIR NAMES fftw3.h)
