@@ -42,6 +42,9 @@ include_directories(${Boost_INCLUDE_DIR})
 include_directories(${LIBXML2_INCLUDE_DIR})
 include_directories(${CFITSIO_INCLUDE_DIR})
 include_directories(${FFTW3_INCLUDE_DIR})
+if(GSL_INCLUDE_DIR)
+	include_directories(${GSL_INCLUDE_DIR})
+endif(GSL_INCLUDE_DIR)
 
 # The following stuff will set the "rpath" correctly, so that
 # LD_LIBRARY_PATH doesn't have to be set.
