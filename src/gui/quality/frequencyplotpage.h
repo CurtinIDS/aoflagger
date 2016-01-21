@@ -77,7 +77,8 @@ class FrequencyPlotPage : public TwoDimensionalPlotPage {
 					{
 						const double t_f = pointSet.GetX(i) * f;
 						const double val = pointSet.GetY(i);
-						nextStat += std::complex<double>(val * cos(t_f), val * sin(t_f));
+						if(std::isfinite(val))
+							nextStat += std::complex<double>(val * cos(t_f), val * sin(t_f));
 					}
 					output.push_back(newElement);
 				}
