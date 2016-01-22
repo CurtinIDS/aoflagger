@@ -393,6 +393,56 @@ namespace aoflagger {
 			class QualityStatisticsData *_data;
 	};
 	
+	/**
+	 * @brief A base class which callers can inherit from to be able to receive
+	 * progress updates and error messages.
+	 * 
+	 * When calling the Run() method in parallell, a status listener should be thread safe.
+	 */
+	class StatusListener
+	{
+		public:
+			/**
+			 * @brief Virtual destructor.
+			 */
+			virtual ~StatusListener() { }
+			/**
+			 * @brief This virtual method is called when a new task is started. 
+			 * 
+			 * Typically, a client could display a message saying that the given task 'description' is started.
+			 * This method can be called recursively to signify the start of a subtask.
+			 * @param taskNo (Sub) task number
+			 * @param taskCount Total number of (sub) tasks.
+			 * @param description Description of the task, e.g. "SumThreshold".
+			 */
+			virtual void OnStartTask(size_t taskNo, size_t taskCount, const std::string &description)
+			{ }
+			/**
+			* @brief Called when at the end of the current task.
+			* 
+			* After OnEndTask() is called, the handler does not need to expect any OnProgress() calls until a new
+			* task has been started and OnStartTask() was called.
+			*/
+			virtual void OnEndTask()
+			{ }
+			/**
+			 * @brief Called while the current task is progressing.
+			 * 
+			 * This can be used to display a progress bar if the strategy would take a lot of time.
+			 * @param progress Current progress
+			 * @param maxProgress Progress that is required to finish the current task.
+			 */
+			virtual void OnProgress(size_t progress, size_t maxProgress)
+			{ }
+			/**
+			 * @brief Called when an exception occurs during execution of the strategy.
+			 * 
+			 * This can occur when for example the strategy is malformed. 
+			 * @param thrownException The exception that was thrown.
+			 */
+			virtual void OnException(std::exception &thrownException) = 0;
+	};
+	
 	/** @brief Main class for access to the flagger functionality.
 	 * 
 	 * Software using the flagger should first create an instance of the @ref AOFlagger
@@ -462,7 +512,7 @@ namespace aoflagger {
 	{
 		public:
 			/** @brief Create and initialize the flagger main class. */
-			AOFlagger() { }
+			AOFlagger() : _statusListener(0) { }
 			
 			/** @brief Destructor. */
 			~AOFlagger() { }
@@ -662,6 +712,22 @@ namespace aoflagger {
 			 */
 			static std::string GetVersionDate();
 			
+			/**
+			 * @brief Set a handler for progress updates and exceptions.
+			 * 
+			 * By default, exceptions will be reported to stderr and progress updates
+			 * will be ignored. If an application needs to handle either of these
+			 * themselves, they can override a StatusListener that handles these
+			 * events and call this method to enable receiving the events.
+			 * This method is not thread safe.
+			 * @param statusListener The handler that will receive the status updates.
+			 * @since Version 2.6.2
+			 */
+			void SetStatusListener(StatusListener* statusListener)
+			{
+				_statusListener = statusListener;
+			}
+			
 		private:
 			/** @brief It is not allowed to copy this class
 			 */
@@ -670,6 +736,8 @@ namespace aoflagger {
 			/** @brief It is not allowed to assign to this class
 			 */
 			void operator=(const AOFlagger&) { }
+			
+			StatusListener* _statusListener;
 	};
 
 }

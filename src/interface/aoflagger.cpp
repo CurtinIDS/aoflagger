@@ -363,11 +363,31 @@ namespace aoflagger {
 		}
 	};
 	
+	class ForwardingListener : public ProgressListener {
+	public:
+		ForwardingListener(StatusListener* destination) : _destination(destination)
+		{ }
+		virtual void OnStartTask(const rfiStrategy::Action &, size_t taskNo, size_t taskCount, const std::string &description, size_t weight) {
+			_destination->OnStartTask(taskNo, taskCount, description); }
+		virtual void OnEndTask(const rfiStrategy::Action &) {
+			_destination->OnEndTask(); }
+		virtual void OnProgress(const rfiStrategy::Action &, size_t progress, size_t maxProgress) {
+			_destination->OnProgress(progress, maxProgress); }
+		virtual void OnException(const rfiStrategy::Action &, std::exception &thrownException) {
+			_destination->OnException(thrownException); }
+	private:
+		StatusListener *_destination;
+	};
+	
 	FlagMask AOFlagger::Run(Strategy& strategy, ImageSet& input)
 	{
 		boost::mutex mutex;
 		rfiStrategy::ArtifactSet artifacts(&mutex);
-		ErrorListener listener;
+		ProgressListener* listener;
+		if(_statusListener == 0)
+			listener = new ErrorListener();
+		else
+			listener = new ForwardingListener(_statusListener);
 		
 		Mask2DPtr mask = Mask2D::CreateSetMaskPtr<false>(input.Width(), input.Height());
 		TimeFrequencyData inputData, revisedData;
@@ -415,10 +435,11 @@ namespace aoflagger {
 		artifacts.SetPolarizationStatistics(new PolarizationStatistics());
 		artifacts.SetBaselineSelectionInfo(new rfiStrategy::BaselineSelector());
 		
-		strategy._data->strategyPtr->Perform(artifacts, listener);
+		strategy._data->strategyPtr->Perform(artifacts, *listener);
 		
 		delete artifacts.BaselineSelectionInfo();
 		delete artifacts.PolarizationStatistics();
+		delete listener;
 		
 		FlagMask flagMask;
 		flagMask._data = new FlagMaskData(Mask2D::CreateCopy(artifacts.ContaminatedData().GetSingleMask()));
