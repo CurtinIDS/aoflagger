@@ -275,7 +275,7 @@ namespace aoflagger {
 	}
 
 	Strategy::Strategy(const Strategy& sourceStrategy) :
-		_data(sourceStrategy._data)
+		_data(new StrategyData(*sourceStrategy._data))
 	{
 	}
 	
