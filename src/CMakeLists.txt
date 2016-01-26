@@ -6,14 +6,18 @@ include(CheckCXXSymbolExists)
 include(CheckIncludeFileCXX)
 
 CHECK_CXX_COMPILER_FLAG("-march=native" COMPILER_SUPPORTS_MARCH_NATIVE)
-CHECK_CXX_COMPILER_FLAG("-pedantic -Wno-long-long -Werror=vla -std=c++11" COMPILER_SUPPORTS_PEDANTIC)
+CHECK_CXX_COMPILER_FLAG("-pedantic -Wno-long-long -Werror=vla" COMPILER_SUPPORTS_PEDANTIC)
 CHECK_SYMBOL_EXISTS(posix_fallocate "fcntl.h" HAVE_POSIX_FALLOCATE) 
 CHECK_CXX_SYMBOL_EXISTS(exp10 "cmath" HAVE_EXP10)
 
 # -march=native speeds up the flagger with about 6% - 7%, but is not supported prior gcc 4.2.
 # Hence, only enable it if it is supported.
 if(COMPILER_SUPPORTS_MARCH_NATIVE)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=native")
+	if(NOT PORTABLE)
+		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=native")
+	else()
+	  message(STATUS "Portable build requested; a generic build will be created with slightly decreased performance")
+	endif(NOT PORTABLE)
 else()
 	# We add -msse2 because it needs the sse2 instruction set to compile some files, and
 	# this will force its inclusion in case the below -march=natve is not set.
