@@ -635,9 +635,9 @@ namespace aoflagger {
 			
 			/** @brief Run the flagging strategy on the given data.
 			 * 
-			 * It is okay to call this function from from multiple threads
+			 * It is okay to call this function from multiple threads
 			 * as long as they call Run with a different instance for the
-			 * @a input parameter. The @param strategy parameter can be the
+			 * @p input parameter. The @p strategy parameter can be the
 			 * same for different threads.
 			 * @param strategy The flagging strategy that will be used.
 			 * @param input The data to run the flagger on.
@@ -717,7 +717,7 @@ namespace aoflagger {
 			 * 
 			 * By default, exceptions will be reported to stderr and progress updates
 			 * will be ignored. If an application needs to handle either of these
-			 * themselves, they can override a StatusListener that handles these
+			 * themselves, they can override a @ref StatusListener that handles these
 			 * events and call this method to enable receiving the events.
 			 * This method is not thread safe.
 			 * @param statusListener The handler that will receive the status updates.
