@@ -46,6 +46,11 @@ class MemoryBaselineReader : public BaselineReader {
 		class BaselineID
 		{
 		public:
+			BaselineID(unsigned a1, unsigned a2, unsigned _spw, unsigned seqId)
+			: antenna1(a1), antenna2(a2), spw(_spw), sequenceId(seqId)
+			{
+				if(antenna1 > antenna2) std::swap(antenna1, antenna2);
+			}
 			unsigned antenna1, antenna2, spw, sequenceId;
 			
 			bool operator<(const BaselineID &other) const

@@ -29,11 +29,7 @@ void MemoryBaselineReader::PerformReadRequests()
 	for(size_t i=0;i!=_readRequests.size();++i)
 	{
 		const ReadRequest &request = _readRequests[i];
-		BaselineID id;
-		id.antenna1 = request.antenna1;
-		id.antenna2 = request.antenna2;
-		id.spw = request.spectralWindow;
-		id.sequenceId = request.sequenceId;
+		BaselineID id(request.antenna1, request.antenna2, request.spectralWindow, request.sequenceId);
 		std::map<BaselineID, Result*>::const_iterator requestedBaselineIter = _baselines.find(id);
 		if(requestedBaselineIter == _baselines.end())
 		{
@@ -224,11 +220,7 @@ void MemoryBaselineReader::readSet()
 					{
 						if(baselineCube[fbIndex][a1][a2] != 0)
 						{
-							BaselineID id;
-							id.antenna1 = a1;
-							id.antenna2 = a2;
-							id.spw = b;
-							id.sequenceId = s;
+							BaselineID id(a1, a2, b, s);
 							_baselines.insert(std::pair<BaselineID, Result*>(id, baselineCube[fbIndex][a1][a2]));
 						}
 					}
@@ -249,11 +241,7 @@ void MemoryBaselineReader::PerformFlagWriteRequests()
 	for(size_t i=0;i!=_writeRequests.size();++i)
 	{
 		const FlagWriteRequest &request = _writeRequests[i];
-		BaselineID id;
-		id.antenna1 = request.antenna1;
-		id.antenna2 = request.antenna2;
-		id.spw = request.spectralWindow;
-		id.sequenceId = request.sequenceId;
+		BaselineID id(request.antenna1, request.antenna2, request.spectralWindow, request.sequenceId);
 		Result *result = _baselines[id];
 		if(result->_flags.size() != request.flags.size())
 			throw std::runtime_error("Polarizations do not match");
@@ -316,11 +304,7 @@ void MemoryBaselineReader::writeFlags()
 		flagShape[1] = frequencyCount;
 		casacore::Array<bool> flagArray(flagShape);
 		
-		BaselineID baselineID;
-		baselineID.antenna1 = ant1;
-		baselineID.antenna2 = ant2;
-		baselineID.spw = spw;
-		baselineID.sequenceId = sequenceId;
+		BaselineID baselineID(ant1, ant2, spw, sequenceId);
 		std::map<BaselineID, Result*>::iterator resultIter = _baselines.find(baselineID);
 		Result *result = resultIter->second;
 		
