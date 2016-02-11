@@ -2,6 +2,7 @@
 #include <sstream>
 
 #include <gtkmm/filechooserdialog.h>
+#include "../gtkmm-compat.h"
 
 #include "plotpropertieswindow.h"
 #include "plot2d.h"
@@ -56,15 +57,15 @@ PlotPropertiesWindow::PlotPropertiesWindow(Plot2D &plot, const std::string &titl
 	_framesHBox.pack_start(_framesRightVBox);
 	
 	_applyButton.signal_clicked().connect(sigc::mem_fun(*this, &PlotPropertiesWindow::onApplyClicked));
-	_applyButton.set_image_from_icon_name("gtk-ok");
+	gtkmm_set_image_from_icon_name(_applyButton, "gtk-ok");
 	_bottomButtonBox.pack_start(_applyButton);
 
 	_exportButton.signal_clicked().connect(sigc::mem_fun(*this, &PlotPropertiesWindow::onExportClicked));
-	_exportButton.set_image_from_icon_name("document-save");
+	gtkmm_set_image_from_icon_name(_exportButton, "document-save");
 	_bottomButtonBox.pack_start(_exportButton);
 
 	_closeButton.signal_clicked().connect(sigc::mem_fun(*this, &PlotPropertiesWindow::onCloseClicked));
-	_closeButton.set_image_from_icon_name("window-close");
+	gtkmm_set_image_from_icon_name(_closeButton, "window-close");
 	_bottomButtonBox.pack_start(_closeButton);
 
 	_topVBox.pack_start(_framesHBox);

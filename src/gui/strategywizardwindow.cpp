@@ -3,6 +3,8 @@
 
 #include "../strategy/control/defaultstrategy.h"
 
+#include "gtkmm-compat.h"
+
 StrategyWizardWindow::StrategyWizardWindow(class StrategyController &controller) : Window(),
 	_strategyController(controller),
 	_telescopeLabel("Telescope:"),
@@ -41,15 +43,15 @@ StrategyWizardWindow::StrategyWizardWindow(class StrategyController &controller)
 	
 	_mainBox.pack_start(_notebook, true, true);
 	
-	_previousButton.set_image_from_icon_name("go-previous");
+	gtkmm_set_image_from_icon_name(_previousButton, "go-previous");
 	_previousButton.signal_clicked().connect(
 		sigc::mem_fun(*this, &StrategyWizardWindow::onPreviousClicked));
 	_buttonBox.pack_start(_previousButton, true, false);
-	_nextButton.set_image_from_icon_name("go-next");
+	gtkmm_set_image_from_icon_name(_nextButton, "go-next");
 	_nextButton.signal_clicked().connect(
 		sigc::mem_fun(*this, &StrategyWizardWindow::onNextClicked));
 	_buttonBox.pack_start(_nextButton, true, false);
-	_finishButton.set_image_from_icon_name("gtk-ok");
+	gtkmm_set_image_from_icon_name(_finishButton, "gtk-ok");
 	_finishButton.signal_clicked().connect(
 		sigc::mem_fun(*this, &StrategyWizardWindow::onFinishClicked));
 	_buttonBox.pack_end(_finishButton, true, false);

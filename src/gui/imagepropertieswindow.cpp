@@ -2,6 +2,7 @@
 #include <sstream>
 
 #include <gtkmm/filechooserdialog.h>
+#include "gtkmm-compat.h"
 
 #include "imagepropertieswindow.h"
 #include "imagewidget.h"
@@ -68,18 +69,18 @@ ImagePropertiesWindow::ImagePropertiesWindow(ImageWidget &imageWidget, const std
 	initZoomWidgets();
 	initAxisWidgets();
 	
-	_applyButton.set_image_from_icon_name("gtk-apply");
+	gtkmm_set_image_from_icon_name(_applyButton, "gtk-apply");
 	_applyButton.signal_clicked().connect(sigc::mem_fun(*this, &ImagePropertiesWindow::onApplyClicked));
 	_bottomButtonBox.pack_start(_applyButton);
 
-	_exportButton.set_image_from_icon_name("document-save-as");
+	gtkmm_set_image_from_icon_name(_exportButton, "document-save-as");
 	_exportButton.signal_clicked().connect(sigc::mem_fun(*this, &ImagePropertiesWindow::onExportClicked));
 	_bottomButtonBox.pack_start(_exportButton);
 
 	_exportDataButton.signal_clicked().connect(sigc::mem_fun(*this, &ImagePropertiesWindow::onExportDataClicked));
 	_bottomButtonBox.pack_start(_exportDataButton);
 
-	_closeButton.set_image_from_icon_name("window-close");
+	gtkmm_set_image_from_icon_name(_closeButton, "window-close");
 	_closeButton.signal_clicked().connect(sigc::mem_fun(*this, &ImagePropertiesWindow::onCloseClicked));
 	_bottomButtonBox.pack_start(_closeButton);
 

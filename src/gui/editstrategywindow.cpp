@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include <gtkmm/messagedialog.h>
+#include "gtkmm-compat.h"
 
 #include "../strategy/actions/iterationaction.h"
 #include "../strategy/actions/strategy.h"
@@ -61,12 +62,12 @@ EditStrategyWindow::EditStrategyWindow(StrategyController &strategyController)
 	_rightFrame(0), _wizardWindow(0)
 {
 	_addActionButton.set_icon_name("list-add");
-	_removeActionButton.set_image_from_icon_name("edit-delete");
-	_moveUpButton.set_image_from_icon_name("go-up");
-	_moveDownButton.set_image_from_icon_name("go-down");
-	_loadEmptyButton.set_image_from_icon_name("document-new");
-	_saveButton.set_image_from_icon_name("document-save-as");
-	_openButton.set_image_from_icon_name("document-open");
+	gtkmm_set_image_from_icon_name(_removeActionButton, "edit-delete");
+	gtkmm_set_image_from_icon_name(_moveUpButton, "go-up");
+	gtkmm_set_image_from_icon_name(_moveDownButton, "go-down");
+	gtkmm_set_image_from_icon_name(_loadEmptyButton, "document-new");
+	gtkmm_set_image_from_icon_name(_saveButton, "document-save-as");
+	gtkmm_set_image_from_icon_name(_openButton, "document-open");
 	
 	_strategyController.SignalOnStrategyChanged().connect(sigc::mem_fun(*this, &EditStrategyWindow::onStrategyChanged));
 	

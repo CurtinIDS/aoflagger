@@ -1,9 +1,9 @@
 #include <gtkmm/button.h>
 #include <gtkmm/image.h>
 
-void set_image_from_icon_name(const Glib::ustring& icon_name, IconSize size)
+inline void gtkmm_set_image_from_icon_name(Gtk::Button& button, const Glib::ustring& icon_name, Gtk::IconSize size = Gtk::ICON_SIZE_BUTTON)
 {
-  Image* image = Gtk::manage(new Image());
+  Gtk::Image* image = Gtk::manage(new Gtk::Image());
   image->set_from_icon_name(icon_name, size);
-  set_image(*image);
+  button.set_image(*image);
 }

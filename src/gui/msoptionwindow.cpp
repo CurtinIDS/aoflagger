@@ -1,5 +1,7 @@
 #include <iostream>
 
+#include "gtkmm-compat.h"
+
 #include "msoptionwindow.h"
 #include "controllers/rfiguicontroller.h"
 
@@ -32,7 +34,7 @@ MSOptionWindow::MSOptionWindow(class RFIGuiController &controller, const std::st
 	initDataTypeButtons();
 	initPolarisationButtons();
 
-	_openButton.set_image_from_icon_name("document-open");
+	gtkmm_set_image_from_icon_name(_openButton, "document-open");
 	_openButton.signal_clicked().connect(sigc::mem_fun(*this, &MSOptionWindow::onOpen));
 	_bottomButtonBox.pack_start(_openButton);
 
