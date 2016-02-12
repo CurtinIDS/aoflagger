@@ -1,5 +1,6 @@
 #include "imagewidget.h"
 
+#include "../structures/colormap.h"
 #include "../structures/image2d.h"
 
 #include "../strategy/algorithms/thresholdconfig.h"

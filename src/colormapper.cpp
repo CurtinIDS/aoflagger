@@ -7,6 +7,7 @@
 #include <vector>
 #include <algorithm>
 
+#include "structures/colormap.h"
 #include "msio/fitsfile.h"
 #include "structures/image2d.h"
 #include "msio/pngfile.h"
