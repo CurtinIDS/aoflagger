@@ -585,6 +585,8 @@ ColorMap *ImageWidget::createColorMap()
 			return new class FireMap();
 		case BlackRedMap:
 			return new class BlackRedMap();
+		case ViridisMap:
+			return new class ViridisMap();
 		default:
 			return 0;
 	}

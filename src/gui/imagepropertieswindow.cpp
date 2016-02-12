@@ -23,6 +23,7 @@ ImagePropertiesWindow::ImagePropertiesWindow(ImageWidget &imageWidget, const std
 	_blackRedScaleButton("Black/red"),
 	_redBlueYellowScaleButton("Red/Yellow/Blue"),
 	_fireScaleButton("Fire"),
+	_viridisScaleButton("Viridis"),
 	
 	_scaleFrame("Scale"),
 	_minMaxScaleButton("From min to max"),
@@ -117,6 +118,9 @@ void ImagePropertiesWindow::initColorMapButtons()
 	_fireScaleButton.set_group(group);
 	_colorMapBox.pack_start(_fireScaleButton);
 	
+	_viridisScaleButton.set_group(group);
+	_colorMapBox.pack_start(_viridisScaleButton);
+	
 	switch(_imageWidget.GetColorMap())
 	{
 		default:
@@ -127,6 +131,7 @@ void ImagePropertiesWindow::initColorMapButtons()
 		case ImageWidget::BlackRedMap: _blackRedScaleButton.set_active(true); break;
 		case ImageWidget::RedYellowBlueMap: _redBlueYellowScaleButton.set_active(true); break;
 		case ImageWidget::FireMap: _fireScaleButton.set_active(true); break;
+		case ImageWidget::ViridisMap: _viridisScaleButton.set_active(true); break;
 	}
 
 	_colorMapFrame.add(_colorMapBox);
@@ -330,6 +335,8 @@ void ImagePropertiesWindow::onApplyClicked()
 		_imageWidget.SetColorMap(ImageWidget::RedYellowBlueMap);
 	else if(_fireScaleButton.get_active())
 		_imageWidget.SetColorMap(ImageWidget::FireMap);
+	else if(_viridisScaleButton.get_active())
+		_imageWidget.SetColorMap(ImageWidget::ViridisMap);
 	
 	if(_minMaxScaleButton.get_active())
 		_imageWidget.SetRange(ImageWidget::MinMax);
