@@ -470,9 +470,15 @@ class IntMap {
  */
 class ViridisMap : public ColorMap {
 	public:
-		unsigned char ValueToColorR(long double value) const { return (unsigned char) (DATA_R[(int) round(value*127.5+127.5)]*127.5+127.5); }
-		unsigned char ValueToColorG(long double value) const { return (unsigned char) (DATA_G[(int) round(value*127.5+127.5)]*127.5+127.5); }
-		unsigned char ValueToColorB(long double value) const { return (unsigned char) (DATA_B[(int) round(value*127.5+127.5)]*127.5+127.5); }
+		unsigned char ValueToColorR(long double value) const {
+			return (unsigned char) (DATA_R[(int) round(value*127.5+127.5)]*255.0);
+		}
+		unsigned char ValueToColorG(long double value) const {
+			return (unsigned char) (DATA_G[(int) round(value*127.5+127.5)]*255.0); 
+		}
+		unsigned char ValueToColorB(long double value) const { 
+			return (unsigned char) (DATA_B[(int) round(value*127.5+127.5)]*255.0);
+		}
 		unsigned char ValueToColorA(long double) const { return 255; }
 private:
 	const static double DATA_R[256], DATA_G[256], DATA_B[256];

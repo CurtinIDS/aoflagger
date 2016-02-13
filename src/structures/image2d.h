@@ -6,7 +6,6 @@
 #define IMAGE2D_H
 
 #include "../baseexception.h"
-#include "colormap.h"
 #include "types.h"
 
 #include <boost/shared_ptr.hpp>
