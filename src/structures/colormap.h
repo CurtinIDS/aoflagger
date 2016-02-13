@@ -5,7 +5,7 @@
 #ifndef COLORMAP_H
 #define COLORMAP_H
 
-#include <math.h>
+#include <cmath>
 #include <string>
 
 /**
@@ -466,7 +466,7 @@ class IntMap {
 };
 
 /**
- * ColorMap that is the logarithmic negation of PositiveMap.
+ * ColorMap that is equivalent with the Viridis colormap as used by Python Matplotlib.
  */
 class ViridisMap : public ColorMap {
 	public:
