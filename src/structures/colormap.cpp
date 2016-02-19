@@ -42,7 +42,7 @@ ColorMap *ColorMap::CreateColorMap(const std::string &type) throw()
 		return new MonochromeMap();
 }
 
-const std::string ColorMap::_colorMapsString("monochrome, coldhot, redblue, redyellowblue, fire, contrast, coldhotcontrast, redbluecontrast, redyellowbluecontrast, positive, invpositive, positivecontrast, invpositivecontrast", "viridis");
+const std::string ColorMap::_colorMapsString("monochrome, coldhot, redblue, redyellowblue, fire, contrast, coldhotcontrast, redbluecontrast, redyellowbluecontrast, positive, invpositive, positivecontrast, invpositivecontrast, viridis");
 
 const std::string &ColorMap::GetColorMapsString() throw()
 {
