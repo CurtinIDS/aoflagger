@@ -37,7 +37,7 @@ void Client::Run(const std::string &serverHost)
 	boost::asio::ip::tcp::endpoint endpoint = *iter;
 	_socket.connect(endpoint);
 	
-	const std::string hostname = ProcessCommander::GetHostName();
+	const Hostname hostname = ProcessCommander::GetHostName();
 	struct InitialBlock initialBlock;
 	boost::asio::read(_socket, boost::asio::buffer(&initialBlock, sizeof(initialBlock)));
 	
@@ -45,17 +45,17 @@ void Client::Run(const std::string &serverHost)
 	initialResponse.blockIdentifier = InitialResponseId;
 	initialResponse.blockSize = sizeof(initialResponse);
 	initialResponse.negotiatedProtocolVersion = AO_REMOTE_PROTOCOL_VERSION;
-	initialResponse.hostNameSize = hostname.size();
+	initialResponse.hostNameSize = hostname.AsString().size();
 	if(initialBlock.protocolVersion != AO_REMOTE_PROTOCOL_VERSION || initialBlock.blockSize != sizeof(initialBlock) || initialBlock.blockIdentifier != InitialId)
 	{
 		initialResponse.errorCode = ProtocolNotUnderstoodError;
 		boost::asio::write(_socket, boost::asio::buffer(&initialResponse, sizeof(initialResponse)));
-		boost::asio::write(_socket, boost::asio::buffer(hostname));
+		boost::asio::write(_socket, boost::asio::buffer(hostname.AsString()));
 		return;
 	}
 	initialResponse.errorCode = NoError;
 	boost::asio::write(_socket, boost::asio::buffer(&initialResponse, sizeof(initialResponse)));
-	boost::asio::write(_socket, boost::asio::buffer(hostname));
+	boost::asio::write(_socket, boost::asio::buffer(hostname.AsString()));
 
 	while(true)
 	{

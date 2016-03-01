@@ -5,6 +5,8 @@
 #include <vector>
 #include <map>
 
+#include "hostname.h"
+
 namespace aoRemote
 {
 
@@ -14,7 +16,7 @@ class ClusteredObservationItem
 		ClusteredObservationItem() :
 			_index(0), _localPath(), _hostName()
 		{ }
-		ClusteredObservationItem(unsigned index, const std::string &localPath, const std::string &hostName) :
+		ClusteredObservationItem(unsigned index, const std::string &localPath, const Hostname &hostName) :
 			_index(index), _localPath(localPath), _hostName(hostName)
 		{ }
 		ClusteredObservationItem(const ClusteredObservationItem &source) :
@@ -33,11 +35,11 @@ class ClusteredObservationItem
 		}
 		unsigned Index() const { return _index; }
 		const std::string &LocalPath() const { return _localPath; }
-		const std::string &HostName() const { return _hostName; }
+		const Hostname &HostName() const { return _hostName; }
 	private:
 		unsigned _index;
 		std::string _localPath;
-		std::string _hostName;
+		Hostname _hostName;
 };
 
 class ClusteredObservation

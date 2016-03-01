@@ -22,7 +22,7 @@ namespace aoRemote
 class RemoteProcess
 {
 	public:
-		RemoteProcess(const std::string &clientHostName, const std::string &serverHostName)
+		RemoteProcess(const Hostname &clientHostName, const Hostname &serverHostName)
 		: _clientHostName(clientHostName), _serverHostName(serverHostName),  _running(false)
 		{
 		}
@@ -53,7 +53,7 @@ class RemoteProcess
 			return _onFinished;
 		}
 		
-		const std::string &ClientHostname() const
+		const Hostname &ClientHostname() const
 		{
 			return _clientHostName;
 		}
@@ -69,8 +69,8 @@ class RemoteProcess
 			{
 				std::ostringstream commandLine;
 				commandLine
-					<< "ssh " << _remoteProcess._clientHostName << " -x \"bash --login -c \\\"aoremoteclient connect "
-					<< _remoteProcess._serverHostName << "\\\" \"";
+					<< "ssh " << _remoteProcess._clientHostName.AsString() << " -x \"bash --login -c \\\"aoremoteclient connect "
+					<< _remoteProcess._serverHostName.AsString() << "\\\" \"";
 				std::cout << commandLine.str() << std::endl;
 				int pid = vfork();
 				switch (pid) {
@@ -100,7 +100,7 @@ class RemoteProcess
 		};
 		
 		const ClusteredObservationItem _item;
-		const std::string _clientHostName, _serverHostName;
+		const Hostname _clientHostName, _serverHostName;
 		boost::thread *_thread;
 		bool _running;
 		

@@ -8,7 +8,7 @@ class Hostname
 public:
 	Hostname() : _hostname()
 	{ }
-	Hostname(const std::string& str) : _hostname(str)
+	explicit Hostname(const std::string& str) : _hostname(str)
 	{
 		size_t dot = _hostname.find('.');
 		if(dot == std::string::npos)
@@ -16,8 +16,6 @@ public:
 		else
 			_briefName = _hostname.substr(0, dot);
 	}
-	
-	operator const std::string&() const { return _hostname; }
 	
 	const std::string& AsString() const { return _hostname; }
 	

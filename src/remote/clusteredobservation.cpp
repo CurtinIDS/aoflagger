@@ -22,7 +22,7 @@ ClusteredObservation *ClusteredObservation::LoadFromVds(const std::string &vdsFi
 	const size_t nParts = vdsFile.NParts();
 	for(size_t i=0;i!=nParts;++i)
 	{
-		cObs->AddItem(ClusteredObservationItem(cObs->Size(), vdsFile.Filename(i), vdsFile.Host(i)));
+		cObs->AddItem(ClusteredObservationItem(cObs->Size(), vdsFile.Filename(i), Hostname(vdsFile.Host(i))));
 	}
 	return cObs.release();
 	
@@ -56,7 +56,7 @@ ClusteredObservation *ClusteredObservation::LoadFromRef(const std::string &refFi
 	for(AOTools::RefFile::const_iterator i=refFile.begin();i!=refFile.end();++i)
 	{
 		const AOTools::RefFileEntry &entry = *i;
-		cObs->AddItem(ClusteredObservationItem(cObs->Size(), entry.Path(), entry.Node()));
+		cObs->AddItem(ClusteredObservationItem(cObs->Size(), entry.Path(), Hostname(entry.Node())));
 	}
 	return cObs.release();
 }

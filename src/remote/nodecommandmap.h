@@ -80,7 +80,7 @@ class NodeCommandMap
 			return _nodeMap.empty();
 		}
 		
-		void NodeList(std::vector<std::string> &dest) const
+		void NodeList(std::vector<Hostname> &dest) const
 		{
 			dest.resize(_nodeMap.size());
 			size_t p = 0;

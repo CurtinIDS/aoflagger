@@ -45,7 +45,7 @@ void ProcessCommander::Run(bool finishConnections)
 	
 	if(!_observation.GetItems().empty() && !_tasks.empty())
 	{
-		const std::string thisHostName = GetHostName();
+		const Hostname thisHostName = GetHostName();
 		
 		// make a list of the involved nodes
 		_nodeCommands.Initialize(_observation);
@@ -61,9 +61,9 @@ void ProcessCommander::Run(bool finishConnections)
 		if(_processes.empty())
 		{
 			//construct a process for each unique node name
-			std::vector<std::string> list;
+			std::vector<Hostname> list;
 			_nodeCommands.NodeList(list);
-			for(std::vector<std::string>::const_iterator i=list.begin();i!=list.end();++i)
+			for(std::vector<Hostname>::const_iterator i=list.begin();i!=list.end();++i)
 			{
 				RemoteProcess *process = new RemoteProcess(*i, thisHostName);
 				process->SignalFinished() = boost::bind(&ProcessCommander::onProcessFinished, this, _1, _2, _3);
@@ -114,7 +114,7 @@ void ProcessCommander::continueReadAntennaTablesTask(ServerConnectionPtr serverC
 
 void ProcessCommander::continueReadBandTablesTask(ServerConnectionPtr serverConnection)
 {
-	const std::string &hostname = serverConnection->GetHostname();
+	const Hostname &hostname = serverConnection->GetHostname();
 	
 	boost::mutex::scoped_lock lock(_mutex);
 	ClusteredObservationItem item;
@@ -132,7 +132,7 @@ void ProcessCommander::continueReadBandTablesTask(ServerConnectionPtr serverConn
 
 void ProcessCommander::continueReadDataRowsTask(ServerConnectionPtr serverConnection)
 {
-	const std::string &hostname = serverConnection->GetHostname();
+	const Hostname &hostname = serverConnection->GetHostname();
 	
 	boost::mutex::scoped_lock lock(_mutex);
 	ClusteredObservationItem item;
@@ -153,7 +153,7 @@ void ProcessCommander::continueReadDataRowsTask(ServerConnectionPtr serverConnec
 
 void ProcessCommander::continueWriteDataRowsTask(ServerConnectionPtr serverConnection)
 {
-	const std::string &hostname = serverConnection->GetHostname();
+	const Hostname &hostname = serverConnection->GetHostname();
 	
 	boost::mutex::scoped_lock lock(_mutex);
 	ClusteredObservationItem item;
@@ -171,7 +171,7 @@ void ProcessCommander::continueWriteDataRowsTask(ServerConnectionPtr serverConne
 	}
 }
 
-std::string ProcessCommander::GetHostName()
+Hostname ProcessCommander::GetHostName()
 {
 #if defined _POSIX_HOST_NAME_MAX
 	char name[_POSIX_HOST_NAME_MAX];
@@ -183,7 +183,7 @@ std::string ProcessCommander::GetHostName()
 	if(false)
 #endif
 	{
-		return std::string(name);
+		return Hostname(std::string(name));
 	} else {
 		throw std::runtime_error("Error retrieving hostname");
 	}
@@ -276,7 +276,7 @@ void ProcessCommander::onConnectionFinishReadBandTable(ServerConnectionPtr serve
 
 void ProcessCommander::onConnectionFinishReadDataRows(ServerConnectionPtr serverConnection, MSRowDataExt *rowData, size_t totalRows)
 {
-	const std::string &hostname = serverConnection->GetHostname();
+	const Hostname &hostname = serverConnection->GetHostname();
 	ClusteredObservationItem item;
 	_nodeCommands.Current(hostname, item);
 	_observationTimerange->SetTimestepData(item.Index(), rowData, _rowCount);
@@ -289,10 +289,10 @@ void ProcessCommander::onError(ServerConnectionPtr connection, const std::string
 {
 	std::stringstream s;
 	
-	const std::string &hostname = connection->GetHostname();
+	const Hostname &hostname = connection->GetHostname();
 	ClusteredObservationItem item;
 	bool knowFile = _nodeCommands.Current(hostname, item);
-	s << "On connection with " << hostname;
+	s << "On connection with " << hostname.AsString();
 	if(knowFile)
 		s << " to process local file '" << item.LocalPath() << "'";
 	s << ", reported error was: " << error;
@@ -310,7 +310,7 @@ void ProcessCommander::onProcessFinished(RemoteProcess &process, bool error, int
 	if(error)
 	{
 		std::stringstream s;
-		s << "Remote process to " << process.ClientHostname() << " reported an error";
+		s << "Remote process to " << process.ClientHostname().AsString() << " reported an error";
 		if(status != 0) s << " (status " << status << ")";
 		_errors.push_back(s.str());
 	}

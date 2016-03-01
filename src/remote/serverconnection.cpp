@@ -58,7 +58,7 @@ void ServerConnection::onReceiveInitialResponse()
 	std::vector<char> hostname(initialResponse.hostNameSize + 1);
 	boost::asio::read(_socket, boost::asio::buffer(&hostname[0], initialResponse.hostNameSize));
 	hostname[initialResponse.hostNameSize] = 0;
-	_hostname = std::string(&hostname[0]);
+	_hostname = Hostname(std::string(&hostname[0]));
 	
 	_onAwaitingCommand(shared_from_this());
 }

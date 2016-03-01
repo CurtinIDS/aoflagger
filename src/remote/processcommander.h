@@ -27,7 +27,7 @@ class ProcessCommander
 		
 		void Run(bool finishConnections = true);
 		
-		static std::string GetHostName();
+		static Hostname GetHostName();
 		const StatisticsCollection &Statistics() const { return *_statisticsCollection; }
 		const HistogramCollection &Histograms() const { return *_histogramCollection; }
 		size_t PolarizationCount() const { return _polarizationCount; }
