@@ -4,6 +4,7 @@
 #include <stdexcept>
 
 #include "clusteredobservation.h"
+#include "hostname.h"
 
 namespace aoRemote {
 
@@ -24,7 +25,7 @@ class NodeCommandMap
 			}
 		}
 		
-		const ClusteredObservationItem &Top(const std::string &hostname) const
+		const ClusteredObservationItem &Top(const Hostname &hostname) const
 		{
 			NodeMap::const_iterator iter = _nodeMap.find(hostname);
 			if(iter == _nodeMap.end())
@@ -39,7 +40,7 @@ class NodeCommandMap
 		 * is called again or the host is removed.
 		 * @returns @c true when the node had another item ('command')
 		 */
-		bool Pop(const std::string &hostname, ClusteredObservationItem &item)
+		bool Pop(const Hostname &hostname, ClusteredObservationItem &item)
 		{
 			NodeMap::iterator iter = _nodeMap.find(hostname);
 			if(iter == _nodeMap.end())
@@ -68,7 +69,7 @@ class NodeCommandMap
 		 * Also removes the 'current' item for this host.
 		 * @returns @c true when the hostname was found and removed.
 		 */
-		bool RemoveNode(const std::string &hostname)
+		bool RemoveNode(const Hostname &hostname)
 		{
 			_lastItem.erase(hostname);
 			return _nodeMap.erase(hostname) != 0;
@@ -83,16 +84,16 @@ class NodeCommandMap
 		{
 			dest.resize(_nodeMap.size());
 			size_t p = 0;
-			for(std::map<std::string, std::deque<ClusteredObservationItem> >::const_iterator i=_nodeMap.begin();i!=_nodeMap.end();++i)
+			for(std::map<Hostname, std::deque<ClusteredObservationItem> >::const_iterator i=_nodeMap.begin();i!=_nodeMap.end();++i)
 			{
 				dest[p] = i->first;
 				++p;
 			}
 		}
 		
-		bool Current(const std::string &hostname, ClusteredObservationItem &item) const
+		bool Current(const Hostname &hostname, ClusteredObservationItem &item) const
 		{
-			std::map<std::string, ClusteredObservationItem>::const_iterator iter = _lastItem.find(hostname);
+			std::map<Hostname, ClusteredObservationItem>::const_iterator iter = _lastItem.find(hostname);
 			if(iter == _lastItem.end())
 				return false;
 			else
@@ -102,10 +103,10 @@ class NodeCommandMap
 			}
 		}
 	private:
-		typedef std::map<std::string, std::deque<ClusteredObservationItem> > NodeMap;
+		typedef std::map<Hostname, std::deque<ClusteredObservationItem> > NodeMap;
 		NodeMap _nodeMap;
 		
-		std::map<std::string, ClusteredObservationItem> _lastItem;
+		std::map<Hostname, ClusteredObservationItem> _lastItem;
 };
 
 }

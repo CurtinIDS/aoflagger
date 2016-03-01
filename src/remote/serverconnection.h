@@ -10,6 +10,7 @@
 #include <boost/signals2/signal.hpp>
 
 #include "format.h"
+#include "hostname.h"
 
 #include "../structures/antennainfo.h"
 #include "../structures/msrowdataext.h"
@@ -48,11 +49,11 @@ class ServerConnection : public boost::enable_shared_from_this<ServerConnection>
 		boost::signals2::signal<void(ServerConnectionPtr, MSRowDataExt*, size_t)> &SignalFinishReadDataRows() { return _onFinishReadDataRows; }
 		boost::signals2::signal<void(ServerConnectionPtr, const std::string&)> &SignalError() { return _onError; }
 		
-		const std::string &Hostname() const { return _hostname; }
+		const Hostname &GetHostname() const { return _hostname; }
 	private:
 		ServerConnection(boost::asio::io_service &ioService);
 		boost::asio::ip::tcp::socket _socket;
-		std::string _hostname;
+		Hostname _hostname;
 		
 		boost::signals2::signal<void(ServerConnectionPtr)> _onAwaitingCommand;
 		boost::signals2::signal<void(ServerConnectionPtr, StatisticsCollection&, HistogramCollection&)> _onFinishReadQualityTables;

@@ -7,6 +7,7 @@
 #include <boost/bind.hpp>
 
 #include "format.h"
+#include "hostname.h"
 
 #include "../quality/statisticscollection.h"
 #include "../quality/histogramcollection.h"
@@ -122,7 +123,7 @@ void ServerConnection::ReadAntennaTables(const std::string &msFilename, boost::s
 	
 	boost::asio::write(_socket, boost::asio::buffer(reqBuffer.str()));
 	
-	std::cout << "Requesting antenna tables from " << Hostname() << "...\n";
+	std::cout << "Requesting antenna tables from " << GetHostname().AsString() << "...\n";
 	
 	prepareBuffer(sizeof(GenericReadResponseHeader));
 	boost::asio::async_read(_socket, boost::asio::buffer(_buffer, sizeof(GenericReadResponseHeader)),
@@ -133,7 +134,7 @@ void ServerConnection::ReadBandTable(const std::string &msFilename, BandInfo &ba
 {
 	_band = &band;
 	
-	std::cout << "Requesting band table from " << Hostname() << "...\n";
+	std::cout << "Requesting band table from " << GetHostname().AsString() << "...\n";
 	std::stringstream reqBuffer;
 	
 	RequestBlock requestBlock;

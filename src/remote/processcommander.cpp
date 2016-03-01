@@ -82,7 +82,7 @@ void ProcessCommander::Run(bool finishConnections)
 
 void ProcessCommander::continueReadQualityTablesTask(ServerConnectionPtr serverConnection)
 {
-	const std::string &hostname = serverConnection->Hostname();
+	const Hostname &hostname = serverConnection->GetHostname();
 	
 	boost::mutex::scoped_lock lock(_mutex);
 	ClusteredObservationItem item;
@@ -104,7 +104,7 @@ void ProcessCommander::continueReadAntennaTablesTask(ServerConnectionPtr serverC
 {
 	boost::mutex::scoped_lock lock(_mutex);
 	
-	const std::string &hostname = serverConnection->Hostname();
+	const Hostname &hostname = serverConnection->GetHostname();
 	std::vector<AntennaInfo> *antennas = new std::vector<AntennaInfo>();
 	serverConnection->ReadAntennaTables(_nodeCommands.Top(hostname).LocalPath(),
 																			boost::shared_ptr<std::vector<AntennaInfo> >(antennas));
@@ -114,7 +114,7 @@ void ProcessCommander::continueReadAntennaTablesTask(ServerConnectionPtr serverC
 
 void ProcessCommander::continueReadBandTablesTask(ServerConnectionPtr serverConnection)
 {
-	const std::string &hostname = serverConnection->Hostname();
+	const std::string &hostname = serverConnection->GetHostname();
 	
 	boost::mutex::scoped_lock lock(_mutex);
 	ClusteredObservationItem item;
@@ -132,7 +132,7 @@ void ProcessCommander::continueReadBandTablesTask(ServerConnectionPtr serverConn
 
 void ProcessCommander::continueReadDataRowsTask(ServerConnectionPtr serverConnection)
 {
-	const std::string &hostname = serverConnection->Hostname();
+	const std::string &hostname = serverConnection->GetHostname();
 	
 	boost::mutex::scoped_lock lock(_mutex);
 	ClusteredObservationItem item;
@@ -153,7 +153,7 @@ void ProcessCommander::continueReadDataRowsTask(ServerConnectionPtr serverConnec
 
 void ProcessCommander::continueWriteDataRowsTask(ServerConnectionPtr serverConnection)
 {
-	const std::string &hostname = serverConnection->Hostname();
+	const std::string &hostname = serverConnection->GetHostname();
 	
 	boost::mutex::scoped_lock lock(_mutex);
 	ClusteredObservationItem item;
@@ -276,7 +276,7 @@ void ProcessCommander::onConnectionFinishReadBandTable(ServerConnectionPtr serve
 
 void ProcessCommander::onConnectionFinishReadDataRows(ServerConnectionPtr serverConnection, MSRowDataExt *rowData, size_t totalRows)
 {
-	const std::string &hostname = serverConnection->Hostname();
+	const std::string &hostname = serverConnection->GetHostname();
 	ClusteredObservationItem item;
 	_nodeCommands.Current(hostname, item);
 	_observationTimerange->SetTimestepData(item.Index(), rowData, _rowCount);
@@ -289,7 +289,7 @@ void ProcessCommander::onError(ServerConnectionPtr connection, const std::string
 {
 	std::stringstream s;
 	
-	const std::string &hostname = connection->Hostname();
+	const std::string &hostname = connection->GetHostname();
 	ClusteredObservationItem item;
 	bool knowFile = _nodeCommands.Current(hostname, item);
 	s << "On connection with " << hostname;
