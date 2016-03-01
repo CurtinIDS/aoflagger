@@ -6,12 +6,12 @@
 class Hostname
 {
 public:
-	Hostname() : _hostname()
+	Hostname() : _hostname(), _briefName()
 	{ }
 	explicit Hostname(const std::string& str) : _hostname(str)
 	{
 		size_t dot = _hostname.find('.');
-		if(dot == std::string::npos)
+		if(dot == std::string::npos || dot == 0)
 			_briefName = _hostname;
 		else
 			_briefName = _hostname.substr(0, dot);
@@ -26,6 +26,6 @@ private:
 };
 
 inline bool operator<(const Hostname& lhs, const Hostname& rhs)
-{ return lhs < rhs; }
+{ return lhs.AsString() < rhs.AsString(); }
 
 #endif
