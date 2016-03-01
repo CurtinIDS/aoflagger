@@ -28,65 +28,73 @@ Client::Client()
 
 void Client::Run(const std::string &serverHost)
 {
-	boost::asio::ip::tcp::resolver resolver(_ioService);
-	std::stringstream s;
-	s << PORT();
-	boost::asio::ip::tcp::resolver::query query(serverHost, s.str());
-	boost::asio::ip::tcp::resolver::iterator iter = resolver.resolve(query);
-	
-	boost::asio::ip::tcp::endpoint endpoint = *iter;
-	_socket.connect(endpoint);
-	
 	const Hostname hostname = ProcessCommander::GetHostName();
-	struct InitialBlock initialBlock;
-	boost::asio::read(_socket, boost::asio::buffer(&initialBlock, sizeof(initialBlock)));
 	
-	struct InitialResponseBlock initialResponse;
-	initialResponse.blockIdentifier = InitialResponseId;
-	initialResponse.blockSize = sizeof(initialResponse);
-	initialResponse.negotiatedProtocolVersion = AO_REMOTE_PROTOCOL_VERSION;
-	initialResponse.hostNameSize = hostname.AsString().size();
-	if(initialBlock.protocolVersion != AO_REMOTE_PROTOCOL_VERSION || initialBlock.blockSize != sizeof(initialBlock) || initialBlock.blockIdentifier != InitialId)
-	{
-		initialResponse.errorCode = ProtocolNotUnderstoodError;
+	try {
+		boost::asio::ip::tcp::resolver resolver(_ioService);
+		std::stringstream s;
+		s << PORT();
+		boost::asio::ip::tcp::resolver::query query(serverHost, s.str());
+		boost::asio::ip::tcp::resolver::iterator iter = resolver.resolve(query);
+		
+		boost::asio::ip::tcp::endpoint endpoint = *iter;
+		_socket.connect(endpoint);
+		
+		struct InitialBlock initialBlock;
+		boost::asio::read(_socket, boost::asio::buffer(&initialBlock, sizeof(initialBlock)));
+		
+		struct InitialResponseBlock initialResponse;
+		initialResponse.blockIdentifier = InitialResponseId;
+		initialResponse.blockSize = sizeof(initialResponse);
+		initialResponse.negotiatedProtocolVersion = AO_REMOTE_PROTOCOL_VERSION;
+		initialResponse.hostNameSize = hostname.AsString().size();
+		if(initialBlock.protocolVersion != AO_REMOTE_PROTOCOL_VERSION || initialBlock.blockSize != sizeof(initialBlock) || initialBlock.blockIdentifier != InitialId)
+		{
+			initialResponse.errorCode = ProtocolNotUnderstoodError;
+			boost::asio::write(_socket, boost::asio::buffer(&initialResponse, sizeof(initialResponse)));
+			boost::asio::write(_socket, boost::asio::buffer(hostname.AsString()));
+			return;
+		}
+		initialResponse.errorCode = NoError;
 		boost::asio::write(_socket, boost::asio::buffer(&initialResponse, sizeof(initialResponse)));
 		boost::asio::write(_socket, boost::asio::buffer(hostname.AsString()));
-		return;
-	}
-	initialResponse.errorCode = NoError;
-	boost::asio::write(_socket, boost::asio::buffer(&initialResponse, sizeof(initialResponse)));
-	boost::asio::write(_socket, boost::asio::buffer(hostname.AsString()));
 
-	while(true)
-	{
-		struct RequestBlock requestBlock;
-		boost::asio::read(_socket, boost::asio::buffer(&requestBlock, sizeof(requestBlock)));
-		
-		enum RequestType request = (enum RequestType) requestBlock.request;
-		switch(request)
+		while(true)
 		{
-			case StopClientRequest:
-				return;
-			case ReadQualityTablesRequest:
-				handleReadQualityTables(requestBlock.dataSize);
-				break;
-			case ReadAntennaTablesRequest:
-				handleReadAntennaTables(requestBlock.dataSize);
-				break;
-			case ReadBandTableRequest:
-				handleReadBandTable(requestBlock.dataSize);
-				break;
-			case ReadDataRowsRequest:
-				handleReadDataRows(requestBlock.dataSize);
-				break;
-			case WriteDataRowsRequest:
-				handleWriteDataRows(requestBlock.dataSize);
-				break;
-			default:
-				std::cout << "CLIENT: unknown command sent" << std::endl;
-				writeGenericReadException("Command not understood by client: server and client versions don't match?");
-				break;
+			struct RequestBlock requestBlock;
+			boost::asio::read(_socket, boost::asio::buffer(&requestBlock, sizeof(requestBlock)));
+			
+			enum RequestType request = (enum RequestType) requestBlock.request;
+			switch(request)
+			{
+				case StopClientRequest:
+					return;
+				case ReadQualityTablesRequest:
+					handleReadQualityTables(requestBlock.dataSize);
+					break;
+				case ReadAntennaTablesRequest:
+					handleReadAntennaTables(requestBlock.dataSize);
+					break;
+				case ReadBandTableRequest:
+					handleReadBandTable(requestBlock.dataSize);
+					break;
+				case ReadDataRowsRequest:
+					handleReadDataRows(requestBlock.dataSize);
+					break;
+				case WriteDataRowsRequest:
+					handleWriteDataRows(requestBlock.dataSize);
+					break;
+				default:
+					std::cout << "CLIENT: unknown command sent" << std::endl;
+					writeGenericReadException("Command not understood by client: server and client versions don't match?");
+					break;
+			}
 		}
+	}
+	catch(std::exception& e)
+	{
+		std::cout << "Client for host " << ProcessCommander::GetHostName().AsString() << " received an exception.\n";
+		throw;
 	}
 }
 
