@@ -1,4 +1,6 @@
-cmake_minimum_required(VERSION 2.6)
+# AOFlagger 2.8 and higher use 'OBJECT' libraries and the 'TARGET_OBJECTS keywords. These
+# require cmake 2.8.8.
+cmake_minimum_required(VERSION 2.8.8)
 
 project(AOFlagger)
 
