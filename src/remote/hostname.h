@@ -18,14 +18,12 @@ public:
 	}
 	
 	const std::string& AsString() const { return _hostname; }
+	const std::string BriefName() const { return _briefName; }
 	
-	bool operator<(const Hostname& rhs) { return _briefName < rhs._briefName; }
-	bool operator==(const Hostname& rhs) { return _briefName == rhs._briefName; }
+	bool operator<(const Hostname& rhs) const { return _briefName < rhs._briefName; }
+	bool operator==(const Hostname& rhs) const { return _briefName == rhs._briefName; }
 private:
 	 std::string _hostname, _briefName;
 };
-
-inline bool operator<(const Hostname& lhs, const Hostname& rhs)
-{ return lhs.AsString() < rhs.AsString(); }
 
 #endif
