@@ -15,11 +15,25 @@
 #include "../../remote/processcommander.h"
 
 AOQPlotWindow::AOQPlotWindow() :
+	_activeSheetIndex(-1),
+	_pageMenuButton("Sheet"),
+	_baselineMI(_pageGroup, "Baselines"),
+	_antennaeMI(_pageGroup, "Antennae"),
+	_bLengthMI(_pageGroup, "Baseline lengths"),
+	_timeMI(_pageGroup, "Time"),
+	_frequencyMI(_pageGroup, "Frequency"),
+	_timeFrequencyMI(_pageGroup, "Time-frequency"),
+	_summaryMI(_pageGroup, "Summary"),
+	_histogramMI(_pageGroup, "Histograms"),
+	
+	_countButton(_statisticsGroup, "#"),
+	_meanButton(_statisticsGroup, "μ"),
+	_stddevButton(_statisticsGroup, "σ"),
 	_isOpen(false)
 {
 	set_default_icon_name("aoqplot");
 	
-	_notebook.append_page(_baselinePlotPage, "Baselines");
+	/*_notebook.append_page(_baselinePlotPage, "Baselines");
 	_baselinePlotPage.SignalStatusChange().connect(sigc::mem_fun(*this, &AOQPlotWindow::onStatusChange));
 	
 	_notebook.append_page(_antennaePlotPage, "Antennae");
@@ -32,10 +46,36 @@ AOQPlotWindow::AOQPlotWindow() :
 	
 	_notebook.append_page(_summaryPage, "Summary");
 	
-	_notebook.append_page(_histogramPage, "Histograms");
+	_notebook.append_page(_histogramPage, "Histograms");*/
 	
-	_vBox.pack_start(_notebook);
-	_notebook.signal_switch_page().connect(sigc::mem_fun(*this, &AOQPlotWindow::onSwitchPage));
+	_toolbar.append(_pageMenuButton);
+	_pageMenuButton.set_menu(_pageMenu);
+	_pageMenu.append(_baselineMI);
+	_baselineMI.signal_toggled().connect(sigc::mem_fun(*this, &AOQPlotWindow::onChangeSheet));
+	_pageMenu.append(_antennaeMI);
+	_antennaeMI.signal_toggled().connect(sigc::mem_fun(*this, &AOQPlotWindow::onChangeSheet));
+	_pageMenu.append(_bLengthMI);
+	_bLengthMI.signal_toggled().connect(sigc::mem_fun(*this, &AOQPlotWindow::onChangeSheet));
+	_pageMenu.append(_timeFrequencyMI);
+	_timeFrequencyMI.signal_toggled().connect(sigc::mem_fun(*this, &AOQPlotWindow::onChangeSheet));
+	_pageMenu.append(_timeMI);
+	_timeMI.signal_toggled().connect(sigc::mem_fun(*this, &AOQPlotWindow::onChangeSheet));
+	_pageMenu.append(_frequencyMI);
+	_frequencyMI.signal_toggled().connect(sigc::mem_fun(*this, &AOQPlotWindow::onChangeSheet));
+	_pageMenu.append(_summaryMI);
+	_summaryMI.signal_toggled().connect(sigc::mem_fun(*this, &AOQPlotWindow::onChangeSheet));
+	_pageMenu.append(_histogramMI);
+	_histogramMI.signal_toggled().connect(sigc::mem_fun(*this, &AOQPlotWindow::onChangeSheet));
+	_pageMenu.show_all_children();
+	
+	_toolbar.append(_countButton);
+	_toolbar.append(_meanButton);
+	_toolbar.append(_stddevButton);
+		
+	_vBox.pack_start(_toolbar, Gtk::PACK_SHRINK);
+	
+	//_vBox.pack_start(_notebook);
+	///_notebook.signal_switch_page().connect(sigc::mem_fun(*this, &AOQPlotWindow::onSwitchPage));
 	
 	_vBox.pack_end(_statusBar, Gtk::PACK_SHRINK);
 	_statusBar.push("Quality plot util is ready. Author: André Offringa (offringa@gmail.com)");
@@ -55,15 +95,16 @@ void AOQPlotWindow::Open(const std::vector<std::string> &files)
 void AOQPlotWindow::onOpenOptionsSelected(const std::vector<std::string>& files, bool downsampleTime, bool downsampleFreq, size_t timeCount, size_t freqCount, bool correctHistograms)
 {
 	readStatistics(files, downsampleTime, downsampleFreq, timeCount, freqCount, correctHistograms);
-	_baselinePlotPage.SetStatistics(_statCollection, _antennas);
-	_antennaePlotPage.SetStatistics(_statCollection, _antennas);
+	/*_antennaePlotPage.SetStatistics(_statCollection, _antennas);
 	_bLengthPlotPage.SetStatistics(_statCollection, _antennas);
 	_timePlotPage.SetStatistics(_statCollection, _antennas);
 	_frequencyPlotPage.SetStatistics(_statCollection, _antennas);
 	_timeFrequencyPlotPage.SetStatistics(_fullStats);
 	_summaryPage.SetStatistics(_statCollection);
 	if(_histogramPage.get_visible())
-		_histogramPage.SetStatistics(*_histCollection);
+		_histogramPage.SetStatistics(*_histCollection);*/
+	_activeSheetIndex = -1;
+	showBaselineSheet();
 	show();
 }
 
@@ -71,14 +112,14 @@ void AOQPlotWindow::close()
 {
 	if(_isOpen)
 	{
-		_baselinePlotPage.CloseStatistics();
+		/*_baselinePlotPage.CloseStatistics();
 		_antennaePlotPage.CloseStatistics();
 		_bLengthPlotPage.CloseStatistics();
 		_timePlotPage.CloseStatistics();
 		_frequencyPlotPage.CloseStatistics();
 		_timeFrequencyPlotPage.CloseStatistics();
 		_summaryPage.CloseStatistics();
-		_histogramPage.CloseStatistics();
+		_histogramPage.CloseStatistics();*/
 		delete _statCollection;
 		delete _histCollection;
 		delete _fullStats;
@@ -214,6 +255,7 @@ void AOQPlotWindow::Save(const AOQPlotWindow::PlotSavingData& data)
 	const std::string& prefix = data.filenamePrefix;
 	QualityTablesFormatter::StatisticKind kind = data.statisticKind;
 	
+	/*
 	std::cout << "Saving " << prefix << "-antennas.pdf...\n";
 	_antennaePlotPage.SavePdf(prefix+"-antennas.pdf", kind);
 	
@@ -230,5 +272,126 @@ void AOQPlotWindow::Save(const AOQPlotWindow::PlotSavingData& data)
 	_timePlotPage.SavePdf(prefix+"-time.pdf", kind);
 	
 	std::cout << "Saving " << prefix << "-frequency.pdf...\n";
-	_frequencyPlotPage.SavePdf(prefix+"-frequency.pdf", kind);
+	_frequencyPlotPage.SavePdf(prefix+"-frequency.pdf", kind);*/
+}
+
+void AOQPlotWindow::onChangeSheet()
+{
+	if(_baselineMI.get_active())
+		showBaselineSheet();
+	else if(_antennaeMI.get_active())
+		showAntennaeSheet();
+	else if(_bLengthMI.get_active())
+		showBaselineLengthSheet();
+	else if(_timeMI.get_active())
+		showTimeSheet();
+	else if(_frequencyMI.get_active())
+		showFrequencySheet();
+	else if(_timeFrequencyMI.get_active())
+		showTimeFrequencySheet();
+	else if(_summaryMI.get_active())
+		showSummarySheet();
+	else if(_histogramMI.get_active())
+		showHistogramSheet();
+}
+
+void AOQPlotWindow::showBaselineSheet()
+{
+	if(_activeSheetIndex != 0)
+	{
+		_activeSheet.reset(new BaselinePlotPage());
+		BaselinePlotPage& newPage = static_cast<BaselinePlotPage&>(*_activeSheet);
+		newPage.SetStatistics(_statCollection, _antennas);
+		_vBox.pack_start(*_activeSheet);
+		_activeSheet->show_all();
+		_activeSheetIndex = 0;
+	}
+}
+
+void AOQPlotWindow::showAntennaeSheet()
+{
+	if(_activeSheetIndex != 1)
+	{
+		_activeSheet.reset(new AntennaePlotPage());
+		AntennaePlotPage& newPage = static_cast<AntennaePlotPage&>(*_activeSheet);
+		newPage.SetStatistics(_statCollection, _antennas);
+		_vBox.pack_start(*_activeSheet);
+		_activeSheet->show_all();
+		_activeSheetIndex = 1;
+	}
+}
+
+void AOQPlotWindow::showBaselineLengthSheet()
+{
+	if(_activeSheetIndex != 2)
+	{
+		_activeSheet.reset(new BLengthPlotPage());
+		BLengthPlotPage& newPage = static_cast<BLengthPlotPage&>(*_activeSheet);
+		newPage.SetStatistics(_statCollection, _antennas);
+		_vBox.pack_start(*_activeSheet);
+		_activeSheet->show_all();
+		_activeSheetIndex = 2;
+	}
+}
+
+void AOQPlotWindow::showTimeSheet()
+{
+	if(_activeSheetIndex != 3)
+	{
+		_activeSheet.reset(new TimePlotPage());
+		TimePlotPage& newPage = static_cast<TimePlotPage&>(*_activeSheet);
+		newPage.SetStatistics(_statCollection, _antennas);
+		_vBox.pack_start(*_activeSheet);
+		_activeSheet->show_all();
+		_activeSheetIndex = 3;
+	}
+}
+void AOQPlotWindow::showFrequencySheet()
+{
+	if(_activeSheetIndex != 4)
+	{
+		_activeSheet.reset(new FrequencyPlotPage());
+		FrequencyPlotPage& newPage = static_cast<FrequencyPlotPage&>(*_activeSheet);
+		newPage.SetStatistics(_statCollection, _antennas);
+		_vBox.pack_start(*_activeSheet);
+		_activeSheet->show_all();
+		_activeSheetIndex = 4;
+	}
+}
+void AOQPlotWindow::showTimeFrequencySheet()
+{
+	if(_activeSheetIndex != 5)
+	{
+		_activeSheet.reset(new TimeFrequencyPlotPage());
+		TimeFrequencyPlotPage& newPage = static_cast<TimeFrequencyPlotPage&>(*_activeSheet);
+		newPage.SetStatistics(_statCollection);
+		_vBox.pack_start(*_activeSheet);
+		_activeSheet->show_all();
+		_activeSheetIndex = 5;
+	}
+}
+void AOQPlotWindow::showSummarySheet()
+{
+	if(_activeSheetIndex != 6)
+	{
+		_activeSheet.reset(new SummaryPage());
+		SummaryPage& newPage = static_cast<SummaryPage&>(*_activeSheet);
+		newPage.SetStatistics(_statCollection);
+		_vBox.pack_start(*_activeSheet);
+		_activeSheet->show_all();
+		_activeSheetIndex = 6;
+	}
+}
+
+void AOQPlotWindow::showHistogramSheet()
+{
+	if(_activeSheetIndex != 7)
+	{
+		_activeSheet.reset(new HistogramPage());
+		HistogramPage& newPage = static_cast<HistogramPage&>(*_activeSheet);
+		newPage.SetStatistics(*_histCollection);
+		_vBox.pack_start(*_activeSheet);
+		_activeSheet->show_all();
+		_activeSheetIndex = 7;
+	}
 }

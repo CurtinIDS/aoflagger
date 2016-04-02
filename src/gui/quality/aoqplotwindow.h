@@ -5,6 +5,11 @@
 #include <gtkmm/box.h>
 #include <gtkmm/notebook.h>
 #include <gtkmm/statusbar.h>
+#include <gtkmm/toolbar.h>
+#include <gtkmm/menu.h>
+#include <gtkmm/menutoolbutton.h>
+#include <gtkmm/radiomenuitem.h>
+#include <gtkmm/radiotoolbutton.h>
 #include <gtkmm/window.h>
 
 #include "../imagewidget.h"
@@ -78,23 +83,44 @@ class AOQPlotWindow : public Gtk::Window {
 				case 6: SetStatus("Summary"); break;
 			}
 		}
+		
+		void onChangeSheet();
+		void showBaselineSheet();
+		void showAntennaeSheet();
+		void showBaselineLengthSheet();
+		void showTimeSheet();
+		void showFrequencySheet();
+		void showTimeFrequencySheet();
+		void showSummarySheet();
+		void showHistogramSheet();
+		
 		void setShowHistograms(bool show)
 		{
-			_histogramPage.set_visible(show);
+			//_histogramPage.set_visible(show);
+			_histogramMI.set_sensitive(show);
 		}
+		
+		int _activeSheetIndex;
+		Gtk::Toolbar _toolbar;
+		Gtk::MenuToolButton _pageMenuButton;
+		Gtk::Menu _pageMenu;
+		Gtk::RadioButtonGroup _pageGroup, _statisticsGroup;
+		Gtk::RadioMenuItem _baselineMI, _antennaeMI, _bLengthMI, _timeMI, _frequencyMI, _timeFrequencyMI, _summaryMI, _histogramMI;
+		Gtk::RadioToolButton _countButton, _meanButton, _stddevButton;
 		
 		Gtk::VBox _vBox;
 		Gtk::Notebook _notebook;
 		Gtk::Statusbar _statusBar;
 		
-		BaselinePlotPage _baselinePlotPage;
-		AntennaePlotPage _antennaePlotPage;
-		BLengthPlotPage  _bLengthPlotPage;
-		TimeFrequencyPlotPage _timeFrequencyPlotPage;
-		TimePlotPage _timePlotPage;
-		FrequencyPlotPage _frequencyPlotPage;
-		SummaryPage _summaryPage;
-		HistogramPage _histogramPage;
+		//BaselinePlotPage _baselinePlotPage;
+		//AntennaePlotPage _antennaePlotPage;
+		//BLengthPlotPage  _bLengthPlotPage;
+		//TimeFrequencyPlotPage _timeFrequencyPlotPage;
+		//TimePlotPage _timePlotPage;
+		//FrequencyPlotPage _frequencyPlotPage;
+		//SummaryPage _summaryPage;
+		//HistogramPage _histogramPage;
+		std::unique_ptr<Gtk::HBox> _activeSheet;
 		
 		OpenOptionsWindow _openOptionsWindow;
 
