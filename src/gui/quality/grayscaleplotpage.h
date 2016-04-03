@@ -1,11 +1,10 @@
 #ifndef GUI_QUALITY__GRAYSCALEPLOTPAGE_H
 #define GUI_QUALITY__GRAYSCALEPLOTPAGE_H
 
-#include <gtkmm/box.h>
-#include <gtkmm/expander.h>
-#include <gtkmm/frame.h>
-#include <gtkmm/window.h>
-#include <gtkmm/radiobutton.h>
+#include <gtkmm/radiotoolbutton.h>
+#include <gtkmm/toggletoolbutton.h>
+#include <gtkmm/toolbutton.h>
+#include <gtkmm/separatortoolitem.h>
 
 #include "../imagewidget.h"
 
@@ -26,6 +25,8 @@ class GrayScalePlotPage : public PlotSheet {
 			updateImageImpl(kind, AutoDipolePolarisation, TimeFrequencyData::AmplitudePart);
 			_imageWidget.SavePdf(filename);
 		}
+		
+		virtual void InitializeToolbar(Gtk::Toolbar& toolbar) override final;
 	protected:
 		virtual std::pair<TimeFrequencyData, TimeFrequencyMetaDataCPtr> constructImage(QualityTablesFormatter::StatisticKind kind) = 0;
 		
@@ -40,10 +41,10 @@ class GrayScalePlotPage : public PlotSheet {
 	private:
 		void updateImageImpl(QualityTablesFormatter::StatisticKind statisticKind, PolarisationType polarisation, enum TimeFrequencyData::PhaseRepresentation phase);
 		
-		void initStatisticKinds();
-		void initPolarizations();
-		void initPhaseButtons();
-		void initPlotOptions();
+		void initStatisticKinds(Gtk::Toolbar& toolbar);
+		void initPolarizations(Gtk::Toolbar& toolbar);
+		void initPhaseButtons(Gtk::Toolbar& toolbar);
+		void initPlotOptions(Gtk::Toolbar& toolbar);
 		
 		enum PolarisationType getSelectedPolarization() const;
 		enum TimeFrequencyData::PhaseRepresentation getSelectedPhase() const;
@@ -84,31 +85,23 @@ class GrayScalePlotPage : public PlotSheet {
 		void setToPolarization(TimeFrequencyData &data, PolarisationType polarisation);
 		void setToPhase(TimeFrequencyData &data, enum TimeFrequencyData::PhaseRepresentation phase);
 		
-		Gtk::Expander _expander;
-		Gtk::VBox _sideBox;
+		Gtk::SeparatorToolItem _separator1, _separator2, _separator3, _separator4, _separator5, _separator6;
 		
-		Gtk::Frame _statisticKindFrame;
-		Gtk::VBox _statisticKindBox;
+		Gtk::RadioButtonGroup _statisticGroup;
+		Gtk::RadioToolButton _countButton, _meanButton, _stdDevButton, _dCountButton, _dMeanButton, _dStdDevButton, _rfiPercentageButton;
 		
-		Gtk::RadioButton _countButton, _meanButton, _stdDevButton, _dCountButton, _dMeanButton, _dStdDevButton, _rfiPercentageButton, _snrButton;
+		Gtk::RadioButtonGroup _polGroup;
+		Gtk::RadioToolButton _polXXButton, _polXYButton, _polYXButton, _polYYButton, _polIButton;
 		
-		Gtk::Frame _polarizationFrame;
-		Gtk::VBox _polarizationBox;
+		Gtk::RadioButtonGroup _phaseGroup;
+		Gtk::RadioToolButton _amplitudePhaseButton, _phasePhaseButton, _realPhaseButton, _imaginaryPhaseButton;
 		
-		Gtk::RadioButton _polXXButton, _polXYButton, _polYXButton, _polYYButton, _polXXandYYButton, _polXYandYXButton;
-		
-		Gtk::Frame _phaseFrame;
-		Gtk::VBox _phaseBox;
-		
-		Gtk::RadioButton _amplitudePhaseButton, _phasePhaseButton, _realPhaseButton, _imaginaryPhaseButton;
-		
-		Gtk::Frame _plotFrame;
-		Gtk::VBox _plotBox;
-		
-		Gtk::RadioButton _rangeMinMaxButton, _rangeWinsorizedButton, _rangeSpecified;
-		Gtk::CheckButton _logarithmicScaleButton, _normalizeXAxisButton, _normalizeYAxisButton;
-		Gtk::RadioButton _meanNormButton, _winsorNormButton, _medianNormButton;
-		Gtk::Button _plotPropertiesButton;
+		Gtk::RadioButtonGroup _rangeGroup;
+		Gtk::RadioToolButton _rangeMinMaxButton, _rangeWinsorizedButton, _rangeSpecified;
+		Gtk::ToggleToolButton _logarithmicScaleButton, _normalizeXAxisButton, _normalizeYAxisButton;
+		Gtk::RadioButtonGroup _rangeTypeGroup;
+		Gtk::RadioToolButton _meanNormButton, _winsorNormButton, _medianNormButton;
+		Gtk::ToolButton _plotPropertiesButton;
 		
 		QualityTablesFormatter::StatisticKind _selectStatisticKind;
 		ImageWidget _imageWidget;

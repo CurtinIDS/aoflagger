@@ -45,10 +45,10 @@ class FrequencyPlotPage : public TwoDimensionalPlotPage {
 			}
 		}
 		
-		virtual void addCustomPlotButtons(Gtk::VBox &container) override final
+		virtual void addCustomPlotButtons(Gtk::Toolbar &container) override final
 		{
 			_ftButton.signal_clicked().connect(sigc::mem_fun(*this, &FrequencyPlotPage::onFTButtonClicked));
-			container.pack_start(_ftButton);
+			container.append(_ftButton);
 			_ftButton.show();
 		}
 	private:
@@ -93,7 +93,7 @@ class FrequencyPlotPage : public TwoDimensionalPlotPage {
 		}
 		
 		std::map<double, class DefaultStatistics> _statistics;
-		Gtk::CheckButton _ftButton;
+		Gtk::ToggleToolButton _ftButton;
 };
 
 #endif

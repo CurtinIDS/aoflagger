@@ -35,9 +35,6 @@ AOQPlotWindow::AOQPlotWindow() :
 	_summaryMI(_pageGroup, "Summary"),
 	_histogramMI(_pageGroup, "Histograms"),
 	
-	_countButton(_statisticsGroup, "#"),
-	_meanButton(_statisticsGroup, "μ"),
-	_stddevButton(_statisticsGroup, "σ"),
 	_isOpen(false)
 {
 	set_default_icon_name("aoqplot");
@@ -62,10 +59,6 @@ AOQPlotWindow::AOQPlotWindow() :
 	_histogramMI.signal_toggled().connect(sigc::mem_fun(*this, &AOQPlotWindow::onChangeSheet));
 	_pageMenu.show_all_children();
 	
-	_toolbar.append(_countButton);
-	_toolbar.append(_meanButton);
-	_toolbar.append(_stddevButton);
-		
 	_vBox.pack_start(_toolbar, Gtk::PACK_SHRINK);
 	
 	_vBox.pack_end(_statusBar, Gtk::PACK_SHRINK);
@@ -311,6 +304,8 @@ void AOQPlotWindow::onChangeSheet()
 		_activeSheet->SetStatistics(_statCollection, _antennas);
 		_activeSheet->SetHistograms(_histCollection);
 		_activeSheet->SignalStatusChange().connect(sigc::mem_fun(*this, &AOQPlotWindow::onStatusChange));
+		_activeSheet->InitializeToolbar(_toolbar);
+		_toolbar.show_all();
 		_vBox.pack_start(*_activeSheet);
 		_activeSheet->show_all();
 	}

@@ -11,46 +11,31 @@
 #include "../plot/plotpropertieswindow.h"
 
 TwoDimensionalPlotPage::TwoDimensionalPlotPage() :
-	_expander("Side bar"),
-	_statisticFrame("Statistics"),
-	_countButton("Count"),
-	_meanButton("Mean"),
-	_stdDevButton("StdDev"),
-	_varianceButton("Variance"),
-	_dCountButton("DCount"),
-	_dMeanButton("DMean"),
-	_dStdDevButton("DStdDev"),
-	_rfiPercentageButton("RFI"),
-	_snrButton("SNR"),
-	_polarizationFrame("Polarization"),
+	_countButton("#"),
+	_meanButton("μ"),
+	_stdDevButton("σ"),
+	_varianceButton("σ²"),
+	_dCountButton("Δ#"),
+	_dMeanButton("Δμ"),
+	_dStdDevButton("Δσ"),
+	_rfiPercentageButton("%"),
 	_polXXButton("XX"),
 	_polXYButton("XY"),
 	_polYXButton("YX"),
 	_polYYButton("YY"),
-	_polXXandYYButton("XX/2+YY/2"),
-	_polXYandYXButton("XY/2+YX/2"),
-	_phaseFrame("Phase"),
-	_amplitudeButton("Amplitude"),
-	_phaseButton("Phase"),
-	_realButton("Real"),
-	_imaginaryButton("Imaginary"),
-	_plotFrame("Plot"),
-	_logarithmicButton("Logarithmic"),
-	_zeroAxisButton("Zero axis"),
-	_plotPropertiesButton("Properties..."),
-	_dataExportButton("Data..."),
+	_polIButton("I"),
+	_amplitudeButton("A"),
+	_phaseButton("ϕ"),
+	_realButton("r"),
+	_imaginaryButton("i"),
+	_logarithmicButton("Log"),
+	_zeroAxisButton("0"),
+	_plotPropertiesButton("P"),
+	_dataExportButton("D"),
 	_statCollection(0),
 	_plotPropertiesWindow(0),
 	_customButtonsCreated(false)
 {
-	initStatisticKindButtons();
-	initPolarizationButtons();
-	initPhaseButtons();
-	initPlotButtons();
-	
-	_expander.add(_sideBox);
-	pack_start(_expander, Gtk::PACK_SHRINK);
-	
 	_plotWidget.SetPlot(_plot);
 	pack_start(_plotWidget, Gtk::PACK_EXPAND_WIDGET);
 	
@@ -65,22 +50,6 @@ TwoDimensionalPlotPage::~TwoDimensionalPlotPage()
 	if(_plotPropertiesWindow != 0)
 		delete _plotPropertiesWindow;
 }
-
-/*
-unsigned TwoDimensionalPlotPage::selectedKindCount() const
-{
-	unsigned count = 0;
-	if(_countButton.get_active()) ++count;
-	if(_meanButton.get_active()) ++count;
-	if(_stdDevButton.get_active()) ++count;
-	if(_varianceButton.get_active()) ++count;
-	if(_dCountButton.get_active()) ++count;
-	if(_dMeanButton.get_active()) ++count;
-	if(_dStdDevButton.get_active()) ++count;
-	if(_rfiPercentageButton.get_active()) ++count;
-	if(_snrButton.get_active()) ++count;
-	return count;
-}*/
 
 void TwoDimensionalPlotPage::updatePlot()
 {
@@ -159,8 +128,6 @@ std::set<QualityTablesFormatter::StatisticKind> TwoDimensionalPlotPage::getSelec
 		kinds.insert(QualityTablesFormatter::DStandardDeviationStatistic);
 	if(_rfiPercentageButton.get_active())
 		kinds.insert(QualityTablesFormatter::RFIPercentageStatistic);
-	if(_snrButton.get_active())
-		kinds.insert(QualityTablesFormatter::SignalToNoiseStatistic);
 	return kinds;
 }
 
@@ -175,10 +142,8 @@ std::set<std::pair<unsigned int, unsigned int> > TwoDimensionalPlotPage::getSele
 		pols.insert(std::make_pair(2, 2));
 	if(_polYYButton.get_active())
 		pols.insert(std::make_pair(3, 3));
-	if(_polXXandYYButton.get_active())
+	if(_polIButton.get_active())
 		pols.insert(std::make_pair(0, 3));
-	if(_polXYandYXButton.get_active())
-		pols.insert(std::make_pair(1, 2));
 	return pols;
 }
 
@@ -227,106 +192,106 @@ void TwoDimensionalPlotPage::plotStatistic(QualityTablesFormatter::StatisticKind
 	}
 }
 
-void TwoDimensionalPlotPage::initStatisticKindButtons()
+void TwoDimensionalPlotPage::InitializeToolbar(Gtk::Toolbar& toolbar)
 {
+	initStatisticKindButtons(toolbar);
+	initPolarizationButtons(toolbar);
+	initPhaseButtons(toolbar);
+	initPlotButtons(toolbar);
+	
+	if(!_customButtonsCreated)
+	{
+		addCustomPlotButtons(toolbar);
+		_customButtonsCreated = true;
+	}
+}
+
+void TwoDimensionalPlotPage::initStatisticKindButtons(Gtk::Toolbar& toolbar)
+{
+	toolbar.append(_separator1);
+	
 	_countButton.signal_clicked().connect(sigc::mem_fun(*this, &TwoDimensionalPlotPage::updatePlot));
-	_statisticBox.pack_start(_countButton, Gtk::PACK_SHRINK);
+	toolbar.append(_countButton);
 	
 	_meanButton.signal_clicked().connect(sigc::mem_fun(*this, &TwoDimensionalPlotPage::updatePlot));
-	_statisticBox.pack_start(_meanButton, Gtk::PACK_SHRINK);
+	toolbar.append(_meanButton);
 	
 	_stdDevButton.signal_clicked().connect(sigc::mem_fun(*this, &TwoDimensionalPlotPage::updatePlot));
 	_stdDevButton.set_active(true);
-	_statisticBox.pack_start(_stdDevButton, Gtk::PACK_SHRINK);
+	toolbar.append(_stdDevButton);
 	
 	_varianceButton.signal_clicked().connect(sigc::mem_fun(*this, &TwoDimensionalPlotPage::updatePlot));
-	_statisticBox.pack_start(_varianceButton, Gtk::PACK_SHRINK);
+	toolbar.append(_varianceButton);
 	
 	_dCountButton.signal_clicked().connect(sigc::mem_fun(*this, &TwoDimensionalPlotPage::updatePlot));
-	_statisticBox.pack_start(_dCountButton, Gtk::PACK_SHRINK);
+	toolbar.append(_dCountButton);
 	
 	_dMeanButton.signal_clicked().connect(sigc::mem_fun(*this, &TwoDimensionalPlotPage::updatePlot));
-	_statisticBox.pack_start(_dMeanButton, Gtk::PACK_SHRINK);
+	toolbar.append(_dMeanButton);
 	
 	_dStdDevButton.signal_clicked().connect(sigc::mem_fun(*this, &TwoDimensionalPlotPage::updatePlot));
-	_statisticBox.pack_start(_dStdDevButton, Gtk::PACK_SHRINK);
+	toolbar.append(_dStdDevButton);
 	
 	_rfiPercentageButton.signal_clicked().connect(sigc::mem_fun(*this, &TwoDimensionalPlotPage::updatePlot));
-	_statisticBox.pack_start(_rfiPercentageButton, Gtk::PACK_SHRINK);
-	
-	_snrButton.signal_clicked().connect(sigc::mem_fun(*this, &TwoDimensionalPlotPage::updatePlot));
-	_statisticBox.pack_start(_snrButton, Gtk::PACK_SHRINK);
-	
-	_statisticFrame.add(_statisticBox);
-	
-	_sideBox.pack_start(_statisticFrame, Gtk::PACK_SHRINK);
+	toolbar.append(_rfiPercentageButton);
 }
 
-void TwoDimensionalPlotPage::initPolarizationButtons()
+void TwoDimensionalPlotPage::initPolarizationButtons(Gtk::Toolbar& toolbar)
 {
+	toolbar.append(_separator2);
+	
 	_polXXButton.signal_clicked().connect(sigc::mem_fun(*this, &TwoDimensionalPlotPage::updatePlot));
-	_polarizationBox.pack_start(_polXXButton, Gtk::PACK_SHRINK);
+	toolbar.append(_polXXButton);
 	
 	_polXYButton.signal_clicked().connect(sigc::mem_fun(*this, &TwoDimensionalPlotPage::updatePlot));
-	_polarizationBox.pack_start(_polXYButton, Gtk::PACK_SHRINK);
+	toolbar.append(_polXYButton);
 	
 	_polYXButton.signal_clicked().connect(sigc::mem_fun(*this, &TwoDimensionalPlotPage::updatePlot));
-	_polarizationBox.pack_start(_polYXButton, Gtk::PACK_SHRINK);
+	toolbar.append(_polYXButton);
 	
 	_polYYButton.signal_clicked().connect(sigc::mem_fun(*this, &TwoDimensionalPlotPage::updatePlot));
-	_polarizationBox.pack_start(_polYYButton, Gtk::PACK_SHRINK);
+	toolbar.append(_polYYButton);
 	
-	_polXXandYYButton.signal_clicked().connect(sigc::mem_fun(*this, &TwoDimensionalPlotPage::updatePlot));
-	_polXXandYYButton.set_active(true);
-	_polarizationBox.pack_start(_polXXandYYButton, Gtk::PACK_SHRINK);
-	
-	_polXYandYXButton.signal_clicked().connect(sigc::mem_fun(*this, &TwoDimensionalPlotPage::updatePlot));
-	_polarizationBox.pack_start(_polXYandYXButton, Gtk::PACK_SHRINK);
-	
-	_polarizationFrame.add(_polarizationBox);
-	
-	_sideBox.pack_start(_polarizationFrame, Gtk::PACK_SHRINK);
+	_polIButton.signal_clicked().connect(sigc::mem_fun(*this, &TwoDimensionalPlotPage::updatePlot));
+	_polIButton.set_active(true);
+	toolbar.append(_polIButton);
 }
 
-void TwoDimensionalPlotPage::initPhaseButtons()
+void TwoDimensionalPlotPage::initPhaseButtons(Gtk::Toolbar& toolbar)
 {
+	toolbar.append(_separator3);
+	
 	_amplitudeButton.signal_clicked().connect(sigc::mem_fun(*this, &TwoDimensionalPlotPage::updatePlot));
 	_amplitudeButton.set_active(true);
-	_phaseBox.pack_start(_amplitudeButton, Gtk::PACK_SHRINK);
+	toolbar.append(_amplitudeButton);
 	
 	_phaseButton.signal_clicked().connect(sigc::mem_fun(*this, &TwoDimensionalPlotPage::updatePlot));
-	_phaseBox.pack_start(_phaseButton, Gtk::PACK_SHRINK);
+	toolbar.append(_phaseButton);
 	
 	_realButton.signal_clicked().connect(sigc::mem_fun(*this, &TwoDimensionalPlotPage::updatePlot));
-	_phaseBox.pack_start(_realButton, Gtk::PACK_SHRINK);
+	toolbar.append(_realButton);
 	
 	_imaginaryButton.signal_clicked().connect(sigc::mem_fun(*this, &TwoDimensionalPlotPage::updatePlot));
-	_phaseBox.pack_start(_imaginaryButton, Gtk::PACK_SHRINK);
-	
-	_phaseFrame.add(_phaseBox);
-	
-	_sideBox.pack_start(_phaseFrame, Gtk::PACK_SHRINK);
+	toolbar.append(_imaginaryButton);
 }
 
-void TwoDimensionalPlotPage::initPlotButtons()
+void TwoDimensionalPlotPage::initPlotButtons(Gtk::Toolbar& toolbar)
 {
+	toolbar.append(_separator4);
+	
 	_logarithmicButton.signal_clicked().connect(sigc::mem_fun(*this, &TwoDimensionalPlotPage::onLogarithmicClicked));
-	_plotBox.pack_start(_logarithmicButton, Gtk::PACK_SHRINK);
+	toolbar.append(_logarithmicButton);
 	
 	_zeroAxisButton.signal_clicked().connect(sigc::mem_fun(*this, &TwoDimensionalPlotPage::updatePlotConfig));
 	_zeroAxisButton.set_active(true);
-	_plotBox.pack_start(_zeroAxisButton, Gtk::PACK_SHRINK);
+	toolbar.append(_zeroAxisButton);
 	_plot.SetIncludeZeroYAxis(true);
 	
 	_plotPropertiesButton.signal_clicked().connect(sigc::mem_fun(*this, &TwoDimensionalPlotPage::onPlotPropertiesClicked));
-	_plotBox.pack_start(_plotPropertiesButton, Gtk::PACK_SHRINK);
+	toolbar.append(_plotPropertiesButton);
 
 	_dataExportButton.signal_clicked().connect(sigc::mem_fun(*this, &TwoDimensionalPlotPage::onDataExportClicked));
-	_plotBox.pack_start(_dataExportButton, Gtk::PACK_SHRINK);
-	
-	_plotFrame.add(_plotBox);
-	
-	_sideBox.pack_start(_plotFrame, Gtk::PACK_SHRINK);
+	toolbar.append(_dataExportButton);
 }
 
 void TwoDimensionalPlotPage::onPlotPropertiesClicked()

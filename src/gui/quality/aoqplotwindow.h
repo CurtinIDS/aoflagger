@@ -77,7 +77,6 @@ class AOQPlotWindow : public Gtk::Window {
 		Gtk::Menu _pageMenu;
 		Gtk::RadioButtonGroup _pageGroup, _statisticsGroup;
 		Gtk::RadioMenuItem _baselineMI, _antennaeMI, _bLengthMI, _timeMI, _frequencyMI, _timeFrequencyMI, _summaryMI, _histogramMI;
-		Gtk::RadioToolButton _countButton, _meanButton, _stddevButton;
 		
 		Gtk::VBox _vBox;
 		Gtk::Statusbar _statusBar;

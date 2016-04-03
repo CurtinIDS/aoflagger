@@ -10,51 +10,36 @@
 #include "../../quality/statisticsderivator.h"
 
 GrayScalePlotPage::GrayScalePlotPage() :
-	_expander("Side bar"),
-	_statisticKindFrame("Statistic kind"),
-	_countButton("Count"),
-	_meanButton("Mean"),
-	_stdDevButton("StdDev"),
-	_dCountButton("DCount"),
-	_dMeanButton("DMean"),
-	_dStdDevButton("DStdDev"),
-	_rfiPercentageButton("RFIPercentage"),
-	_snrButton("SNR"),
-	_polarizationFrame("Polarization"),
-	_polXXButton("XX"),
-	_polXYButton("XY"),
-	_polYXButton("YX"),
-	_polYYButton("YY"),
-	_polXXandYYButton("XX/2 + YY/2"),
-	_polXYandYXButton("XY/2 + YX/2"),
-	_phaseFrame("Phase"),
-	_amplitudePhaseButton("Amplitude"),
-	_phasePhaseButton("Phase"),
-	_realPhaseButton("Real"),
-	_imaginaryPhaseButton("Imaginary"),
-	_plotFrame("Plot"),
-	_rangeMinMaxButton("Min to max"),
-	_rangeWinsorizedButton("Winsorized"),
-	_rangeSpecified("Specified"),
+	_countButton(_statisticGroup, "#"),
+	_meanButton(_statisticGroup, "μ"),
+	_stdDevButton(_statisticGroup, "σ"),
+	_dCountButton(_statisticGroup, "Δ#"),
+	_dMeanButton(_statisticGroup, "Δμ"),
+	_dStdDevButton(_statisticGroup, "Δσ"),
+	_rfiPercentageButton(_statisticGroup, "%"),
+	_polXXButton(_polGroup, "XX"),
+	_polXYButton(_polGroup, "XY"),
+	_polYXButton(_polGroup, "YX"),
+	_polYYButton(_polGroup, "YY"),
+	_polIButton(_polGroup, "I"),
+	_amplitudePhaseButton(_phaseGroup, "A"),
+	_phasePhaseButton(_phaseGroup, "ϕ"),
+	_realPhaseButton(_phaseGroup, "r"),
+	_imaginaryPhaseButton(_phaseGroup, "i"),
+	_rangeMinMaxButton(_rangeGroup, "Min to max"),
+	_rangeWinsorizedButton(_rangeGroup, "Winsorized"),
+	_rangeSpecified(_rangeGroup, "Specified"),
 	_logarithmicScaleButton("Logarithmic"),
 	_normalizeXAxisButton("Normalize X"),
 	_normalizeYAxisButton("Normalize Y"),
-	_meanNormButton("Mean"),
-	_winsorNormButton("Winsor"),
-	_medianNormButton("Median"),
+	_meanNormButton(_rangeTypeGroup, "Mean"),
+	_winsorNormButton(_rangeTypeGroup, "Winsor"),
+	_medianNormButton(_rangeTypeGroup, "Median"),
 	_plotPropertiesButton("Properties..."),
 	_selectStatisticKind(QualityTablesFormatter::VarianceStatistic),
 	_ready(false),
 	_imagePropertiesWindow(0)
 {
-	initStatisticKinds();
-	initPolarizations();
-	initPhaseButtons();
-	initPlotOptions();
-	
-	_expander.add(_sideBox);
-	pack_start(_expander, Gtk::PACK_SHRINK);
-	
 	_imageWidget.SetCairoFilter(Cairo::FILTER_NEAREST);
 	_imageWidget.SetColorMap(ImageWidget::HotColdMap);
 	_imageWidget.SetRange(ImageWidget::MinMax);
@@ -74,153 +59,121 @@ GrayScalePlotPage::~GrayScalePlotPage()
 		delete _imagePropertiesWindow;
 }
 
-void GrayScalePlotPage::initStatisticKinds()
+void GrayScalePlotPage::InitializeToolbar(Gtk::Toolbar& toolbar)
 {
-	Gtk::RadioButtonGroup statGroup;
-	_countButton.set_group(statGroup);
+	initStatisticKinds(toolbar);
+	initPolarizations(toolbar);
+	initPhaseButtons(toolbar);
+	initPlotOptions(toolbar);
+}
+
+void GrayScalePlotPage::initStatisticKinds(Gtk::Toolbar& toolbar)
+{
+	toolbar.append(_separator1);
+	
 	_countButton.signal_clicked().connect(sigc::mem_fun(*this, &GrayScalePlotPage::onSelectCount));
-	_statisticKindBox.pack_start(_countButton, Gtk::PACK_SHRINK);
+	toolbar.append(_countButton);
 	
-	_meanButton.set_group(statGroup);
 	_meanButton.signal_clicked().connect(sigc::mem_fun(*this, &GrayScalePlotPage::onSelectMean));
-	_statisticKindBox.pack_start(_meanButton, Gtk::PACK_SHRINK);
+	toolbar.append(_meanButton);
 	
-	_stdDevButton.set_group(statGroup);
 	_stdDevButton.signal_clicked().connect(sigc::mem_fun(*this, &GrayScalePlotPage::onSelectStdDev));
-	_statisticKindBox.pack_start(_stdDevButton, Gtk::PACK_SHRINK);
+	toolbar.append(_stdDevButton);
 	
-	_dCountButton.set_group(statGroup);
 	_dCountButton.signal_clicked().connect(sigc::mem_fun(*this, &GrayScalePlotPage::onSelectDCount));
-	_statisticKindBox.pack_start(_dCountButton, Gtk::PACK_SHRINK);
+	toolbar.append(_dCountButton);
 	
-	_dMeanButton.set_group(statGroup);
 	_dMeanButton.signal_clicked().connect(sigc::mem_fun(*this, &GrayScalePlotPage::onSelectDMean));
-	_statisticKindBox.pack_start(_dMeanButton, Gtk::PACK_SHRINK);
+	toolbar.append(_dMeanButton);
 	
-	_dStdDevButton.set_group(statGroup);
 	_dStdDevButton.signal_clicked().connect(sigc::mem_fun(*this, &GrayScalePlotPage::onSelectDStdDev));
-	_statisticKindBox.pack_start(_dStdDevButton, Gtk::PACK_SHRINK);
+	toolbar.append(_dStdDevButton);
 	
-	_rfiPercentageButton.set_group(statGroup);
 	_rfiPercentageButton.signal_clicked().connect(sigc::mem_fun(*this, &GrayScalePlotPage::onSelectRFIPercentage));
-	_statisticKindBox.pack_start(_rfiPercentageButton, Gtk::PACK_SHRINK);
-	
-	_snrButton.set_group(statGroup);
-	_snrButton.signal_clicked().connect(sigc::mem_fun(*this, &GrayScalePlotPage::onSelectSNR));
-	_statisticKindBox.pack_start(_snrButton, Gtk::PACK_SHRINK);
+	toolbar.append(_rfiPercentageButton);
 	
 	_stdDevButton.set_active();
-	
-	_statisticKindFrame.add(_statisticKindBox);
-	
-	_sideBox.pack_start(_statisticKindFrame, Gtk::PACK_SHRINK);
 }
 
-void GrayScalePlotPage::initPolarizations()
+void GrayScalePlotPage::initPolarizations(Gtk::Toolbar& toolbar)
 {
-	Gtk::RadioButtonGroup polGroup;
-	_polXXButton.set_group(polGroup);
+	toolbar.append(_separator2);
+	
 	_polXXButton.signal_clicked().connect(sigc::mem_fun(*this, &GrayScalePlotPage::updateImage));
-	_polarizationBox.pack_start(_polXXButton, Gtk::PACK_SHRINK);
+	toolbar.append(_polXXButton);
 	
-	_polXYButton.set_group(polGroup);
 	_polXYButton.signal_clicked().connect(sigc::mem_fun(*this, &GrayScalePlotPage::updateImage));
-	_polarizationBox.pack_start(_polXYButton, Gtk::PACK_SHRINK);
+	toolbar.append(_polXYButton);
 
-	_polYXButton.set_group(polGroup);
 	_polYXButton.signal_clicked().connect(sigc::mem_fun(*this, &GrayScalePlotPage::updateImage));
-	_polarizationBox.pack_start(_polYXButton, Gtk::PACK_SHRINK);
+	toolbar.append(_polYXButton);
 
-	_polYYButton.set_group(polGroup);
 	_polYYButton.signal_clicked().connect(sigc::mem_fun(*this, &GrayScalePlotPage::updateImage));
-	_polarizationBox.pack_start(_polYYButton, Gtk::PACK_SHRINK);
+	toolbar.append(_polYYButton);
 
-	_polXXandYYButton.set_group(polGroup);
-	_polXXandYYButton.signal_clicked().connect(sigc::mem_fun(*this, &GrayScalePlotPage::updateImage));
-	_polarizationBox.pack_start(_polXXandYYButton, Gtk::PACK_SHRINK);
+	_polIButton.signal_clicked().connect(sigc::mem_fun(*this, &GrayScalePlotPage::updateImage));
+	toolbar.append(_polIButton);
 
-	_polXYandYXButton.set_group(polGroup);
-	_polXYandYXButton.signal_clicked().connect(sigc::mem_fun(*this, &GrayScalePlotPage::updateImage));
-	_polarizationBox.pack_start(_polXYandYXButton, Gtk::PACK_SHRINK);
-
-	_polXXandYYButton.set_active();
-	
-	_polarizationFrame.add(_polarizationBox);
-	
-	_sideBox.pack_start(_polarizationFrame, Gtk::PACK_SHRINK);
+	_polIButton.set_active();
 }
 
-void GrayScalePlotPage::initPhaseButtons()
+void GrayScalePlotPage::initPhaseButtons(Gtk::Toolbar& toolbar)
 {
-	Gtk::RadioButtonGroup phaseGroup;
+	toolbar.append(_separator3);
 	
-	_amplitudePhaseButton.set_group(phaseGroup);
 	_amplitudePhaseButton.signal_clicked().connect(sigc::mem_fun(*this, &GrayScalePlotPage::updateImage));
-	_phaseBox.pack_start(_amplitudePhaseButton, Gtk::PACK_SHRINK);
+	toolbar.append(_amplitudePhaseButton);
 	
-	_phasePhaseButton.set_group(phaseGroup);
 	_phasePhaseButton.signal_clicked().connect(sigc::mem_fun(*this, &GrayScalePlotPage::updateImage));
-	_phaseBox.pack_start(_phasePhaseButton, Gtk::PACK_SHRINK);
+	toolbar.append(_phasePhaseButton);
 	
-	_realPhaseButton.set_group(phaseGroup);
 	_realPhaseButton.signal_clicked().connect(sigc::mem_fun(*this, &GrayScalePlotPage::updateImage));
-	_phaseBox.pack_start(_realPhaseButton, Gtk::PACK_SHRINK);
+	toolbar.append(_realPhaseButton);
 	
-	_imaginaryPhaseButton.set_group(phaseGroup);
 	_imaginaryPhaseButton.signal_clicked().connect(sigc::mem_fun(*this, &GrayScalePlotPage::updateImage));
-	_phaseBox.pack_start(_imaginaryPhaseButton, Gtk::PACK_SHRINK);
+	toolbar.append(_imaginaryPhaseButton);
 	
 	_amplitudePhaseButton.set_active();
-	
-	_phaseFrame.add(_phaseBox);
-	
-	_sideBox.pack_start(_phaseFrame, Gtk::PACK_SHRINK);
 }
 
-void GrayScalePlotPage::initPlotOptions()
+void GrayScalePlotPage::initPlotOptions(Gtk::Toolbar& toolbar)
 {
-	Gtk::RadioButtonGroup rangeGroup;
-	_rangeMinMaxButton.set_group(rangeGroup);
+	toolbar.append(_separator4);
+	
 	_rangeMinMaxButton.signal_clicked().connect(sigc::mem_fun(*this, &GrayScalePlotPage::onSelectMinMaxRange));
-	_plotBox.pack_start(_rangeMinMaxButton, Gtk::PACK_SHRINK);
+	toolbar.append(_rangeMinMaxButton);
 
-	_rangeWinsorizedButton.set_group(rangeGroup);
 	_rangeWinsorizedButton.signal_clicked().connect(sigc::mem_fun(*this, &GrayScalePlotPage::onSelectWinsorizedRange));
-	_plotBox.pack_start(_rangeWinsorizedButton, Gtk::PACK_SHRINK);
+	toolbar.append(_rangeWinsorizedButton);
 
-	_rangeSpecified.set_group(rangeGroup);
 	_rangeSpecified.signal_clicked().connect(sigc::mem_fun(*this, &GrayScalePlotPage::onSelectSpecifiedRange));
-	_plotBox.pack_start(_rangeSpecified, Gtk::PACK_SHRINK);
+	toolbar.append(_rangeSpecified);
+	
+	toolbar.append(_separator5);
 	
 	_logarithmicScaleButton.signal_clicked().connect(sigc::mem_fun(*this, &GrayScalePlotPage::onLogarithmicScaleClicked));
-	_plotBox.pack_start(_logarithmicScaleButton, Gtk::PACK_SHRINK);
+	toolbar.append(_logarithmicScaleButton);
 	_logarithmicScaleButton.set_active(true);
 	
 	_normalizeXAxisButton.signal_clicked().connect(sigc::mem_fun(*this, &GrayScalePlotPage::onNormalizeAxesButtonClicked));
-	_plotBox.pack_start(_normalizeXAxisButton, Gtk::PACK_SHRINK);
+	toolbar.append(_normalizeXAxisButton);
 	
 	_normalizeYAxisButton.signal_clicked().connect(sigc::mem_fun(*this, &GrayScalePlotPage::onNormalizeAxesButtonClicked));
-	_plotBox.pack_start(_normalizeYAxisButton, Gtk::PACK_SHRINK);
+	toolbar.append(_normalizeYAxisButton);
 	
-	Gtk::RadioButtonGroup normMethodGroup;
-	_meanNormButton.set_group(normMethodGroup);
+	toolbar.append(_separator6);
+	
 	_meanNormButton.signal_clicked().connect(sigc::mem_fun(*this, &GrayScalePlotPage::onChangeNormMethod));
-	_plotBox.pack_start(_meanNormButton, Gtk::PACK_SHRINK);
+	toolbar.append(_meanNormButton);
 	
-	_winsorNormButton.set_group(normMethodGroup);
 	_winsorNormButton.signal_clicked().connect(sigc::mem_fun(*this, &GrayScalePlotPage::onChangeNormMethod));
-	_plotBox.pack_start(_winsorNormButton, Gtk::PACK_SHRINK);
+	toolbar.append(_winsorNormButton);
 	
-	_medianNormButton.set_group(normMethodGroup);
 	_medianNormButton.signal_clicked().connect(sigc::mem_fun(*this, &GrayScalePlotPage::onChangeNormMethod));
-	_plotBox.pack_start(_medianNormButton, Gtk::PACK_SHRINK);
+	toolbar.append(_medianNormButton);
 	
 	_plotPropertiesButton.signal_clicked().connect(sigc::mem_fun(*this, &GrayScalePlotPage::onPropertiesClicked));
-	_plotBox.pack_start(_plotPropertiesButton, Gtk::PACK_SHRINK);
-	
-	_plotFrame.add(_plotBox);
-	
-	_sideBox.pack_start(_plotFrame, Gtk::PACK_SHRINK);
+	toolbar.append(_plotPropertiesButton);
 }
 
 void GrayScalePlotPage::updateImageImpl(QualityTablesFormatter::StatisticKind statisticKind, PolarisationType polarisation, enum TimeFrequencyData::PhaseRepresentation phase)
@@ -268,10 +221,8 @@ PolarisationType GrayScalePlotPage::getSelectedPolarization() const
 		return YXPolarisation;
 	else if(_polYYButton.get_active())
 		return YYPolarisation;
-	else if(_polXXandYYButton.get_active())
+	else if(_polIButton.get_active())
 		return AutoDipolePolarisation;
-	else if(_polXYandYXButton.get_active())
-		return CrossDipolePolarisation;
 	else
 		return AutoDipolePolarisation;
 }

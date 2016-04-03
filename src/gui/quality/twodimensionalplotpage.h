@@ -1,10 +1,9 @@
 #ifndef GUI_QUALITY__2DPLOTPAGE_H
 #define GUI_QUALITY__2DPLOTPAGE_H
 
-#include <gtkmm/box.h>
-#include <gtkmm/checkbutton.h>
-#include <gtkmm/expander.h>
-#include <gtkmm/frame.h>
+#include <gtkmm/toggletoolbutton.h>
+#include <gtkmm/toolbutton.h>
+#include <gtkmm/separatortoolitem.h>
 
 #include "../../quality/qualitytablesformatter.h"
 
@@ -25,23 +24,21 @@ class TwoDimensionalPlotPage : public PlotSheet {
 			processStatistics(statCollection, antennas);
 			
 			_statCollection = statCollection;
-			// We need to do this here because it can not be done yet during construction in the
-			// constructor (virtual methods not yet available there).
-			if(!_customButtonsCreated)
-			{
-				addCustomPlotButtons(_plotBox);
-				_customButtonsCreated = true;
-			}
 			updatePlot();
 		}
+		
 		virtual void CloseStatistics() override final
 		{
 			_statCollection = 0;
 		}
+		
+		virtual void InitializeToolbar(Gtk::Toolbar& toolbar) override final;
+		
 		bool HasStatistics() const
 		{
 			return _statCollection != 0;
 		}
+		
 		void SavePdf(const std::string& filename, QualityTablesFormatter::StatisticKind kind);
 	protected:
 		virtual void processStatistics(const StatisticsCollection *, const std::vector<AntennaInfo> &)
@@ -56,7 +53,7 @@ class TwoDimensionalPlotPage : public PlotSheet {
 		{
 		}
 		
-		virtual void addCustomPlotButtons(Gtk::VBox &container)
+		virtual void addCustomPlotButtons(Gtk::Toolbar &container)
 		{
 		}
 		
@@ -85,10 +82,10 @@ class TwoDimensionalPlotPage : public PlotSheet {
 		
 		void plotStatistic(QualityTablesFormatter::StatisticKind kind, unsigned polA, unsigned polB, PhaseType phase, const std::string& yDesc);
 		
-		void initStatisticKindButtons();
-		void initPolarizationButtons();
-		void initPhaseButtons();
-		void initPlotButtons();
+		void initStatisticKindButtons(Gtk::Toolbar& toolbar);
+		void initPolarizationButtons(Gtk::Toolbar& toolbar);
+		void initPhaseButtons(Gtk::Toolbar& toolbar);
+		void initPlotButtons(Gtk::Toolbar& toolbar);
 		
 		void onLogarithmicClicked()
 		{
@@ -98,25 +95,16 @@ class TwoDimensionalPlotPage : public PlotSheet {
 		void onPlotPropertiesClicked();
 		void onDataExportClicked();
 		
-		Gtk::Expander _expander;
-		Gtk::VBox _sideBox;
+		Gtk::SeparatorToolItem _separator1, _separator2, _separator3, _separator4;
 		
-		Gtk::Frame _statisticFrame;
-		Gtk::VBox _statisticBox;
-		Gtk::CheckButton _countButton, _meanButton, _stdDevButton, _varianceButton, _dCountButton, _dMeanButton, _dStdDevButton,  _rfiPercentageButton, _snrButton;
+		Gtk::ToggleToolButton _countButton, _meanButton, _stdDevButton, _varianceButton, _dCountButton, _dMeanButton, _dStdDevButton,  _rfiPercentageButton;
 		
-		Gtk::Frame _polarizationFrame;
-		Gtk::VBox _polarizationBox;
-		Gtk::CheckButton _polXXButton, _polXYButton, _polYXButton, _polYYButton, _polXXandYYButton, _polXYandYXButton;
+		Gtk::ToggleToolButton _polXXButton, _polXYButton, _polYXButton, _polYYButton, _polIButton;
 		
-		Gtk::Frame _phaseFrame;
-		Gtk::VBox _phaseBox;
-		Gtk::CheckButton _amplitudeButton, _phaseButton, _realButton, _imaginaryButton;
+		Gtk::ToggleToolButton _amplitudeButton, _phaseButton, _realButton, _imaginaryButton;
 		
-		Gtk::Frame _plotFrame;
-		Gtk::VBox _plotBox;
-		Gtk::CheckButton _logarithmicButton, _zeroAxisButton;
-		Gtk::Button _plotPropertiesButton, _dataExportButton;
+		Gtk::ToggleToolButton _logarithmicButton, _zeroAxisButton;
+		Gtk::ToolButton _plotPropertiesButton, _dataExportButton;
 		
 		const StatisticsCollection *_statCollection;
 		Plot2D _plot;

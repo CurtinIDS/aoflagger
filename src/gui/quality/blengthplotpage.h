@@ -44,10 +44,10 @@ class BLengthPlotPage : public TwoDimensionalPlotPage {
 			plot.StartLine(name, "Baseline length (m)", yAxisDesc, false, Plot2DPointSet::DrawPoints);
 		}
 		
-		virtual void addCustomPlotButtons(Gtk::VBox &container) override final
+		virtual void addCustomPlotButtons(Gtk::Toolbar &container) override final
 		{
 			_includeAutoCorrelationsButton.signal_clicked().connect(sigc::mem_fun(*this, &BLengthPlotPage::onAutoCorrelationsClicked));
-			container.pack_start(_includeAutoCorrelationsButton);
+			container.append(_includeAutoCorrelationsButton);
 			_includeAutoCorrelationsButton.show();
 		}
 	private:
@@ -58,7 +58,7 @@ class BLengthPlotPage : public TwoDimensionalPlotPage {
 		
 		std::map<double, DefaultStatistics> _statisticsWithAutocorrelations;
 		std::map<double, DefaultStatistics> _statisticsWithoutAutocorrelations;
-		Gtk::CheckButton _includeAutoCorrelationsButton;
+		Gtk::ToggleToolButton _includeAutoCorrelationsButton;
 };
 
 #endif
