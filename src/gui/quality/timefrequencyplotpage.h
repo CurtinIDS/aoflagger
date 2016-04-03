@@ -17,14 +17,12 @@ class TimeFrequencyPlotPage : public GrayScalePlotPage {
 		TimeFrequencyPlotPage();
     virtual ~TimeFrequencyPlotPage();
 		
-		sigc::signal<void, const std::string &> SignalStatusChange() { return _signalStatusChange; }
-		
 		virtual void SetStatistics(const StatisticsCollection *statCollection, const std::vector<class AntennaInfo>&) override final
 		{
 			_statCollection = statCollection;
 			updateImage();
 		}
-		void CloseStatistics()
+		virtual void CloseStatistics() override final
 		{
 			_statCollection = 0;
 		}
@@ -39,8 +37,6 @@ class TimeFrequencyPlotPage : public GrayScalePlotPage {
 		void onMouseMoved(size_t x, size_t y);
 		
 		const StatisticsCollection *_statCollection;
-		
-		sigc::signal<void, const std::string &> _signalStatusChange;
 };
 
 #endif

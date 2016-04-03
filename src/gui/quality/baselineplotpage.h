@@ -17,15 +17,13 @@ class BaselinePlotPage : public GrayScalePlotPage {
 		BaselinePlotPage();
     virtual ~BaselinePlotPage();
 		
-		sigc::signal<void, const std::string &> SignalStatusChange() { return _signalStatusChange; }
-		
 		virtual void SetStatistics(const StatisticsCollection* statCollection, const std::vector<class AntennaInfo>& antennas) override final
 		{
 			_statCollection = statCollection;
 			_antennas = &antennas;
 			updateImage();
 		}
-		void CloseStatistics()
+		virtual void CloseStatistics() override final
 		{
 			_statCollection = 0;
 			_antennas = 0;
@@ -41,8 +39,6 @@ class BaselinePlotPage : public GrayScalePlotPage {
 		
 		const StatisticsCollection *_statCollection;
 		const std::vector<class AntennaInfo> *_antennas;
-		
-		sigc::signal<void, const std::string &> _signalStatusChange;
 };
 
 #endif

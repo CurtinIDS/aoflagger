@@ -32,7 +32,7 @@ class HistogramPage : public PlotSheet {
 			readFromFile();
 			updatePlot();
 		}
-		void CloseStatistics();
+		virtual void CloseStatistics() override final;
 		bool HasStatistics() const
 		{
 			return _histograms != 0;

@@ -25,7 +25,7 @@ class SummaryPage : public PlotSheet {
 			_statCollection = statCollection;
 			updateText();
 		}
-		void CloseStatistics()
+		virtual void CloseStatistics() override final
 		{
 			_statCollection = 0;
 			_textView.get_buffer()->set_text("No open measurement set");

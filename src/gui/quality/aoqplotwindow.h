@@ -63,25 +63,11 @@ class AOQPlotWindow : public Gtk::Window {
 			//Gtk::Application::quit();
 		}
 		void onStatusChange(const std::string &newStatus);
-		void onSwitchPage(Gtk::Widget *page, guint pageNr)
-		{
-			switch(pageNr)
-			{
-				case 0: SetStatus("Baseline statistics"); break;
-				case 1: SetStatus("Antennae statistics"); break;
-				case 2: SetStatus("Baseline length statistics");  break;
-				case 3: SetStatus("Time statistics"); break;
-				case 4: SetStatus("Frequency statistics"); break;
-				case 5: SetStatus("Time-frequency statistics");  break;
-				case 6: SetStatus("Summary"); break;
-			}
-		}
 		
 		void onChangeSheet();
 		
 		void setShowHistograms(bool show)
 		{
-			//_histogramPage.set_visible(show);
 			_histogramMI.set_sensitive(show);
 		}
 		
@@ -94,17 +80,8 @@ class AOQPlotWindow : public Gtk::Window {
 		Gtk::RadioToolButton _countButton, _meanButton, _stddevButton;
 		
 		Gtk::VBox _vBox;
-		Gtk::Notebook _notebook;
 		Gtk::Statusbar _statusBar;
 		
-		//BaselinePlotPage _baselinePlotPage;
-		//AntennaePlotPage _antennaePlotPage;
-		//BLengthPlotPage  _bLengthPlotPage;
-		//TimeFrequencyPlotPage _timeFrequencyPlotPage;
-		//TimePlotPage _timePlotPage;
-		//FrequencyPlotPage _frequencyPlotPage;
-		//SummaryPage _summaryPage;
-		//HistogramPage _histogramPage;
 		std::unique_ptr<PlotSheet> _activeSheet;
 		
 		OpenOptionsWindow _openOptionsWindow;

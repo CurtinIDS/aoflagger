@@ -34,7 +34,7 @@ class TwoDimensionalPlotPage : public PlotSheet {
 			}
 			updatePlot();
 		}
-		void CloseStatistics()
+		virtual void CloseStatistics() override final
 		{
 			_statCollection = 0;
 		}

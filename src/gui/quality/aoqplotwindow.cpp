@@ -42,21 +42,6 @@ AOQPlotWindow::AOQPlotWindow() :
 {
 	set_default_icon_name("aoqplot");
 	
-	/*_notebook.append_page(_baselinePlotPage, "Baselines");
-	_baselinePlotPage.SignalStatusChange().connect(sigc::mem_fun(*this, &AOQPlotWindow::onStatusChange));
-	
-	_notebook.append_page(_antennaePlotPage, "Antennae");
-	_notebook.append_page(_bLengthPlotPage, "Baselines length");
-	_notebook.append_page(_timePlotPage, "Time");
-	_notebook.append_page(_frequencyPlotPage, "Frequency");
-	_notebook.append_page(_timeFrequencyPlotPage, "Time-frequency");
-	_timeFrequencyPlotPage.SignalStatusChange().connect(sigc::mem_fun(*this, &AOQPlotWindow::onStatusChange));
-	//_timeFrequencyPlotPage.set_sensitive(false);
-	
-	_notebook.append_page(_summaryPage, "Summary");
-	
-	_notebook.append_page(_histogramPage, "Histograms");*/
-	
 	_toolbar.append(_pageMenuButton);
 	_pageMenuButton.set_menu(_pageMenu);
 	_pageMenu.append(_baselineMI);
@@ -83,9 +68,6 @@ AOQPlotWindow::AOQPlotWindow() :
 		
 	_vBox.pack_start(_toolbar, Gtk::PACK_SHRINK);
 	
-	//_vBox.pack_start(_notebook);
-	///_notebook.signal_switch_page().connect(sigc::mem_fun(*this, &AOQPlotWindow::onSwitchPage));
-	
 	_vBox.pack_end(_statusBar, Gtk::PACK_SHRINK);
 	_statusBar.push("Quality plot util is ready. Author: André Offringa (offringa@gmail.com)");
 	
@@ -104,14 +86,6 @@ void AOQPlotWindow::Open(const std::vector<std::string> &files)
 void AOQPlotWindow::onOpenOptionsSelected(const std::vector<std::string>& files, bool downsampleTime, bool downsampleFreq, size_t timeCount, size_t freqCount, bool correctHistograms)
 {
 	readStatistics(files, downsampleTime, downsampleFreq, timeCount, freqCount, correctHistograms);
-	/*_antennaePlotPage.SetStatistics(_statCollection, _antennas);
-	_bLengthPlotPage.SetStatistics(_statCollection, _antennas);
-	_timePlotPage.SetStatistics(_statCollection, _antennas);
-	_frequencyPlotPage.SetStatistics(_statCollection, _antennas);
-	_timeFrequencyPlotPage.SetStatistics(_fullStats);
-	_summaryPage.SetStatistics(_statCollection);
-	if(_histogramPage.get_visible())
-		_histogramPage.SetStatistics(*_histCollection);*/
 	_activeSheetIndex = -1;
 	onChangeSheet();
 	show();
@@ -121,14 +95,7 @@ void AOQPlotWindow::close()
 {
 	if(_isOpen)
 	{
-		/*_baselinePlotPage.CloseStatistics();
-		_antennaePlotPage.CloseStatistics();
-		_bLengthPlotPage.CloseStatistics();
-		_timePlotPage.CloseStatistics();
-		_frequencyPlotPage.CloseStatistics();
-		_timeFrequencyPlotPage.CloseStatistics();
-		_summaryPage.CloseStatistics();
-		_histogramPage.CloseStatistics();*/
+		_activeSheet->CloseStatistics();
 		delete _statCollection;
 		delete _histCollection;
 		delete _fullStats;
@@ -264,24 +231,35 @@ void AOQPlotWindow::Save(const AOQPlotWindow::PlotSavingData& data)
 	const std::string& prefix = data.filenamePrefix;
 	QualityTablesFormatter::StatisticKind kind = data.statisticKind;
 	
-	/*
 	std::cout << "Saving " << prefix << "-antennas.pdf...\n";
-	_antennaePlotPage.SavePdf(prefix+"-antennas.pdf", kind);
+	AntennaePlotPage antPage;
+	antPage.SetStatistics(_statCollection, _antennas);
+	antPage.SavePdf(prefix+"-antennas.pdf", kind);
 	
 	std::cout << "Saving " << prefix << "-baselines.pdf...\n";
-	_baselinePlotPage.SavePdf(prefix+"-baselines.pdf", kind);
+	BaselinePlotPage baselPage;
+	baselPage.SetStatistics(_statCollection, _antennas);
+	baselPage.SavePdf(prefix+"-baselines.pdf", kind);
 	
 	std::cout << "Saving " << prefix << "-baselinelengths.pdf...\n";
-	_bLengthPlotPage.SavePdf(prefix+"-baselinelengths.pdf", kind);
+	BLengthPlotPage blenPage;
+	blenPage.SetStatistics(_statCollection, _antennas);
+	blenPage.SavePdf(prefix+"-baselinelengths.pdf", kind);
 	
 	std::cout << "Saving " << prefix << "-timefrequency.pdf...\n";
-	_timeFrequencyPlotPage.SavePdf(prefix+"-timefrequency.pdf", kind);
+	TimeFrequencyPlotPage tfPage;
+	tfPage.SetStatistics(_statCollection, _antennas);
+	tfPage.SavePdf(prefix+"-timefrequency.pdf", kind);
 	
 	std::cout << "Saving " << prefix << "-time.pdf...\n";
-	_timePlotPage.SavePdf(prefix+"-time.pdf", kind);
+	TimePlotPage timePage;
+	timePage.SetStatistics(_statCollection, _antennas);
+	timePage.SavePdf(prefix+"-time.pdf", kind);
 	
 	std::cout << "Saving " << prefix << "-frequency.pdf...\n";
-	_frequencyPlotPage.SavePdf(prefix+"-frequency.pdf", kind);*/
+	FrequencyPlotPage freqPage;
+	freqPage.SetStatistics(_statCollection, _antennas);
+	freqPage.SavePdf(prefix+"-frequency.pdf", kind);
 }
 
 void AOQPlotWindow::onChangeSheet()
@@ -317,10 +295,22 @@ void AOQPlotWindow::onChangeSheet()
 			case 6: _activeSheet.reset(new SummaryPage()); break;
 			case 7: _activeSheet.reset(new HistogramPage()); break;
 		}
+		switch(selectedSheet)
+		{
+			case 0: SetStatus("Baseline statistics"); break;
+			case 1: SetStatus("Antennae statistics"); break;
+			case 2: SetStatus("Baseline length statistics");  break;
+			case 3: SetStatus("Time statistics"); break;
+			case 4: SetStatus("Frequency statistics"); break;
+			case 5: SetStatus("Time-frequency statistics");  break;
+			case 6: SetStatus("Summary"); break;
+			case 7: SetStatus("Histograms"); break;
+		}
 		
 		_activeSheetIndex = selectedSheet;
 		_activeSheet->SetStatistics(_statCollection, _antennas);
 		_activeSheet->SetHistograms(_histCollection);
+		_activeSheet->SignalStatusChange().connect(sigc::mem_fun(*this, &AOQPlotWindow::onStatusChange));
 		_vBox.pack_start(*_activeSheet);
 		_activeSheet->show_all();
 	}
