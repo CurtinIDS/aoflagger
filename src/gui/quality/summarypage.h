@@ -8,7 +8,9 @@
 #include "../../quality/statisticscollection.h"
 #include "../../quality/statisticsderivator.h"
 
-class SummaryPage : public Gtk::HBox {
+#include "plotsheet.h"
+
+class SummaryPage : public PlotSheet {
 	public:
 		SummaryPage()
 		{
@@ -18,7 +20,7 @@ class SummaryPage : public Gtk::HBox {
 			CloseStatistics();
 		}
 		
-		void SetStatistics(class StatisticsCollection *statCollection)
+		virtual void SetStatistics(const StatisticsCollection* statCollection, const std::vector<class AntennaInfo>&) override final
 		{
 			_statCollection = statCollection;
 			updateText();
@@ -153,7 +155,7 @@ class SummaryPage : public Gtk::HBox {
 
 		Gtk::TextView _textView;
 		
-		StatisticsCollection *_statCollection;
+		const StatisticsCollection *_statCollection;
 };
 
 #endif

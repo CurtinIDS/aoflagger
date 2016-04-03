@@ -10,15 +10,15 @@
 class HistogramWindow : public Gtk::Window
 {
 	public:
-		HistogramWindow(HistogramCollection &histograms)
+		HistogramWindow(const HistogramCollection &histograms)
 		{
-			_histogramPage.SetStatistics(histograms);
+			_histogramPage.SetHistograms(&histograms);
 			add(_histogramPage);
 			_histogramPage.show();
 		}
-		void SetStatistics(HistogramCollection &histograms)
+		void SetStatistics(const HistogramCollection &histograms)
 		{
-			_histogramPage.SetStatistics(histograms);
+			_histogramPage.SetHistograms(&histograms);
 		}
 	private:
 		HistogramPage _histogramPage;

@@ -120,27 +120,27 @@ void GrayScalePlotPage::initPolarizations()
 {
 	Gtk::RadioButtonGroup polGroup;
 	_polXXButton.set_group(polGroup);
-	_polXXButton.signal_clicked().connect(sigc::mem_fun(*this, &GrayScalePlotPage::UpdateImage));
+	_polXXButton.signal_clicked().connect(sigc::mem_fun(*this, &GrayScalePlotPage::updateImage));
 	_polarizationBox.pack_start(_polXXButton, Gtk::PACK_SHRINK);
 	
 	_polXYButton.set_group(polGroup);
-	_polXYButton.signal_clicked().connect(sigc::mem_fun(*this, &GrayScalePlotPage::UpdateImage));
+	_polXYButton.signal_clicked().connect(sigc::mem_fun(*this, &GrayScalePlotPage::updateImage));
 	_polarizationBox.pack_start(_polXYButton, Gtk::PACK_SHRINK);
 
 	_polYXButton.set_group(polGroup);
-	_polYXButton.signal_clicked().connect(sigc::mem_fun(*this, &GrayScalePlotPage::UpdateImage));
+	_polYXButton.signal_clicked().connect(sigc::mem_fun(*this, &GrayScalePlotPage::updateImage));
 	_polarizationBox.pack_start(_polYXButton, Gtk::PACK_SHRINK);
 
 	_polYYButton.set_group(polGroup);
-	_polYYButton.signal_clicked().connect(sigc::mem_fun(*this, &GrayScalePlotPage::UpdateImage));
+	_polYYButton.signal_clicked().connect(sigc::mem_fun(*this, &GrayScalePlotPage::updateImage));
 	_polarizationBox.pack_start(_polYYButton, Gtk::PACK_SHRINK);
 
 	_polXXandYYButton.set_group(polGroup);
-	_polXXandYYButton.signal_clicked().connect(sigc::mem_fun(*this, &GrayScalePlotPage::UpdateImage));
+	_polXXandYYButton.signal_clicked().connect(sigc::mem_fun(*this, &GrayScalePlotPage::updateImage));
 	_polarizationBox.pack_start(_polXXandYYButton, Gtk::PACK_SHRINK);
 
 	_polXYandYXButton.set_group(polGroup);
-	_polXYandYXButton.signal_clicked().connect(sigc::mem_fun(*this, &GrayScalePlotPage::UpdateImage));
+	_polXYandYXButton.signal_clicked().connect(sigc::mem_fun(*this, &GrayScalePlotPage::updateImage));
 	_polarizationBox.pack_start(_polXYandYXButton, Gtk::PACK_SHRINK);
 
 	_polXXandYYButton.set_active();
@@ -155,19 +155,19 @@ void GrayScalePlotPage::initPhaseButtons()
 	Gtk::RadioButtonGroup phaseGroup;
 	
 	_amplitudePhaseButton.set_group(phaseGroup);
-	_amplitudePhaseButton.signal_clicked().connect(sigc::mem_fun(*this, &GrayScalePlotPage::UpdateImage));
+	_amplitudePhaseButton.signal_clicked().connect(sigc::mem_fun(*this, &GrayScalePlotPage::updateImage));
 	_phaseBox.pack_start(_amplitudePhaseButton, Gtk::PACK_SHRINK);
 	
 	_phasePhaseButton.set_group(phaseGroup);
-	_phasePhaseButton.signal_clicked().connect(sigc::mem_fun(*this, &GrayScalePlotPage::UpdateImage));
+	_phasePhaseButton.signal_clicked().connect(sigc::mem_fun(*this, &GrayScalePlotPage::updateImage));
 	_phaseBox.pack_start(_phasePhaseButton, Gtk::PACK_SHRINK);
 	
 	_realPhaseButton.set_group(phaseGroup);
-	_realPhaseButton.signal_clicked().connect(sigc::mem_fun(*this, &GrayScalePlotPage::UpdateImage));
+	_realPhaseButton.signal_clicked().connect(sigc::mem_fun(*this, &GrayScalePlotPage::updateImage));
 	_phaseBox.pack_start(_realPhaseButton, Gtk::PACK_SHRINK);
 	
 	_imaginaryPhaseButton.set_group(phaseGroup);
-	_imaginaryPhaseButton.signal_clicked().connect(sigc::mem_fun(*this, &GrayScalePlotPage::UpdateImage));
+	_imaginaryPhaseButton.signal_clicked().connect(sigc::mem_fun(*this, &GrayScalePlotPage::updateImage));
 	_phaseBox.pack_start(_imaginaryPhaseButton, Gtk::PACK_SHRINK);
 	
 	_amplitudePhaseButton.set_active();
@@ -223,11 +223,11 @@ void GrayScalePlotPage::initPlotOptions()
 	_sideBox.pack_start(_plotFrame, Gtk::PACK_SHRINK);
 }
 
-void GrayScalePlotPage::updateImage(QualityTablesFormatter::StatisticKind statisticKind, PolarisationType polarisation, enum TimeFrequencyData::PhaseRepresentation phase)
+void GrayScalePlotPage::updateImageImpl(QualityTablesFormatter::StatisticKind statisticKind, PolarisationType polarisation, enum TimeFrequencyData::PhaseRepresentation phase)
 {
 	if(_ready)
 	{
-		std::pair<TimeFrequencyData, TimeFrequencyMetaDataCPtr> pair = ConstructImage(statisticKind);
+		std::pair<TimeFrequencyData, TimeFrequencyMetaDataCPtr> pair = constructImage(statisticKind);
 		
 		TimeFrequencyData &data = pair.first;
 		
@@ -253,9 +253,9 @@ void GrayScalePlotPage::updateImage(QualityTablesFormatter::StatisticKind statis
 	}
 }
 
-void GrayScalePlotPage::UpdateImage()
+void GrayScalePlotPage::updateImage()
 {
-	updateImage(GetSelectedStatisticKind(), getSelectedPolarization(), getSelectedPhase());
+	updateImageImpl(getSelectedStatisticKind(), getSelectedPolarization(), getSelectedPhase());
 }
 
 PolarisationType GrayScalePlotPage::getSelectedPolarization() const

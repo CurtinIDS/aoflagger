@@ -14,29 +14,31 @@
 #include "../../structures/timefrequencydata.h"
 #include "../../structures/timefrequencymetadata.h"
 
-class GrayScalePlotPage : public Gtk::HBox {
+#include "plotsheet.h"
+
+class GrayScalePlotPage : public PlotSheet {
 	public:
 		GrayScalePlotPage();
     virtual ~GrayScalePlotPage();
 		
 		void SavePdf(const std::string& filename, QualityTablesFormatter::StatisticKind kind)
 		{
-			updateImage(kind, AutoDipolePolarisation, TimeFrequencyData::AmplitudePart);
+			updateImageImpl(kind, AutoDipolePolarisation, TimeFrequencyData::AmplitudePart);
 			_imageWidget.SavePdf(filename);
 		}
 	protected:
-		virtual std::pair<TimeFrequencyData, TimeFrequencyMetaDataCPtr> ConstructImage(QualityTablesFormatter::StatisticKind kind) = 0;
+		virtual std::pair<TimeFrequencyData, TimeFrequencyMetaDataCPtr> constructImage(QualityTablesFormatter::StatisticKind kind) = 0;
 		
-		QualityTablesFormatter::StatisticKind GetSelectedStatisticKind() const
+		QualityTablesFormatter::StatisticKind getSelectedStatisticKind() const
 		{
 			return _selectStatisticKind;
 		}
 		
-		void UpdateImage();
+		void updateImage();
 		
-		ImageWidget &GrayScaleWidget() { return _imageWidget; }
+		ImageWidget &grayScaleWidget() { return _imageWidget; }
 	private:
-		void updateImage(QualityTablesFormatter::StatisticKind statisticKind, PolarisationType polarisation, enum TimeFrequencyData::PhaseRepresentation phase);
+		void updateImageImpl(QualityTablesFormatter::StatisticKind statisticKind, PolarisationType polarisation, enum TimeFrequencyData::PhaseRepresentation phase);
 		
 		void initStatisticKinds();
 		void initPolarizations();
@@ -46,14 +48,14 @@ class GrayScalePlotPage : public Gtk::HBox {
 		enum PolarisationType getSelectedPolarization() const;
 		enum TimeFrequencyData::PhaseRepresentation getSelectedPhase() const;
 		
-		void onSelectCount() { _selectStatisticKind = QualityTablesFormatter::CountStatistic; UpdateImage(); }
-		void onSelectMean() { _selectStatisticKind = QualityTablesFormatter::MeanStatistic; UpdateImage(); }
-		void onSelectStdDev() { _selectStatisticKind = QualityTablesFormatter::StandardDeviationStatistic; UpdateImage(); }
-		void onSelectDCount() { _selectStatisticKind = QualityTablesFormatter::DCountStatistic; UpdateImage(); }
-		void onSelectDMean() { _selectStatisticKind = QualityTablesFormatter::DMeanStatistic; UpdateImage(); }
-		void onSelectDStdDev() { _selectStatisticKind = QualityTablesFormatter::DStandardDeviationStatistic; UpdateImage(); }
-		void onSelectRFIPercentage() { _selectStatisticKind = QualityTablesFormatter::RFIPercentageStatistic; UpdateImage(); }
-		void onSelectSNR() { _selectStatisticKind = QualityTablesFormatter::SignalToNoiseStatistic; UpdateImage(); }
+		void onSelectCount() { _selectStatisticKind = QualityTablesFormatter::CountStatistic; updateImage(); }
+		void onSelectMean() { _selectStatisticKind = QualityTablesFormatter::MeanStatistic; updateImage(); }
+		void onSelectStdDev() { _selectStatisticKind = QualityTablesFormatter::StandardDeviationStatistic; updateImage(); }
+		void onSelectDCount() { _selectStatisticKind = QualityTablesFormatter::DCountStatistic; updateImage(); }
+		void onSelectDMean() { _selectStatisticKind = QualityTablesFormatter::DMeanStatistic; updateImage(); }
+		void onSelectDStdDev() { _selectStatisticKind = QualityTablesFormatter::DStandardDeviationStatistic; updateImage(); }
+		void onSelectRFIPercentage() { _selectStatisticKind = QualityTablesFormatter::RFIPercentageStatistic; updateImage(); }
+		void onSelectSNR() { _selectStatisticKind = QualityTablesFormatter::SignalToNoiseStatistic; updateImage(); }
 		void onPropertiesClicked();
 		
 		void onSelectMinMaxRange() { _imageWidget.SetRange(ImageWidget::MinMax); _imageWidget.Update(); }
@@ -69,12 +71,12 @@ class GrayScalePlotPage : public Gtk::HBox {
 		}
 		void onNormalizeAxesButtonClicked()
 		{
-			UpdateImage();
+			updateImage();
 		}
 		void onChangeNormMethod()
 		{
 			if(_normalizeYAxisButton.get_active())
-				UpdateImage();
+				updateImage();
 		}
 		Image2DCPtr normalizeXAxis(Image2DCPtr input);
 		Image2DCPtr normalizeYAxis(Image2DCPtr input);

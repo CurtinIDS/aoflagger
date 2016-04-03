@@ -16,7 +16,7 @@ class BLengthPlotPage : public TwoDimensionalPlotPage {
 		{
 		}
 	protected:
-		virtual void processStatistics(class StatisticsCollection *statCollection, const std::vector<AntennaInfo> &antennas)
+		virtual void processStatistics(const StatisticsCollection *statCollection, const std::vector<AntennaInfo> &antennas) override final
 		{
 			_statisticsWithAutocorrelations.clear();
 			_statisticsWithoutAutocorrelations.clear();
@@ -34,16 +34,17 @@ class BLengthPlotPage : public TwoDimensionalPlotPage {
 			}
 		}
 		
-		virtual const std::map<double, class DefaultStatistics> &GetStatistics() const
+		virtual const std::map<double, class DefaultStatistics> &getStatistics() const override final
 		{
 			return _includeAutoCorrelationsButton.get_active() ? _statisticsWithAutocorrelations : _statisticsWithoutAutocorrelations;
 		}
 		
-		virtual void StartLine(Plot2D &plot, const std::string &name, const std::string &yAxisDesc)
+		virtual void startLine(Plot2D &plot, const std::string &name, const std::string &yAxisDesc) override final
 		{
 			plot.StartLine(name, "Baseline length (m)", yAxisDesc, false, Plot2DPointSet::DrawPoints);
 		}
-		virtual void addCustomPlotButtons(Gtk::VBox &container)
+		
+		virtual void addCustomPlotButtons(Gtk::VBox &container) override final
 		{
 			_includeAutoCorrelationsButton.signal_clicked().connect(sigc::mem_fun(*this, &BLengthPlotPage::onAutoCorrelationsClicked));
 			container.pack_start(_includeAutoCorrelationsButton);

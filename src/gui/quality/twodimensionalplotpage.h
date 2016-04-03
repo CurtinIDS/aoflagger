@@ -11,14 +11,16 @@
 #include "../plot/plot2d.h"
 #include "../plot/plotwidget.h"
 
+#include "plotsheet.h"
+
 #include <set>
 
-class TwoDimensionalPlotPage : public Gtk::HBox {
+class TwoDimensionalPlotPage : public PlotSheet {
 	public:
 		TwoDimensionalPlotPage();
     virtual ~TwoDimensionalPlotPage();
 
-		void SetStatistics(class StatisticsCollection *statCollection, const std::vector<AntennaInfo> &antennas)
+		virtual void SetStatistics(const StatisticsCollection* statCollection, const std::vector<class AntennaInfo>& antennas) override final
 		{
 			processStatistics(statCollection, antennas);
 			
@@ -42,13 +44,13 @@ class TwoDimensionalPlotPage : public Gtk::HBox {
 		}
 		void SavePdf(const std::string& filename, QualityTablesFormatter::StatisticKind kind);
 	protected:
-		virtual void processStatistics(class StatisticsCollection *, const std::vector<AntennaInfo> &)
+		virtual void processStatistics(const StatisticsCollection *, const std::vector<AntennaInfo> &)
 		{
 		}
 		
-		virtual const std::map<double, class DefaultStatistics> &GetStatistics() const = 0;
+		virtual const std::map<double, class DefaultStatistics> &getStatistics() const = 0;
 		
-		virtual void StartLine(Plot2D &plot, const std::string &name, const std::string &yAxisDesc) = 0;
+		virtual void startLine(Plot2D &plot, const std::string &name, const std::string &yAxisDesc) = 0;
 		
 		virtual void processPlot(Plot2D &plot)
 		{
@@ -58,13 +60,11 @@ class TwoDimensionalPlotPage : public Gtk::HBox {
 		{
 		}
 		
-		class StatisticsCollection *GetStatCollection() const
+		const StatisticsCollection *getStatCollection() const
 		{
 			return _statCollection;
 		}
 		void updatePlot();
-		
-		//unsigned selectedKindCount() const;
 	private:
 		enum PhaseType { AmplitudePhaseType, PhasePhaseType, RealPhaseType, ImaginaryPhaseType} ;
 		
@@ -118,7 +118,7 @@ class TwoDimensionalPlotPage : public Gtk::HBox {
 		Gtk::CheckButton _logarithmicButton, _zeroAxisButton;
 		Gtk::Button _plotPropertiesButton, _dataExportButton;
 		
-		class StatisticsCollection *_statCollection;
+		const StatisticsCollection *_statCollection;
 		Plot2D _plot;
 		PlotWidget _plotWidget;
 		

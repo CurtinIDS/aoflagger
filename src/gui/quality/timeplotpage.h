@@ -7,12 +7,12 @@
 
 class TimePlotPage : public TwoDimensionalPlotPage {
 	protected:
-		virtual const std::map<double, class DefaultStatistics> &GetStatistics() const
+		virtual const std::map<double, class DefaultStatistics> &getStatistics() const override final
 		{
-			return GetStatCollection()->TimeStatistics();
+			return getStatCollection()->TimeStatistics();
 		}
 		
-		virtual void StartLine(Plot2D &plot, const std::string &name, const std::string &yAxisDesc)
+		virtual void startLine(Plot2D &plot, const std::string &name, const std::string &yAxisDesc) override final
 		{
 			plot.StartLine(name, "Time", yAxisDesc, true);
 		}

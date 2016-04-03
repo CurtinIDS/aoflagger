@@ -17,18 +17,21 @@
 #include "../plot/plot2d.h"
 #include "../plot/plotwidget.h"
 
-class HistogramPage : public Gtk::HBox {
+#include "plotsheet.h"
+
+class HistogramPage : public PlotSheet {
 	public:
 		HistogramPage();
     ~HistogramPage();
 
-		void SetStatistics(const std::string &filename)
+		virtual void SetHistograms(const HistogramCollection *histograms) override final;
+		
+		void SetHistograms(const std::string &filename)
 		{
 			_statFilename = filename;
 			readFromFile();
 			updatePlot();
 		}
-		void SetStatistics(class HistogramCollection &collection);
 		void CloseStatistics();
 		bool HasStatistics() const
 		{

@@ -198,10 +198,10 @@ void HistogramPage::CloseStatistics()
 	}
 }
 
-void HistogramPage::SetStatistics(HistogramCollection &collection)
+void HistogramPage::SetHistograms(const HistogramCollection *histograms)
 {
 	CloseStatistics();
-	_histograms = new HistogramCollection(collection);
+	_histograms = new HistogramCollection(*histograms);
 	_summedPolarizationHistograms = _histograms->CreateSummedPolarizationCollection();
 	_histograms->CreateMissingBins();
 	_summedPolarizationHistograms->CreateMissingBins();

@@ -9,7 +9,7 @@
 
 class AntennaePlotPage : public TwoDimensionalPlotPage {
 	protected:
-		virtual void processStatistics(class StatisticsCollection *statCollection, const std::vector<AntennaInfo> &antennas)
+		virtual void processStatistics(const StatisticsCollection *statCollection, const std::vector<AntennaInfo> &antennas) override final
 		{
 			_antennas = antennas;
 			const BaselineStatisticsMap &map = statCollection->BaselineStatistics();
@@ -26,21 +26,12 @@ class AntennaePlotPage : public TwoDimensionalPlotPage {
 			}
 		}
 		
-		void addStatistic(unsigned antIndex, const DefaultStatistics& stats)
-		{
-			std::map<double, DefaultStatistics>::iterator iter = _statistics.find(antIndex);
-			if(iter == _statistics.end())
-				_statistics.insert(std::pair<double, DefaultStatistics>(antIndex, stats));
-			else
-				iter->second += stats;
-		}
-		
-		virtual const std::map<double, class DefaultStatistics> &GetStatistics() const
+		virtual const std::map<double, class DefaultStatistics> &getStatistics() const override final
 		{
 			return _statistics;
 		}
 		
-		virtual void StartLine(Plot2D &plot, const std::string &name, const std::string &yAxisDesc)
+		virtual void startLine(Plot2D &plot, const std::string &name, const std::string &yAxisDesc) override final
 		{
 			Plot2DPointSet &pointSet = plot.StartLine(name, "Antenna index", yAxisDesc, false, Plot2DPointSet::DrawColumns);
 			
@@ -49,6 +40,15 @@ class AntennaePlotPage : public TwoDimensionalPlotPage {
 				labels.push_back(i->name);
 			pointSet.SetTickLabels(labels);
 			pointSet.SetRotateUnits(true);
+		}
+		
+		void addStatistic(unsigned antIndex, const DefaultStatistics& stats)
+		{
+			std::map<double, DefaultStatistics>::iterator iter = _statistics.find(antIndex);
+			if(iter == _statistics.end())
+				_statistics.insert(std::pair<double, DefaultStatistics>(antIndex, stats));
+			else
+				iter->second += stats;
 		}
 		
 	private:

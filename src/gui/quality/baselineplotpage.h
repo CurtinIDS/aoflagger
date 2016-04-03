@@ -19,11 +19,11 @@ class BaselinePlotPage : public GrayScalePlotPage {
 		
 		sigc::signal<void, const std::string &> SignalStatusChange() { return _signalStatusChange; }
 		
-		void SetStatistics(class StatisticsCollection *statCollection, const std::vector<class AntennaInfo> &antennas)
+		virtual void SetStatistics(const StatisticsCollection* statCollection, const std::vector<class AntennaInfo>& antennas) override final
 		{
 			_statCollection = statCollection;
 			_antennas = &antennas;
-			UpdateImage();
+			updateImage();
 		}
 		void CloseStatistics()
 		{
@@ -35,11 +35,11 @@ class BaselinePlotPage : public GrayScalePlotPage {
 			return _statCollection != 0;
 		}
 	protected:
-		virtual std::pair<TimeFrequencyData, TimeFrequencyMetaDataCPtr> ConstructImage(QualityTablesFormatter::StatisticKind kind);
+		virtual std::pair<TimeFrequencyData, TimeFrequencyMetaDataCPtr> constructImage(QualityTablesFormatter::StatisticKind kind) override final;
 	private:
 		void onMouseMoved(size_t x, size_t y);
 		
-		class StatisticsCollection *_statCollection;
+		const StatisticsCollection *_statCollection;
 		const std::vector<class AntennaInfo> *_antennas;
 		
 		sigc::signal<void, const std::string &> _signalStatusChange;

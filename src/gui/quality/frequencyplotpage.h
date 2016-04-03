@@ -12,7 +12,7 @@ class FrequencyPlotPage : public TwoDimensionalPlotPage {
 		{
 		}
 		
-		virtual void processStatistics(class StatisticsCollection *statCollection, const std::vector<AntennaInfo> &antennas)
+		virtual void processStatistics(const StatisticsCollection *statCollection, const std::vector<AntennaInfo> &antennas) override final
 		{
 			_statistics.clear();
 			
@@ -24,12 +24,12 @@ class FrequencyPlotPage : public TwoDimensionalPlotPage {
 			}
 		}
 		
-		virtual const std::map<double, class DefaultStatistics> &GetStatistics() const
+		virtual const std::map<double, class DefaultStatistics> &getStatistics() const override final
 		{
 			return _statistics;
 		}
 		
-		virtual void StartLine(Plot2D &plot, const std::string &name, const std::string &yAxisDesc)
+		virtual void startLine(Plot2D &plot, const std::string &name, const std::string &yAxisDesc) override final
 		{
 			if(_ftButton.get_active())
 				plot.StartLine(name, "Time (μs)", yAxisDesc, false);
@@ -37,7 +37,7 @@ class FrequencyPlotPage : public TwoDimensionalPlotPage {
 				plot.StartLine(name, "Frequency (MHz)", yAxisDesc, false);
 		}
 		
-		virtual void processPlot(Plot2D &plot)
+		virtual void processPlot(Plot2D &plot) override final
 		{
 			if(_ftButton.get_active())
 			{
@@ -45,7 +45,7 @@ class FrequencyPlotPage : public TwoDimensionalPlotPage {
 			}
 		}
 		
-		virtual void addCustomPlotButtons(Gtk::VBox &container)
+		virtual void addCustomPlotButtons(Gtk::VBox &container) override final
 		{
 			_ftButton.signal_clicked().connect(sigc::mem_fun(*this, &FrequencyPlotPage::onFTButtonClicked));
 			container.pack_start(_ftButton);

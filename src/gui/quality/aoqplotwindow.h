@@ -16,15 +16,8 @@
 
 #include "../../quality/qualitytablesformatter.h"
 
-#include "antennaeplotpage.h"
-#include "baselineplotpage.h"
-#include "blengthplotpage.h"
-#include "frequencyplotpage.h"
-#include "histogrampage.h"
+#include "plotsheet.h"
 #include "openoptionswindow.h"
-#include "summarypage.h"
-#include "timefrequencyplotpage.h"
-#include "timeplotpage.h"
 
 #include "../../structures/antennainfo.h"
 
@@ -85,14 +78,6 @@ class AOQPlotWindow : public Gtk::Window {
 		}
 		
 		void onChangeSheet();
-		void showBaselineSheet();
-		void showAntennaeSheet();
-		void showBaselineLengthSheet();
-		void showTimeSheet();
-		void showFrequencySheet();
-		void showTimeFrequencySheet();
-		void showSummarySheet();
-		void showHistogramSheet();
 		
 		void setShowHistograms(bool show)
 		{
@@ -120,7 +105,7 @@ class AOQPlotWindow : public Gtk::Window {
 		//FrequencyPlotPage _frequencyPlotPage;
 		//SummaryPage _summaryPage;
 		//HistogramPage _histogramPage;
-		std::unique_ptr<Gtk::HBox> _activeSheet;
+		std::unique_ptr<PlotSheet> _activeSheet;
 		
 		OpenOptionsWindow _openOptionsWindow;
 

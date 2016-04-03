@@ -200,11 +200,11 @@ void TwoDimensionalPlotPage::plotStatistic(QualityTablesFormatter::StatisticKind
 {
 	std::ostringstream s;
 	StatisticsDerivator derivator(*_statCollection);
-	const std::map<double, DefaultStatistics> &statistics = GetStatistics();
+	const std::map<double, DefaultStatistics> &statistics = getStatistics();
 	if(polA == polB)
 	{
 		s << "Polarization " << polA;
-		StartLine(_plot, s.str(), yDesc);
+		startLine(_plot, s.str(), yDesc);
 		for(std::map<double, DefaultStatistics>::const_iterator i=statistics.begin();i!=statistics.end();++i)
 		{
 			const double x = i->first;
@@ -214,7 +214,7 @@ void TwoDimensionalPlotPage::plotStatistic(QualityTablesFormatter::StatisticKind
 	}
 	else {
 		s << "Polarization " << polA << " and " << polB;
-		StartLine(_plot, s.str(), yDesc);
+		startLine(_plot, s.str(), yDesc);
 		for(std::map<double, DefaultStatistics>::const_iterator i=statistics.begin();i!=statistics.end();++i)
 		{
 			const double x = i->first;

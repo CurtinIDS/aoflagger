@@ -129,12 +129,12 @@ class StatisticsCollection : public Serializable
 			statistics = getGlobalStatistics(_frequencyStatistics);
 		}
 		
-		void GetGlobalAutoBaselineStatistics(DefaultStatistics &statistics)
+		void GetGlobalAutoBaselineStatistics(DefaultStatistics &statistics) const
 		{
 			statistics = getGlobalBaselineStatistics<true>();
 		}
 		
-		void GetGlobalCrossBaselineStatistics(DefaultStatistics &statistics)
+		void GetGlobalCrossBaselineStatistics(DefaultStatistics &statistics) const
 		{
 			statistics = getGlobalBaselineStatistics<false>();
 		}

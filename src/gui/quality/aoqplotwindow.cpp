@@ -14,6 +14,15 @@
 #include "../../remote/clusteredobservation.h"
 #include "../../remote/processcommander.h"
 
+#include "antennaeplotpage.h"
+#include "baselineplotpage.h"
+#include "blengthplotpage.h"
+#include "frequencyplotpage.h"
+#include "histogrampage.h"
+#include "summarypage.h"
+#include "timefrequencyplotpage.h"
+#include "timeplotpage.h"
+
 AOQPlotWindow::AOQPlotWindow() :
 	_activeSheetIndex(-1),
 	_pageMenuButton("Sheet"),
@@ -56,12 +65,12 @@ AOQPlotWindow::AOQPlotWindow() :
 	_antennaeMI.signal_toggled().connect(sigc::mem_fun(*this, &AOQPlotWindow::onChangeSheet));
 	_pageMenu.append(_bLengthMI);
 	_bLengthMI.signal_toggled().connect(sigc::mem_fun(*this, &AOQPlotWindow::onChangeSheet));
-	_pageMenu.append(_timeFrequencyMI);
-	_timeFrequencyMI.signal_toggled().connect(sigc::mem_fun(*this, &AOQPlotWindow::onChangeSheet));
 	_pageMenu.append(_timeMI);
 	_timeMI.signal_toggled().connect(sigc::mem_fun(*this, &AOQPlotWindow::onChangeSheet));
 	_pageMenu.append(_frequencyMI);
 	_frequencyMI.signal_toggled().connect(sigc::mem_fun(*this, &AOQPlotWindow::onChangeSheet));
+	_pageMenu.append(_timeFrequencyMI);
+	_timeFrequencyMI.signal_toggled().connect(sigc::mem_fun(*this, &AOQPlotWindow::onChangeSheet));
 	_pageMenu.append(_summaryMI);
 	_summaryMI.signal_toggled().connect(sigc::mem_fun(*this, &AOQPlotWindow::onChangeSheet));
 	_pageMenu.append(_histogramMI);
@@ -104,7 +113,7 @@ void AOQPlotWindow::onOpenOptionsSelected(const std::vector<std::string>& files,
 	if(_histogramPage.get_visible())
 		_histogramPage.SetStatistics(*_histCollection);*/
 	_activeSheetIndex = -1;
-	showBaselineSheet();
+	onChangeSheet();
 	show();
 }
 
@@ -277,121 +286,42 @@ void AOQPlotWindow::Save(const AOQPlotWindow::PlotSavingData& data)
 
 void AOQPlotWindow::onChangeSheet()
 {
+	int selectedSheet = -1;
 	if(_baselineMI.get_active())
-		showBaselineSheet();
+		selectedSheet = 0;
 	else if(_antennaeMI.get_active())
-		showAntennaeSheet();
+		selectedSheet = 1;
 	else if(_bLengthMI.get_active())
-		showBaselineLengthSheet();
+		selectedSheet = 2;
 	else if(_timeMI.get_active())
-		showTimeSheet();
+		selectedSheet = 3;
 	else if(_frequencyMI.get_active())
-		showFrequencySheet();
+		selectedSheet = 4;
 	else if(_timeFrequencyMI.get_active())
-		showTimeFrequencySheet();
+		selectedSheet = 5;
 	else if(_summaryMI.get_active())
-		showSummarySheet();
+		selectedSheet = 6;
 	else if(_histogramMI.get_active())
-		showHistogramSheet();
-}
-
-void AOQPlotWindow::showBaselineSheet()
-{
-	if(_activeSheetIndex != 0)
+		selectedSheet = 7;
+	
+	if(selectedSheet != _activeSheetIndex)
 	{
-		_activeSheet.reset(new BaselinePlotPage());
-		BaselinePlotPage& newPage = static_cast<BaselinePlotPage&>(*_activeSheet);
-		newPage.SetStatistics(_statCollection, _antennas);
+		switch(selectedSheet)
+		{
+			case 0: _activeSheet.reset(new BaselinePlotPage()); break;
+			case 1: _activeSheet.reset(new AntennaePlotPage()); break;
+			case 2: _activeSheet.reset(new BLengthPlotPage()); break;
+			case 3: _activeSheet.reset(new TimePlotPage()); break;
+			case 4: _activeSheet.reset(new FrequencyPlotPage()); break;
+			case 5: _activeSheet.reset(new TimeFrequencyPlotPage()); break;
+			case 6: _activeSheet.reset(new SummaryPage()); break;
+			case 7: _activeSheet.reset(new HistogramPage()); break;
+		}
+		
+		_activeSheetIndex = selectedSheet;
+		_activeSheet->SetStatistics(_statCollection, _antennas);
+		_activeSheet->SetHistograms(_histCollection);
 		_vBox.pack_start(*_activeSheet);
 		_activeSheet->show_all();
-		_activeSheetIndex = 0;
-	}
-}
-
-void AOQPlotWindow::showAntennaeSheet()
-{
-	if(_activeSheetIndex != 1)
-	{
-		_activeSheet.reset(new AntennaePlotPage());
-		AntennaePlotPage& newPage = static_cast<AntennaePlotPage&>(*_activeSheet);
-		newPage.SetStatistics(_statCollection, _antennas);
-		_vBox.pack_start(*_activeSheet);
-		_activeSheet->show_all();
-		_activeSheetIndex = 1;
-	}
-}
-
-void AOQPlotWindow::showBaselineLengthSheet()
-{
-	if(_activeSheetIndex != 2)
-	{
-		_activeSheet.reset(new BLengthPlotPage());
-		BLengthPlotPage& newPage = static_cast<BLengthPlotPage&>(*_activeSheet);
-		newPage.SetStatistics(_statCollection, _antennas);
-		_vBox.pack_start(*_activeSheet);
-		_activeSheet->show_all();
-		_activeSheetIndex = 2;
-	}
-}
-
-void AOQPlotWindow::showTimeSheet()
-{
-	if(_activeSheetIndex != 3)
-	{
-		_activeSheet.reset(new TimePlotPage());
-		TimePlotPage& newPage = static_cast<TimePlotPage&>(*_activeSheet);
-		newPage.SetStatistics(_statCollection, _antennas);
-		_vBox.pack_start(*_activeSheet);
-		_activeSheet->show_all();
-		_activeSheetIndex = 3;
-	}
-}
-void AOQPlotWindow::showFrequencySheet()
-{
-	if(_activeSheetIndex != 4)
-	{
-		_activeSheet.reset(new FrequencyPlotPage());
-		FrequencyPlotPage& newPage = static_cast<FrequencyPlotPage&>(*_activeSheet);
-		newPage.SetStatistics(_statCollection, _antennas);
-		_vBox.pack_start(*_activeSheet);
-		_activeSheet->show_all();
-		_activeSheetIndex = 4;
-	}
-}
-void AOQPlotWindow::showTimeFrequencySheet()
-{
-	if(_activeSheetIndex != 5)
-	{
-		_activeSheet.reset(new TimeFrequencyPlotPage());
-		TimeFrequencyPlotPage& newPage = static_cast<TimeFrequencyPlotPage&>(*_activeSheet);
-		newPage.SetStatistics(_statCollection);
-		_vBox.pack_start(*_activeSheet);
-		_activeSheet->show_all();
-		_activeSheetIndex = 5;
-	}
-}
-void AOQPlotWindow::showSummarySheet()
-{
-	if(_activeSheetIndex != 6)
-	{
-		_activeSheet.reset(new SummaryPage());
-		SummaryPage& newPage = static_cast<SummaryPage&>(*_activeSheet);
-		newPage.SetStatistics(_statCollection);
-		_vBox.pack_start(*_activeSheet);
-		_activeSheet->show_all();
-		_activeSheetIndex = 6;
-	}
-}
-
-void AOQPlotWindow::showHistogramSheet()
-{
-	if(_activeSheetIndex != 7)
-	{
-		_activeSheet.reset(new HistogramPage());
-		HistogramPage& newPage = static_cast<HistogramPage&>(*_activeSheet);
-		newPage.SetStatistics(*_histCollection);
-		_vBox.pack_start(*_activeSheet);
-		_activeSheet->show_all();
-		_activeSheetIndex = 7;
 	}
 }

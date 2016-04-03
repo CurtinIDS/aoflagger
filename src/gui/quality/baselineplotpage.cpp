@@ -9,18 +9,18 @@ BaselinePlotPage::BaselinePlotPage() :
 	_statCollection(0),
 	_antennas(0)
 {
-	GrayScaleWidget().OnMouseMovedEvent().connect(sigc::mem_fun(*this, &BaselinePlotPage::onMouseMoved));
-	GrayScaleWidget().SetXAxisDescription("Antenna 1 index");
-	GrayScaleWidget().SetManualXAxisDescription(true);
-	GrayScaleWidget().SetYAxisDescription("Antenna 2 index");
-	GrayScaleWidget().SetManualYAxisDescription(true);
+	grayScaleWidget().OnMouseMovedEvent().connect(sigc::mem_fun(*this, &BaselinePlotPage::onMouseMoved));
+	grayScaleWidget().SetXAxisDescription("Antenna 1 index");
+	grayScaleWidget().SetManualXAxisDescription(true);
+	grayScaleWidget().SetYAxisDescription("Antenna 2 index");
+	grayScaleWidget().SetManualYAxisDescription(true);
 }
 
 BaselinePlotPage::~BaselinePlotPage()
 {
 }
 
-std::pair<TimeFrequencyData, TimeFrequencyMetaDataCPtr> BaselinePlotPage::ConstructImage(QualityTablesFormatter::StatisticKind kind)
+std::pair<TimeFrequencyData, TimeFrequencyMetaDataCPtr> BaselinePlotPage::constructImage(QualityTablesFormatter::StatisticKind kind)
 {
 	if(HasStatistics())
 	{
@@ -95,9 +95,9 @@ void BaselinePlotPage::onMouseMoved(size_t x, size_t y)
 		antenna1Name = (*_antennas)[x].name;
 		antenna2Name = (*_antennas)[y].name;
 	}
-	const QualityTablesFormatter::StatisticKind kind = GetSelectedStatisticKind();
+	const QualityTablesFormatter::StatisticKind kind = getSelectedStatisticKind();
 	const std::string &kindName = QualityTablesFormatter::KindToName(kind);
 	
-	text << "Correlation " << antenna1Name << " x " << antenna2Name << ", " << kindName << " = " << GrayScaleWidget().Image()->Value(x, y);
+	text << "Correlation " << antenna1Name << " x " << antenna2Name << ", " << kindName << " = " << grayScaleWidget().Image()->Value(x, y);
 	_signalStatusChange(text.str());
 }
