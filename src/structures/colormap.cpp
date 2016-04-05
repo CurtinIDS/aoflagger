@@ -10,7 +10,11 @@ ColorMap::~ColorMap()
 
 ColorMap *ColorMap::CreateColorMap(const std::string &type) throw()
 {
-	if(type == "coldhot")
+	if(type == "monochrome" || type == "bw")
+		return new MonochromeMap();
+	else if(type == "inverted" || type == "wb")
+		return new InvertedMap();
+	else if(type == "coldhot")
 		return new ColdHotMap();
 	else if(type == "redblue")
 		return new RedBlueMap();

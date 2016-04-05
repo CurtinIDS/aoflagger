@@ -46,6 +46,19 @@ class ColorMap {
 		 */
 		virtual unsigned char ValueToColorA(long double value) const = 0;
 		/**
+		 * Convert the input value to a RGB value.
+		 * @param value Value to be mapped (-1 to 1).
+		 * @param r Red component (0-255)
+		 * @param g Green component (0-255)
+		 * @param b Blue component (0-255)
+		 */
+		void Convert(double value, unsigned char& r, unsigned char& g, unsigned char& b)
+		{
+			r = ValueToColorR(value);
+			g = ValueToColorG(value);
+			b = ValueToColorB(value);
+		}
+		/**
 		 * Create a color map given its name. The human readable list of names can be retrieved with GetColorMapsString().
 		 * @param typeStr name of the color map type.
 		 * @return The new create color map. The caller is responsible for @c delete -ing the color map after usage.
