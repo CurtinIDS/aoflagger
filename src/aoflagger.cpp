@@ -17,6 +17,8 @@
 #include "strategy/control/strategyreader.h"
 #include "strategy/control/defaultstrategy.h"
 
+#include "structures/system.h"
+
 #include "util/aologger.h"
 #include "util/parameter.h"
 #include "util/progresslistener.h"
@@ -222,7 +224,7 @@ int main(int argc, char **argv)
 		checkRelease();
 
 		if(!threadCount.IsSet())
-			threadCount = sysconf(_SC_NPROCESSORS_ONLN);
+			threadCount = System::ProcessorCount();
 		AOLogger::Debug << "Number of threads: " << threadCount.Value() << "\n";
 
 		Stopwatch watch(true);
