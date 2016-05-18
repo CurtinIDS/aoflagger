@@ -155,16 +155,13 @@ void actionCollect(const std::string &filename, enum CollectingMode mode, Statis
 			flaggedAntennae.find(antenna1Index) != flaggedAntennae.end() ||
 			flaggedAntennae.find(antenna2Index) != flaggedAntennae.end();
 		
-		casacore::Array<casacore::Complex>::const_iterator dataIter = dataArray.begin();
-		casacore::Array<bool>::const_iterator flagIter = flagArray.begin();
+		casacore::Array<casacore::Complex>::const_contiter dataIter = dataArray.cbegin();
+		casacore::Array<bool>::const_contiter flagIter = flagArray.cbegin();
 		const unsigned startChannel = ignoreChannelZero ? 1 : 0;
 		if(ignoreChannelZero)
 		{
-			for(unsigned p = 0; p < polarizationCount; ++p)
-			{
-				++dataIter;
-				++flagIter;
-			}
+			dataIter += polarizationCount;
+			flagIter += polarizationCount;
 		}
 		for(unsigned channel = startChannel ; channel<band.channels.size(); ++channel)
 		{
@@ -194,13 +191,13 @@ void actionCollect(const std::string &filename, enum CollectingMode mode, Statis
 				case CollectDefault:
 					if(antennaIsFlagged || timestepIndex < flaggedTimesteps)
 						statisticsCollection.Add(antenna1Index, antenna2Index, time, bandIndex, p,
-																		 &reinterpret_cast<float*>(&samples[p])[0],
-																		 &reinterpret_cast<float*>(&samples[p])[1],
+																		 &reinterpret_cast<float*>(samples[p])[0],
+																		 &reinterpret_cast<float*>(samples[p])[1],
 																		 isRFI[p], correlatorFlagsForBadAntenna, band.channels.size() - startChannel, 2, 1, 1);
 					else
 						statisticsCollection.Add(antenna1Index, antenna2Index, time, bandIndex, p,
-																		 &reinterpret_cast<float*>(&samples[p])[0],
-																		 &reinterpret_cast<float*>(&samples[p])[1],
+																		 &reinterpret_cast<float*>(samples[p])[0],
+																		 &reinterpret_cast<float*>(samples[p])[1],
 																		 isRFI[p], correlatorFlags, band.channels.size() - startChannel, 2, 1, 1);
 					break;
 				case CollectHistograms:
@@ -209,13 +206,13 @@ void actionCollect(const std::string &filename, enum CollectingMode mode, Statis
 				case CollectTimeFrequency:
 					if(antennaIsFlagged || timestepIndex < flaggedTimesteps)
 						statisticsCollection.Add(antenna1Index, antenna2Index, time, bandIndex, p,
-																		 &reinterpret_cast<float*>(&samples[p])[0],
-																		 &reinterpret_cast<float*>(&samples[p])[1],
+																		 &reinterpret_cast<float*>(samples[p])[0],
+																		 &reinterpret_cast<float*>(samples[p])[1],
 																		 isRFI[p], correlatorFlagsForBadAntenna, band.channels.size() - startChannel, 2, 1, 1);
 					else
 						statisticsCollection.AddToTimeFrequency(antenna1Index, antenna2Index, time, bandIndex, p,
-																										&reinterpret_cast<float*>(&samples[p])[0],
-																										&reinterpret_cast<float*>(&samples[p])[1],
+																										&reinterpret_cast<float*>(samples[p])[0],
+																										&reinterpret_cast<float*>(samples[p])[1],
 																										isRFI[p], correlatorFlags, band.channels.size() - startChannel, 2, 1, 1);
 					break;
 			}
