@@ -167,17 +167,8 @@ void actionCollect(const std::string &filename, enum CollectingMode mode, Statis
 		{
 			for(unsigned p = 0; p < polarizationCount; ++p)
 			{
-				bool flag = *flagIter;
-				casa::Complex val = *dataIter;
-				if(std::isfinite(val.real()) && std::isfinite(val.imag()))
-				{
-					samples[p][channel - startChannel] = val;
-					isRFI[p][channel - startChannel] = flag;
-				}
-				else {
-					samples[p][channel - startChannel] = 0.0;
-					isRFI[p][channel - startChannel] = true;
-				}
+				samples[p][channel - startChannel] = *dataIter;
+				isRFI[p][channel - startChannel] = *flagIter;
 				
 				++dataIter;
 				++flagIter;
