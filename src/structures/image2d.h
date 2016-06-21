@@ -11,6 +11,7 @@
 #include <boost/shared_ptr.hpp>
 
 #include <exception>
+#include <cmath>
 
 typedef boost::shared_ptr<class Image2D> Image2DPtr;
 typedef boost::shared_ptr<const class Image2D> Image2DCPtr;
