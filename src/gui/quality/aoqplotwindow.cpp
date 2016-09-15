@@ -241,7 +241,7 @@ void AOQPlotWindow::Save(const AOQPlotWindow::PlotSavingData& data)
 	
 	std::cout << "Saving " << prefix << "-timefrequency.pdf...\n";
 	TimeFrequencyPlotPage tfPage;
-	tfPage.SetStatistics(_statCollection, _antennas);
+	tfPage.SetStatistics(_fullStats, _antennas);
 	tfPage.SavePdf(prefix+"-timefrequency.pdf", kind);
 	
 	std::cout << "Saving " << prefix << "-time.pdf...\n";
@@ -301,7 +301,10 @@ void AOQPlotWindow::onChangeSheet()
 		}
 		
 		_activeSheetIndex = selectedSheet;
-		_activeSheet->SetStatistics(_statCollection, _antennas);
+		if(selectedSheet == 5)
+			_activeSheet->SetStatistics(_fullStats, _antennas);
+		else
+			_activeSheet->SetStatistics(_statCollection, _antennas);
 		_activeSheet->SetHistograms(_histCollection);
 		_activeSheet->SignalStatusChange().connect(sigc::mem_fun(*this, &AOQPlotWindow::onStatusChange));
 		_activeSheet->InitializeToolbar(_toolbar);
