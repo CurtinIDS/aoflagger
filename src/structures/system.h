@@ -17,6 +17,9 @@ class System
 		
 		static unsigned ProcessorCount()
 		{
+#ifdef __APPLE__
+            return sysconf(_SC_NPROCESSORS_ONLN);
+#else
 			cpu_set_t cs;
 			CPU_ZERO(&cs);
 			sched_getaffinity(0, sizeof cs , &cs);
@@ -29,6 +32,7 @@ class System
 			}
 
 			return count;
+#endif
 		}
 };
 
