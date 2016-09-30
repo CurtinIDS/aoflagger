@@ -35,7 +35,7 @@ class PlotWidget : public Gtk::DrawingArea {
 		{
 			redraw();
 			Glib::RefPtr<Gdk::Window> window = get_window();
-			if(window != 0)
+			if(window)
 				window->invalidate(false);
 		}
 	private:
@@ -53,7 +53,7 @@ class PlotWidget : public Gtk::DrawingArea {
 				_plot->Render(*this);
 			else {
 				Glib::RefPtr<Gdk::Window> window = get_window();
-				if(window != 0)
+				if(window)
 				{
 					Cairo::RefPtr<Cairo::Context> cr = window->create_cairo_context();
 					cr->set_source_rgba(1, 1, 1, 1);

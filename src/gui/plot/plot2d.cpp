@@ -35,7 +35,7 @@ void Plot2D::Render(Gtk::DrawingArea &drawingArea)
 		_system.AddToSystem(**i);
 
 	Glib::RefPtr<Gdk::Window> window = drawingArea.get_window();
-	if(window != 0)
+	if(window)
 	{
 		Cairo::RefPtr<Cairo::Context> cr = window->create_cairo_context();
 
