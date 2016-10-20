@@ -493,6 +493,13 @@ void ImageWidget::update(Cairo::RefPtr<Cairo::Context> cairo, unsigned width, un
 	const bool
 		originalActive = _showOriginalMask && originalMask != 0,
 		altActive = _showAlternativeMask && alternativeMask != 0;
+	int orMaskR=255, orMaskG=0, orMaskB=255;
+	int altMaskR=255, altMaskG=255, altMaskB=0;
+	if(_colorMap == ViridisMap)
+	{
+		orMaskR=0; orMaskG=0; orMaskB=0;
+		altMaskR=255; altMaskG=255; altMaskB=255;
+	}
 	for(unsigned long y=startY;y<endY;++y) {
 		guint8* rowpointer = data + rowStride * (endY - y - 1);
 		for(unsigned long x=startX;x<endX;++x) {
@@ -501,9 +508,9 @@ void ImageWidget::update(Cairo::RefPtr<Cairo::Context> cairo, unsigned width, un
 			if(_highlighting && highlightMask->Value(x, y) != 0) {
 				r = 255; g = 0; b = 0; a = 255;
 			} else if(originalActive && originalMask->Value(x, y)) {
-				r = 255; g = 0; b = 255; a = 255;
+				r = orMaskR; g = orMaskG; b = orMaskB; a = 255;
 			} else if(altActive && alternativeMask->Value(x, y)) {
-				r = 255; g = 255; b = 0; a = 255;
+				r = altMaskR; g = altMaskG; b = altMaskB; a = 255;
 			} else {
 				num_t val = image->Value(x, y);
 				if(val > max) val = max;
