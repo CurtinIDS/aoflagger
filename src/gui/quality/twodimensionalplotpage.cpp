@@ -194,6 +194,7 @@ void TwoDimensionalPlotPage::plotStatistic(QualityTablesFormatter::StatisticKind
 
 void TwoDimensionalPlotPage::InitializeToolbar(Gtk::Toolbar& toolbar)
 {
+	toolbar.set_toolbar_style(Gtk::TOOLBAR_TEXT);
 	initStatisticKindButtons(toolbar);
 	initPolarizationButtons(toolbar);
 	initPhaseButtons(toolbar);
@@ -211,28 +212,34 @@ void TwoDimensionalPlotPage::initStatisticKindButtons(Gtk::Toolbar& toolbar)
 	toolbar.append(_separator1);
 	
 	_countButton.signal_clicked().connect(sigc::mem_fun(*this, &TwoDimensionalPlotPage::updatePlot));
+	_countButton.set_tooltip_text("Visibility count");
 	toolbar.append(_countButton);
 	
 	_meanButton.signal_clicked().connect(sigc::mem_fun(*this, &TwoDimensionalPlotPage::updatePlot));
+	_meanButton.set_tooltip_text("Mean value");
 	toolbar.append(_meanButton);
 	
 	_stdDevButton.signal_clicked().connect(sigc::mem_fun(*this, &TwoDimensionalPlotPage::updatePlot));
 	_stdDevButton.set_active(true);
+	_stdDevButton.set_tooltip_text("Standard deviation");
 	toolbar.append(_stdDevButton);
 	
 	_varianceButton.signal_clicked().connect(sigc::mem_fun(*this, &TwoDimensionalPlotPage::updatePlot));
 	toolbar.append(_varianceButton);
 	
-	_dCountButton.signal_clicked().connect(sigc::mem_fun(*this, &TwoDimensionalPlotPage::updatePlot));
-	toolbar.append(_dCountButton);
+	//_dCountButton.signal_clicked().connect(sigc::mem_fun(*this, &TwoDimensionalPlotPage::updatePlot));
+	//toolbar.append(_dCountButton);
 	
 	_dMeanButton.signal_clicked().connect(sigc::mem_fun(*this, &TwoDimensionalPlotPage::updatePlot));
+	_dMeanButton.set_tooltip_text("Frequency-differential (difference between channels) mean value");
 	toolbar.append(_dMeanButton);
 	
 	_dStdDevButton.signal_clicked().connect(sigc::mem_fun(*this, &TwoDimensionalPlotPage::updatePlot));
+	_dStdDevButton.set_tooltip_text("Frequency-differential (difference between channels) standard deviation");
 	toolbar.append(_dStdDevButton);
 	
 	_rfiPercentageButton.signal_clicked().connect(sigc::mem_fun(*this, &TwoDimensionalPlotPage::updatePlot));
+	_rfiPercentageButton.set_tooltip_text("Flagged percentage");
 	toolbar.append(_rfiPercentageButton);
 }
 
@@ -241,19 +248,24 @@ void TwoDimensionalPlotPage::initPolarizationButtons(Gtk::Toolbar& toolbar)
 	toolbar.append(_separator2);
 	
 	_polXXButton.signal_clicked().connect(sigc::mem_fun(*this, &TwoDimensionalPlotPage::updatePlot));
+	_polXXButton.set_tooltip_text("XX polarization");
 	toolbar.append(_polXXButton);
 	
 	_polXYButton.signal_clicked().connect(sigc::mem_fun(*this, &TwoDimensionalPlotPage::updatePlot));
+	_polXYButton.set_tooltip_text("XY polarization");
 	toolbar.append(_polXYButton);
 	
 	_polYXButton.signal_clicked().connect(sigc::mem_fun(*this, &TwoDimensionalPlotPage::updatePlot));
+	_polYXButton.set_tooltip_text("YX polarization");
 	toolbar.append(_polYXButton);
 	
 	_polYYButton.signal_clicked().connect(sigc::mem_fun(*this, &TwoDimensionalPlotPage::updatePlot));
+	_polYYButton.set_tooltip_text("YY polarization");
 	toolbar.append(_polYYButton);
 	
 	_polIButton.signal_clicked().connect(sigc::mem_fun(*this, &TwoDimensionalPlotPage::updatePlot));
 	_polIButton.set_active(true);
+	_polIButton.set_tooltip_text("Stokes I polarization");
 	toolbar.append(_polIButton);
 }
 
@@ -263,15 +275,19 @@ void TwoDimensionalPlotPage::initPhaseButtons(Gtk::Toolbar& toolbar)
 	
 	_amplitudeButton.signal_clicked().connect(sigc::mem_fun(*this, &TwoDimensionalPlotPage::updatePlot));
 	_amplitudeButton.set_active(true);
+	_amplitudeButton.set_tooltip_text("Amplitude");
 	toolbar.append(_amplitudeButton);
 	
 	_phaseButton.signal_clicked().connect(sigc::mem_fun(*this, &TwoDimensionalPlotPage::updatePlot));
+	_phaseButton.set_tooltip_text("Phase");
 	toolbar.append(_phaseButton);
 	
 	_realButton.signal_clicked().connect(sigc::mem_fun(*this, &TwoDimensionalPlotPage::updatePlot));
+	_realButton.set_tooltip_text("Real value");
 	toolbar.append(_realButton);
 	
 	_imaginaryButton.signal_clicked().connect(sigc::mem_fun(*this, &TwoDimensionalPlotPage::updatePlot));
+	_imaginaryButton.set_tooltip_text("Imaginary value");
 	toolbar.append(_imaginaryButton);
 }
 
