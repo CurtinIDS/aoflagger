@@ -104,6 +104,7 @@ void PlotWindow::onSelectedPlotChange()
 
 void PlotWindow::onClearPlotsPressed()
 {
+	_plotListView.get_selection()->unselect_all();
 	_plotManager.Clear();
 }
 
