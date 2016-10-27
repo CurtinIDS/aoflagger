@@ -350,8 +350,7 @@ void RFIGuiWindow::onEditStrategyPressed()
 
 void RFIGuiWindow::onExecuteStrategyPressed()
 {
-	if(_progressWindow != 0)
-		delete _progressWindow;
+	delete _progressWindow;
 
 	ProgressWindow *window = new ProgressWindow(*this);
 	_progressWindow = window;
@@ -440,6 +439,11 @@ void RFIGuiWindow::onExecuteStrategyFinished()
 		delete artifacts->BaselineSelectionInfo();
 		delete artifacts->IterationsPlot();
 		delete artifacts;
+	}
+	if(_closeExecuteFrameButton->get_active())
+	{
+		delete _progressWindow;
+		_progressWindow = 0;
 	}
 }
 
@@ -703,6 +707,9 @@ void RFIGuiWindow::createToolbar()
 	action->set_icon_name("system-run");
 	_actionGroup->add(action, Gtk::AccelKey("F9"),
 			sigc::mem_fun(*this, &RFIGuiWindow::onExecuteStrategyPressed));
+	_closeExecuteFrameButton = Gtk::ToggleAction::create("CloseExecuteFrame", "Close execute frame");
+	_actionGroup->add(_closeExecuteFrameButton);
+	_closeExecuteFrameButton->set_active(true); 
 	_actionGroup->add(Gtk::Action::create("ShowStats", "Show _stats"),
 		Gtk::AccelKey("F2"),
 		sigc::mem_fun(*this, &RFIGuiWindow::onShowStats) );
@@ -998,6 +1005,7 @@ void RFIGuiWindow::createToolbar()
 	  "    <menu action='MenuActions'>"
     "      <menuitem action='EditStrategy'/>"
     "      <menuitem action='ExecuteStrategy'/>"
+    "      <menuitem action='CloseExecuteFrame'/>"
     "      <separator/>"
     "      <menuitem action='Segment'/>"
     "      <menuitem action='Cluster'/>"

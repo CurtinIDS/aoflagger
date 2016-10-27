@@ -252,7 +252,8 @@ class RFIGuiWindow : public Gtk::Window, private StrategyController {
 		Glib::RefPtr<Gtk::ToggleAction>
 			_originalFlagsButton, _altFlagsButton,
 			_originalImageButton, _backgroundImageButton, _diffImageButton,
-			_timeGraphButton, _simFixBandwidthButton;
+			_timeGraphButton, _simFixBandwidthButton,
+			_closeExecuteFrameButton;
 		Glib::RefPtr<Gtk::RadioAction>
 			_gaussianTestSetsButton, _rayleighTestSetsButton, _zeroTestSetsButton,
 			_ncpSetButton, _b1834SetButton, _emptySetButton,
