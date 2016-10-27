@@ -19,6 +19,8 @@
 #include "../util/aologger.h"
 #include "../util/stopwatch.h"
 
+#include "reorderedfilebuffer.h"
+
 IndirectBaselineReader::IndirectBaselineReader(const std::string &msFile) : BaselineReader(msFile), _directReader(msFile),
 _seqIndexTable(0),
 _msIsReordered(false), _removeReorderedFiles(false), _reorderedDataFilesHaveChanged(false), _reorderedFlagFilesHaveChanged(false), _readUVW(false)
@@ -234,13 +236,27 @@ void IndirectBaselineReader::reorderFull()
 		throw std::runtime_error("Error: failed to open temporary data files for writing! Check access rights and free disk space.");
 
 	AOLogger::Debug << "Reordering data set...\n";
+	
+	size_t bufferMem = std::min<size_t>(System::TotalMemory()/10, 1024l*1024l*1024l);
+	ReorderedFileBuffer dataFile(reorderInfo.dataFile.get(), bufferMem);
+	ReorderedFileBuffer flagFile(reorderInfo.flagFile.get(), bufferMem/8);
+	
 	size_t prevFieldId = size_t(-1), sequenceId = size_t(-1);
 	std::vector<std::size_t> writeFilePositions = _filePositions;
 	std::vector<std::size_t> timePositions(_filePositions.size(), size_t(-1));
 	double prevTime = -1.0;
 	size_t timeIndex = size_t(-1);
+	unsigned progress = 0;
 	for(size_t rowIndex = 0; rowIndex!=rowCount; ++rowIndex)
 	{
+		if(rowIndex*1000/rowCount != progress)
+		{
+			progress = rowIndex*1000/rowCount;
+			if(progress%10 == 0)
+				AOLogger::Debug << "\nReorder progress: ";
+			AOLogger::Debug << progress/10.0 << "% ";
+			AOLogger::Debug.Flush();
+		}
 		size_t fieldId = fieldIdColumn(rowIndex);
 		if(fieldId != prevFieldId)
 		{
@@ -268,11 +284,8 @@ void IndirectBaselineReader::reorderFull()
 		casacore::Array<casacore::Complex> data = (*dataColumn)(rowIndex);
 		casacore::Array<bool> flag = flagColumn(rowIndex);
 		
-		std::ofstream &dataFile = *reorderInfo.dataFile;
-		std::ofstream &flagFile = *reorderInfo.flagFile;
-		
-		dataFile.seekp(filePos * (sizeof(float)*2), std::ios_base::beg);
-		flagFile.seekp(filePos * sizeof(bool), std::ios_base::beg);
+		dataFile.seekp(filePos * (sizeof(float)*2));
+		flagFile.seekp(filePos * sizeof(bool));
 		
 		// If this baseline missed some time steps, pad the files
 		// (we can't just skip over, because the flags should be set to true)
@@ -288,12 +301,8 @@ void IndirectBaselineReader::reorderFull()
 		}
 		
 		dataFile.write(reinterpret_cast<const char*>(&*data.cbegin()), sampleCount * 2 * sizeof(float));
-		if(dataFile.fail())
-			throw std::runtime_error("Error: failed to write temporary data file! Check access rights and free disk space.");
 		
 		flagFile.write(reinterpret_cast<const char*>(&*flag.cbegin()), sampleCount * sizeof(bool));
-		if(flagFile.fail())
-			throw std::runtime_error("Error: failed to write temporary flag file! Check access rights and free disk space.");
 		
 		filePos += sampleCount;
 	}
