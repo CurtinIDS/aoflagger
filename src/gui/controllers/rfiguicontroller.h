@@ -40,6 +40,7 @@ class RFIGuiController
 		void PlotSumSpectrum() { plotMeanSpectrum(true); }
 		void PlotPowerSpectrum();
 		void PlotPowerSpectrumComparison();
+		void PlotFrequencyScatter();
 		void PlotPowerRMS();
 		void PlotPowerSNR();
 		void PlotPowerTime();

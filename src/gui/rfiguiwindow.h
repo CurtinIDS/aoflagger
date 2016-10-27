@@ -181,6 +181,7 @@ class RFIGuiWindow : public Gtk::Window, private StrategyController {
 		void onPlotSumSpectrumPressed();
 		void onPlotPowerSpectrumPressed();
 		void onPlotPowerSpectrumComparisonPressed();
+		void onPlotFrequencyScatterPressed();
 		void onPlotPowerRMSPressed();
 		void onPlotPowerSNRPressed();
 		void onPlotPowerTimePressed();

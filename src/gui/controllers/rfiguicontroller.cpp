@@ -182,6 +182,17 @@ void RFIGuiController::PlotPowerSpectrumComparison()
 	}
 }
 
+void RFIGuiController::PlotFrequencyScatter()
+{
+	if(IsImageLoaded())
+	{
+		MultiPlot plot(_plotManager->NewPlot2D("Frequency scatter"), 4);
+		RFIPlots::MakeFrequencyScatterPlot(plot, ActiveData(), SelectedMetaData());
+		plot.Finish();
+		_plotManager->Update();
+	}
+}
+
 void RFIGuiController::PlotPowerRMS()
 {
 	if(IsImageLoaded())
@@ -298,7 +309,7 @@ void RFIGuiController::PlotTimeScatter()
 	if(IsImageLoaded())
 	{
 		MultiPlot plot(_plotManager->NewPlot2D("Time scatter"), 4);
-		RFIPlots::MakeScatterPlot(plot, ActiveData(), SelectedMetaData());
+		RFIPlots::MakeTimeScatterPlot(plot, ActiveData(), SelectedMetaData());
 		plot.Finish();
 		_plotManager->Update();
 	}
@@ -309,8 +320,8 @@ void RFIGuiController::PlotTimeScatterComparison()
 	if(IsImageLoaded())
 	{
 		MultiPlot plot(_plotManager->NewPlot2D("Time scatter comparison"), 8);
-		RFIPlots::MakeScatterPlot(plot, OriginalData(), SelectedMetaData(), 0);
-		RFIPlots::MakeScatterPlot(plot, ContaminatedData(), SelectedMetaData(), 4);
+		RFIPlots::MakeTimeScatterPlot(plot, OriginalData(), SelectedMetaData(), 0);
+		RFIPlots::MakeTimeScatterPlot(plot, ContaminatedData(), SelectedMetaData(), 4);
 		plot.Finish();
 		_plotManager->Update();
 	}

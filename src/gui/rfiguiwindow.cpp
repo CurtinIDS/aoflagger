@@ -622,6 +622,8 @@ void RFIGuiWindow::createToolbar()
 	_actionGroup->add( Gtk::Action::create("PlotPowerSpectrum", "Plot _power spectrum"),
 		Gtk::AccelKey("<alt>W"),
 		sigc::mem_fun(*this, &RFIGuiWindow::onPlotPowerSpectrumPressed) );
+	_actionGroup->add( Gtk::Action::create("PlotFrequencyScatter", "Plot _frequency scatter"),
+		sigc::mem_fun(*this, &RFIGuiWindow::onPlotFrequencyScatterPressed) );
 	_actionGroup->add( Gtk::Action::create("PlotPowerSpectrumComparison", "Power _spectrum"),
 		sigc::mem_fun(*this, &RFIGuiWindow::onPlotPowerSpectrumComparisonPressed) );
 	_actionGroup->add( Gtk::Action::create("PlotRMSSpectrum", "Plot _rms spectrum"),
@@ -942,6 +944,7 @@ void RFIGuiWindow::createToolbar()
     "      <menuitem action='PlotMeanSpectrum'/>"
     "      <menuitem action='PlotSumSpectrum'/>"
     "      <menuitem action='PlotPowerSpectrum'/>"
+    "      <menuitem action='PlotFrequencyScatter'/>"
     "      <menuitem action='PlotRMSSpectrum'/>"
     "      <menuitem action='PlotSNRSpectrum'/>"
     "      <menuitem action='PlotPowerTime'/>"
@@ -1280,6 +1283,11 @@ void RFIGuiWindow::onPlotPowerSpectrumPressed()
 void RFIGuiWindow::onPlotPowerSpectrumComparisonPressed()
 {
 	_controller->PlotPowerSpectrumComparison();
+}
+
+void RFIGuiWindow::onPlotFrequencyScatterPressed()
+{
+	_controller->PlotFrequencyScatter();
 }
 
 void RFIGuiWindow::onPlotPowerRMSPressed()
