@@ -31,24 +31,28 @@ class StatisticalFlaggingFrame : public Gtk::Frame {
 
 			_dilluteTimeSizeScale.set_range(0, 100);
 			_dilluteTimeSizeScale.set_value(_action.EnlargeTimeSize());
+			_dilluteTimeSizeScale.set_increments(1, 10);
 			_box.pack_start(_dilluteTimeSizeScale);
 
 			_box.pack_start(_dilluteFrequencySizeLabel);
 
 			_dilluteFrequencySizeScale.set_range(0, 100);
 			_dilluteFrequencySizeScale.set_value(_action.EnlargeFrequencySize());
+			_dilluteFrequencySizeScale.set_increments(1, 10);
 			_box.pack_start(_dilluteFrequencySizeScale);
 
 			_box.pack_start(_minTimeRatioLabel);
 
 			_minTimeRatioScale.set_range(0, 100);
 			_minTimeRatioScale.set_value(_action.MinimumGoodTimeRatio()*100.0);
+			_minTimeRatioScale.set_increments(.25, 5);
 			_box.pack_start(_minTimeRatioScale);
 
 			_box.pack_start(_minFreqRatioLabel);
 
 			_minFreqRatioScale.set_range(0, 100);
 			_minFreqRatioScale.set_value(_action.MinimumGoodFrequencyRatio()*100.0);
+			_minFreqRatioScale.set_increments(.25, 5);
 			_box.pack_start(_minFreqRatioScale);
 
 			_buttonBox.pack_start(_applyButton);

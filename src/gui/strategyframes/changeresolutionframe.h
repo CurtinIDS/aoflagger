@@ -30,12 +30,14 @@ class ChangeResolutionFrame : public Gtk::Frame {
 			_box.pack_start(_timeDecreaseFactorLabel);
 
 			_timeDecreaseFactorScale.set_range(1, 128);
+			_timeDecreaseFactorScale.set_increments(1, 5);
 			_box.pack_start(_timeDecreaseFactorScale);
 			_timeDecreaseFactorScale.set_value(_action.TimeDecreaseFactor());
 
 			_box.pack_start(_frequencyDecreaseFactorLabel);
 
 			_frequencyDecreaseFactorScale.set_range(1, 256);
+			_frequencyDecreaseFactorScale.set_increments(1, 5);
 			_box.pack_start(_frequencyDecreaseFactorScale);
 			_frequencyDecreaseFactorScale.set_value(_action.FrequencyDecreaseFactor());
 

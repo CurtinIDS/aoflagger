@@ -26,13 +26,15 @@ class IterationFrame : public Gtk::Frame {
 			_box.pack_start(_iterationCountLabel);
 
 			_box.pack_start(_iterationCountScale);
-			_iterationCountScale.set_range(0, 1000);
+			_iterationCountScale.set_range(0, 200);
 			_iterationCountScale.set_value(_iterationBlock.IterationCount());
+			_iterationCountScale.set_increments(1, 10);
 
 			_box.pack_start(_sensitivityStartLabel);
 
 			_box.pack_start(_sensitivityStartScale);
 			_sensitivityStartScale.set_range(0, 25.0);
+			_sensitivityStartScale.set_increments(1, 5);
 			_sensitivityStartScale.set_value(_iterationBlock.SensitivityStart());
 
 			_buttonBox.pack_start(_applyButton);

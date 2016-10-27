@@ -51,12 +51,15 @@ class HighPassFilterFrame : public Gtk::Frame {
 		{
 			_box.pack_start(_hWindowSizeLabel);
 			_hWindowSizeScale.set_range(0.0, 400.0);
+			_hWindowSizeScale.set_increments(1, 10);
+			_hWindowSizeScale.set_value(_action.WindowWidth());
 			_hWindowSizeScale.set_value(_action.WindowWidth());
 			_box.pack_start(_hWindowSizeScale);
 		
 			_box.pack_start(_vWindowSizeLabel);
 			_vWindowSizeScale.set_range(0.0, 400.0);
 			_vWindowSizeScale.set_value(_action.WindowHeight());
+			_vWindowSizeScale.set_increments(1, 10);
 			_box.pack_start(_vWindowSizeScale);
 		
 			_box.pack_start(_hKernelSigmaLabel);
